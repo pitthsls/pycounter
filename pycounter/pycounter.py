@@ -1,5 +1,6 @@
 import csv
 import logging
+import re
 
 class CounterReport(object):
     def __init__(self):
@@ -7,6 +8,11 @@ class CounterReport(object):
         self.year = None
         self.report_type = None
         self.report_version = 0
+
+    def __str__(self):
+        return "CounterReport %s version %s for %s" % (self.report_type,
+                                                       self.report_version,
+                                                       self.year)
 
     def __iter__(self):
         return iter(self.pubs)
@@ -19,6 +25,8 @@ class CounterPublication(object):
             self.issn = line[3]
             self.eissn = line[4]
             self.monthdata = [int(x) for x in line[5:-3]]
+            while len(self.monthdata) < 12:
+                self.monthdata.append(None)
             logging.debug("monthdata: %s", self.monthdata)
 
 def parse(filename):
@@ -29,10 +37,13 @@ def parse(filename):
         report_reader = csv.reader(datafile)
         line1 = report_reader.next()
         parts = line1[0].split()
-        report.report_type = ""
-        if parts[1] == "Journal":
-            report.report_type += "JR"
-        report.report_type += parts[3][0]
+        
+        rt_match = re.match(r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
+                            line1[0])
+        if rt_match:
+            report.report_type = (rt_match.group(1)[0].capitalize()+ 'R' +
+                     rt_match.group(2))
+
         report.report_version = int(parts[3][-2])
         for _ in xrange(3):
             report_reader.next()
