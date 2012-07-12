@@ -2,6 +2,9 @@ import csv
 import logging
 import re
 
+class UnknownReportTypeError(Exception):
+    pass
+
 class CounterReport(object):
     def __init__(self):
         self.pubs = []
@@ -20,6 +23,7 @@ class CounterReport(object):
 class CounterPublication(object):
     def __init__(self, line=None):
         if line is not None:
+            self.title = line[0]
             self.publisher = line[1]
             self.platform = line[2]
             self.issn = line[3]
@@ -29,8 +33,23 @@ class CounterPublication(object):
                 self.monthdata.append(None)
             logging.debug("monthdata: %s", self.monthdata)
 
+class CounterBook(object):
+    def __init__(self, line=None):
+        if line is not None:
+            self.title = line[0]
+            self.publisher = line[1]
+            self.platform = line[2]
+            self.isbn = line[3]
+            self.issn = line[4]
+            print(line)
+            self.monthdata = [int(x) for x in line[5:-1]]
+            while len(self.monthdata) < 12:
+                self.monthdata.append(None)
+            logging.debug("monthdata: %s", self.monthdata)
+
 def parse(filename):
-    """Open COUNTER report with given filename and parse into a CounterReport object"""
+    """Open CSV COUNTER report with given filename and parse into a
+    CounterReport object"""
     with open(filename, 'rb') as datafile:
         report = CounterReport()
 
@@ -43,15 +62,23 @@ def parse(filename):
         if rt_match:
             report.report_type = (rt_match.group(1)[0].capitalize()+ 'R' +
                      rt_match.group(2))
+            report.report_version = int(rt_match.group(3))
 
-        report.report_version = int(parts[3][-2])
         for _ in xrange(3):
             report_reader.next()
         header = report_reader.next()
         report.year = int(header[5].split('-')[1])
+        if report.year < 100:
+            report.year += 2000
         report_reader.next()
         for line in report_reader:
             logging.debug(line)
-            report.pubs.append(CounterPublication(line))
+            if report.report_type:
+                if report.report_type.startswith('JR'):
+                    report.pubs.append(CounterPublication(line))
+                elif report.report_type.startswith('BR'):
+                    report.pubs.append(CounterBook(line))
+                else:
+                    raise UnknownReportTypeError(report.report_type)
 
         return report
