@@ -28,7 +28,7 @@ class CounterPublication(object):
             self.platform = line[2]
             self.issn = line[3]
             self.eissn = line[4]
-            self.monthdata = [int(x) for x in line[5:-3]]
+            self.monthdata = [format_stat(x) for x in line[5:]]
             while len(self.monthdata) < 12:
                 self.monthdata.append(None)
             logging.debug("monthdata: %s", self.monthdata)
@@ -42,10 +42,17 @@ class CounterBook(object):
             self.isbn = line[3]
             self.issn = line[4]
             print(line)
-            self.monthdata = [int(x) for x in line[5:-1]]
+            self.monthdata = [format_stat(x) for x in line[5:]]
             while len(self.monthdata) < 12:
                 self.monthdata.append(None)
             logging.debug("monthdata: %s", self.monthdata)
+
+def format_stat(stat):
+    stat = stat.replace(',', '')
+    if stat.isdigit():
+        return int(stat)
+    else:
+        return None
 
 def parse(filename):
     """Open CSV COUNTER report with given filename and parse into a
@@ -70,8 +77,13 @@ def parse(filename):
         report.year = int(header[5].split('-')[1])
         if report.year < 100:
             report.year += 2000
+
+        for last_row, v in enumerate(header):
+            if 'YTD' in v:
+                break
         report_reader.next()
         for line in report_reader:
+            line = line[0:last_row]
             logging.debug(line)
             if report.report_type:
                 if report.report_type.startswith('JR'):
