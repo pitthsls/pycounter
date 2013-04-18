@@ -32,6 +32,9 @@ class CounterPublication(object):
             while len(self.monthdata) < 12:
                 self.monthdata.append(None)
             logging.debug("monthdata: %s", self.monthdata)
+    def __str__(self):
+        return """<CounterPublication %s, publisher %s,
+        platform %s>""" % (self.title, self.publisher, self.platform)
 
 class CounterBook(object):
     def __init__(self, line=None):
@@ -83,6 +86,8 @@ def parse(filename):
                 break
         report_reader.next()
         for line in report_reader:
+            if not line:
+                continue
             line = line[0:last_row]
             logging.debug(line)
             if report.report_type:
