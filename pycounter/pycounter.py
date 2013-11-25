@@ -44,7 +44,6 @@ class CounterBook(object):
             self.platform = line[2]
             self.isbn = line[3].strip()
             self.issn = line[4].strip()
-            print(line)
             self.monthdata = [format_stat(x) for x in line[5:]]
             while len(self.monthdata) < 12:
                 self.monthdata.append(None)
@@ -58,7 +57,13 @@ def format_stat(stat):
         return None
 
 def parse(filename):
-    """Open CSV COUNTER report with given filename and parse into a
+    """Parse a COUNTER file, first attempting to determine type"""
+    # fallback to old assume-csv behavior
+    return parse_csv(filename)
+
+
+def parse_csv(filename):
+    """Open CSV COUNTER CSV report with given filename and parse into a
     CounterReport object"""
     with open(filename, 'rb') as datafile:
         report = CounterReport()
@@ -66,7 +71,7 @@ def parse(filename):
         report_reader = csv.reader(datafile)
         line1 = report_reader.next()
         parts = line1[0].split()
-        
+
         rt_match = re.match(r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
                             line1[0])
         if rt_match:
@@ -76,19 +81,30 @@ def parse(filename):
 
         for _ in xrange(3):
             report_reader.next()
+        if report.report_version == 4:
+            # COUNTER 4 has 3 more lines of introduction
+            for _ in xrange(3):
+                report_reader.next()
         header = report_reader.next()
-        report.year = int(header[5].split('-')[1])
+        first_date_col = 10 if report.report_version == 4 else 5
+        report.year = int(header[first_date_col].split('-')[1])
         if report.year < 100:
             report.year += 2000
 
-        for last_row, v in enumerate(header):
-            if 'YTD' in v:
-                break
+        if report.report_version == 4:
+            last_col = len(header)
+        else:
+            for last_col, v in enumerate(header):
+                if 'YTD' in v:
+                    break
         report_reader.next()
         for line in report_reader:
             if not line:
                 continue
-            line = line[0:last_row]
+            if report.report_version == 4:
+                line = line[0:3] + line[5:7] + line[10:last_col]
+            else:
+                line = line[0:last_col]
             logging.debug(line)
             if report.report_type:
                 if report.report_type.startswith('JR'):

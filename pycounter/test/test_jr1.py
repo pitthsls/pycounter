@@ -24,4 +24,11 @@ class ParseExample(unittest.TestCase):
         self.assertEqual(publication.monthdata, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         publication = self.report.pubs[1]
         self.assertEqual(publication.monthdata, [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 0])
-        
+
+    def test_counter4_csv(self):
+        c4_report = pycounter.parse(os.path.join(os.path.dirname(__file__),
+                                                             'data/C4JR1.csv'))
+        publication = c4_report.pubs[0]
+        self.assertEqual(publication.monthdata, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        publication = c4_report.pubs[1]
+        self.assertEqual(publication.monthdata, [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 0])
