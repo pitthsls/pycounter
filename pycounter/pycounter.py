@@ -51,9 +51,9 @@ class CounterBook(object):
 
 def format_stat(stat):
     stat = stat.replace(',', '')
-    if stat.isdigit():
+    try:
         return int(stat)
-    else:
+    except ValueError:
         return None
 
 def parse(filename):
