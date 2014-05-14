@@ -1,6 +1,7 @@
 import csv
 import logging
 import re
+import pyisbn
 
 class UnknownReportTypeError(Exception):
     pass
@@ -44,12 +45,17 @@ class CounterBook(object):
             self.publisher = line[1]
             self.platform = line[2]
             self.isbn = line[3].strip()
+            if len(self.isbn) == 10:
+                self.isbn = pyisbn.convert(self.isbn)
             self.issn = line[4].strip()
             self.eissn = None
             self.monthdata = [format_stat(x) for x in line[5:]]
             while len(self.monthdata) < 12:
                 self.monthdata.append(None)
             logging.debug("monthdata: %s", self.monthdata)
+    def __str__(self):
+        return """<CounterPublication %s (ISBN: %s), publisher %s,
+        platform %s>""" % (self.title, self.isbn, self.publisher, self.platform)
 
 def format_stat(stat):
     stat = stat.replace(',', '')
