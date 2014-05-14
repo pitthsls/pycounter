@@ -28,6 +28,7 @@ class CounterPublication(object):
             self.platform = line[2]
             self.issn = line[3].strip()
             self.eissn = line[4].strip()
+            self.isbn = None
             self.monthdata = [format_stat(x) for x in line[5:]]
             while len(self.monthdata) < 12:
                 self.monthdata.append(None)
@@ -44,6 +45,7 @@ class CounterBook(object):
             self.platform = line[2]
             self.isbn = line[3].strip()
             self.issn = line[4].strip()
+            self.eissn = None
             self.monthdata = [format_stat(x) for x in line[5:]]
             while len(self.monthdata) < 12:
                 self.monthdata.append(None)
