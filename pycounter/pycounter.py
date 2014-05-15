@@ -99,7 +99,7 @@ def parse_csv(filename):
                 report_reader.next()
         header = report_reader.next()
         first_date_col = 10 if report.report_version == 4 else 5
-        if report.report_type == 'BR2' and report.report_version == 4:
+        if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
             first_date_col = 8
         report.year = int(header[first_date_col].split('-')[1])
         if report.year < 100:
@@ -118,7 +118,7 @@ def parse_csv(filename):
             if report.report_version == 4:
                 if report.report_type == 'JR1':
                     line = line[0:3] + line[5:7] + line[10:last_col]
-                elif report.report_type == 'BR2':
+                elif report.report_type in ('BR1', 'BR2'):
                     line = line[0:3] + line[5:7] + line[8:last_col]
             else:
                 line = line[0:last_col]
@@ -158,7 +158,7 @@ def parse_tsv(filename):
                 report_reader.next()
         header = report_reader.next()
         first_date_col = 10 if report.report_version == 4 else 5
-        if report.report_type == 'BR2' and report.report_version == 4:
+        if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
             first_date_col = 8
 
         report.year = int(header[first_date_col].split('-')[1])
@@ -178,7 +178,7 @@ def parse_tsv(filename):
             if report.report_version == 4:
                 if report.report_type == 'JR1':
                     line = line[0:3] + line[5:7] + line[10:last_col]
-                elif report.report_type == 'BR2':
+                elif report.report_type in ('BR1', 'BR2'):
                     line = line[0:3] + line[5:7] + line[8:last_col]
             else:
                 line = line[0:last_col]
