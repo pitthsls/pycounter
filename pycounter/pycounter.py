@@ -44,7 +44,7 @@ class CounterBook(object):
             self.title = line[0]
             self.publisher = line[1]
             self.platform = line[2]
-            self.isbn = line[3].strip()
+            self.isbn = line[3].strip().replace('-', '')
             if len(self.isbn) == 10:
                 self.isbn = pyisbn.convert(self.isbn)
             self.issn = line[4].strip()
