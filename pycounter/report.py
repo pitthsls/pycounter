@@ -1,7 +1,11 @@
+from __future__ import absolute_import
 import csv
 import logging
 import re
+
 import pyisbn
+
+from pycounter import csvhelper
 
 class UnknownReportTypeError(Exception):
     pass
@@ -141,10 +145,9 @@ def parse_xlsx(filename):
 def parse_csv(filename):
     """Open COUNTER CSV report with given filename and parse into a
     CounterReport object"""
-    with open(filename, 'rb') as datafile:
+    with csvhelper.UnicodeReader(filename) as report_reader:
         report = CounterReport()
 
-        report_reader = csv.reader(datafile)
         line1 = report_reader.next()
         parts = line1[0].split()
 
@@ -200,10 +203,9 @@ def parse_csv(filename):
 def parse_tsv(filename):
     """Open COUNTER TSV report with given filename and parse into a
     CounterReport object"""
-    with open(filename, 'rb') as datafile:
+    with csvhelper.UnicodeReader(filename, delimiter="\t") as report_reader:
         report = CounterReport()
 
-        report_reader = csv.reader(datafile, delimiter="\t")
         line1 = report_reader.next()
         parts = line1[0].split()
 
