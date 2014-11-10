@@ -3,6 +3,7 @@
 *.pyc
 *.egg-info
 *.egg
+.eggs/
 .coverage
 htmlcov
 *.orig
