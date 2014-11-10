@@ -8,5 +8,5 @@ setup(
     author_email = 'geoffspear@gmail.com',
     keywords = 'library COUNTER journals usage_statistics',
     test_suite = 'pycounter.test',
-    install_requires = ['pyisbn', 'openpyxl', 'suds']
+    install_requires = ['pyisbn', 'openpyxl', 'suds', 'six']
     )
