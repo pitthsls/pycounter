@@ -4,6 +4,8 @@ import logging
 import re
 
 import pyisbn
+import six
+from six.moves import range
 
 from pycounter import csvhelper
 
@@ -148,7 +150,7 @@ def parse_csv(filename):
     with csvhelper.UnicodeReader(filename) as report_reader:
         report = CounterReport()
 
-        line1 = report_reader.next()
+        line1 = six.next(report_reader)
         parts = line1[0].split()
 
         rt_match = re.match(r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
@@ -158,13 +160,13 @@ def parse_csv(filename):
                      rt_match.group(2))
             report.report_version = int(rt_match.group(3))
 
-        for _ in xrange(3):
-            report_reader.next()
+        for _ in range(3):
+            six.next(report_reader)
         if report.report_version == 4:
             # COUNTER 4 has 3 more lines of introduction
-            for _ in xrange(3):
-                report_reader.next()
-        header = report_reader.next()
+            for _ in range(3):
+                six.next(report_reader)
+        header = six.next(report_reader)
         first_date_col = 10 if report.report_version == 4 else 5
         if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
             first_date_col = 8
@@ -178,7 +180,7 @@ def parse_csv(filename):
             for last_col, v in enumerate(header):
                 if 'YTD' in v:
                     break
-        report_reader.next()
+        six.next(report_reader)
         for line in report_reader:
             if not line:
                 continue
@@ -206,7 +208,7 @@ def parse_tsv(filename):
     with csvhelper.UnicodeReader(filename, delimiter="\t") as report_reader:
         report = CounterReport()
 
-        line1 = report_reader.next()
+        line1 = six.next(report_reader)
         parts = line1[0].split()
 
         rt_match = re.match(r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
@@ -216,13 +218,13 @@ def parse_tsv(filename):
                      rt_match.group(2))
             report.report_version = int(rt_match.group(3))
 
-        for _ in xrange(3):
-            report_reader.next()
+        for _ in range(3):
+            six.next(report_reader)
         if report.report_version == 4:
             # COUNTER 4 has 3 more lines of introduction
-            for _ in xrange(3):
-                report_reader.next()
-        header = report_reader.next()
+            for _ in range(3):
+                six.next(report_reader)
+        header = six.next(report_reader)
         first_date_col = 10 if report.report_version == 4 else 5
         if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
             first_date_col = 8
@@ -237,7 +239,7 @@ def parse_tsv(filename):
             for last_col, v in enumerate(header):
                 if 'YTD' in v:
                     break
-        report_reader.next()
+        six.next(report_reader)
         for line in report_reader:
             if not line:
                 continue
