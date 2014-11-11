@@ -5,6 +5,7 @@ import os
 
 from six import text_type
 
+
 class UnicodeTests(unittest.TestCase):
     """All parsers should return text fields as unicode"""
 

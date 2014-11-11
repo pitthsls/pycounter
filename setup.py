@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = 'pycounter',
-    version = '0.3',
-    packages = find_packages(),
-    author = 'Geoffrey Spear',
-    author_email = 'geoffspear@gmail.com',
-    keywords = 'library COUNTER journals usage_statistics SUSHI',
-    test_suite = 'pycounter.test',
-    classifiers = [
+    name='pycounter',
+    version='0.3',
+    packages=find_packages(),
+    author='Geoffrey Spear',
+    author_email='geoffspear@gmail.com',
+    keywords='library COUNTER journals usage_statistics SUSHI',
+    test_suite='pycounter.test',
+    classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 2.6',
@@ -16,5 +16,5 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         ],
-    install_requires = ['pyisbn', 'openpyxl', 'suds-jurko', 'six']
+    install_requires=['pyisbn', 'openpyxl', 'suds-jurko', 'six']
     )

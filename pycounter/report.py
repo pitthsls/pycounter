@@ -11,8 +11,10 @@ from six.moves import range
 
 from pycounter import csvhelper
 
+
 class UnknownReportTypeError(Exception):
     pass
+
 
 class CounterReport(object):
     def __init__(self):
@@ -29,6 +31,7 @@ class CounterReport(object):
     def __iter__(self):
         return iter(self.pubs)
 
+
 class CounterPublication(object):
     def __init__(self, line=None):
         if line is not None:
@@ -42,9 +45,11 @@ class CounterPublication(object):
             while len(self.monthdata) < 12:
                 self.monthdata.append(None)
             logging.debug("monthdata: %s", self.monthdata)
+
     def __str__(self):
         return """<CounterPublication %s, publisher %s,
         platform %s>""" % (self.title, self.publisher, self.platform)
+
 
 class CounterBook(object):
     def __init__(self, line=None):
@@ -61,9 +66,12 @@ class CounterBook(object):
             while len(self.monthdata) < 12:
                 self.monthdata.append(None)
             logging.debug("monthdata: %s", self.monthdata)
+
     def __str__(self):
         return """<CounterPublication %s (ISBN: %s), publisher %s,
-        platform %s>""" % (self.title, self.isbn, self.publisher, self.platform)
+        platform %s>""" % (self.title, self.isbn, self.publisher,
+                           self.platform)
+
 
 def format_stat(stat):
     stat = stat.replace(',', '')
@@ -71,6 +79,7 @@ def format_stat(stat):
         return int(stat)
     except ValueError:
         return None
+
 
 def parse(filename):
     """Parse a COUNTER file, first attempting to determine type"""
@@ -93,12 +102,11 @@ def parse_xlsx(filename):
     report = CounterReport()
 
     line1 = worksheet['A1'].value
-    parts = line1.split()
 
     rt_match = re.match(r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
                         line1)
     if rt_match:
-        report.report_type = (rt_match.group(1)[0].capitalize()+ 'R' +
+        report.report_type = (rt_match.group(1)[0].capitalize() + 'R' +
                               rt_match.group(2))
         report.report_version = int(rt_match.group(3))
 
@@ -153,13 +161,13 @@ def parse_csv(filename):
         report = CounterReport()
 
         line1 = six.next(report_reader)
-        parts = line1[0].split()
 
-        rt_match = re.match(r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
-                            line1[0])
+        rt_match = re.match(
+            r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
+            line1[0])
         if rt_match:
-            report.report_type = (rt_match.group(1)[0].capitalize()+ 'R' +
-                     rt_match.group(2))
+            report.report_type = (rt_match.group(1)[0].capitalize() + 'R' +
+                                  rt_match.group(2))
             report.report_version = int(rt_match.group(3))
 
         for _ in range(3):
@@ -204,6 +212,7 @@ def parse_csv(filename):
 
         return report
 
+
 def parse_tsv(filename):
     """Open COUNTER TSV report with given filename and parse into a
     CounterReport object"""
@@ -211,13 +220,13 @@ def parse_tsv(filename):
         report = CounterReport()
 
         line1 = six.next(report_reader)
-        parts = line1[0].split()
 
-        rt_match = re.match(r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
-                            line1[0])
+        rt_match = re.match(
+            r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
+            line1[0])
         if rt_match:
-            report.report_type = (rt_match.group(1)[0].capitalize()+ 'R' +
-                     rt_match.group(2))
+            report.report_type = (rt_match.group(1)[0].capitalize() + 'R' +
+                                  rt_match.group(2))
             report.report_version = int(rt_match.group(3))
 
         for _ in range(3):

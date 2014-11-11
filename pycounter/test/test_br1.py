@@ -3,10 +3,11 @@ from pycounter import pycounter
 import unittest
 import os
 
+
 class ParseExample(unittest.TestCase):
     def setUp(self):
         self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
-                                                             'data/simpleBR1.csv'))
+                                                   'data/simpleBR1.csv'))
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u'BR1')
@@ -22,12 +23,15 @@ class ParseExample(unittest.TestCase):
 
     def test_stats(self):
         publication = self.report.pubs[0]
-        self.assertEqual(publication.monthdata, [0, 25, 0, 0, 0, 0, None, None, None, None, None, None])
+        self.assertEqual(
+            publication.monthdata,
+            [0, 25, 0, 0, 0, 0, None, None, None, None, None, None])
+
 
 class ParseCounter4Example(unittest.TestCase):
     def setUp(self):
         self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
-                                                             'data/C4BR1.tsv'))
+                                                   'data/C4BR1.tsv'))
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u'BR1')
@@ -43,4 +47,6 @@ class ParseCounter4Example(unittest.TestCase):
 
     def test_stats(self):
         publication = self.report.pubs[0]
-        self.assertEqual(publication.monthdata, [0, 25, 0, 0, 0, 0, None, None, None, None, None, None])
+        self.assertEqual(
+            publication.monthdata,
+            [0, 25, 0, 0, 0, 0, None, None, None, None, None, None])

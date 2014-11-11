@@ -2,9 +2,10 @@ from __future__ import absolute_import
 
 """Read CSV as unicode from both python 2 and 3 transparently"""
 
-import sys, csv, codecs
+import csv
 
 import six
+
 
 class UnicodeReader(six.Iterator):
     def __init__(self, filename, dialect=csv.excel,
@@ -35,6 +36,7 @@ class UnicodeReader(six.Iterator):
 
     def __iter__(self):
         return self
+
 
 class UnicodeWriter(object):
     def __init__(self, filename, dialect=csv.excel,
