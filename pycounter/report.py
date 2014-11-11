@@ -1,5 +1,7 @@
+"""COUNTER journal and book reports and associated functions"""
+
 from __future__ import absolute_import
-import csv
+
 import logging
 import re
 
