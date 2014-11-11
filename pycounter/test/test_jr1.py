@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from pycounter import pycounter
+from pycounter import report as pycounter
 import unittest
 import os
 
