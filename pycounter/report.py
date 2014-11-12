@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 import logging
 import re
+import warnings
 
 import pyisbn
 import six
@@ -85,11 +86,11 @@ def parse(filename):
     """Parse a COUNTER file, first attempting to determine type"""
     if filename.endswith('.tsv'):
         # Horrible filename-based hack; in future examine contents of file here
-        return parse_tsv(filename)
+        return parse_separated(filename, '\t')
     if filename.endswith('.xlsx'):
         return parse_xlsx(filename)
     # fallback to old assume-csv behavior
-    return parse_csv(filename)
+    return parse_separated(filename, ',')
 
 
 def parse_xlsx(filename):
@@ -154,10 +155,11 @@ def parse_xlsx(filename):
     return report
 
 
-def parse_csv(filename):
-    """Open COUNTER CSV report with given filename and parse into a
-    CounterReport object"""
-    with csvhelper.UnicodeReader(filename) as report_reader:
+def parse_separated(filename, delimiter):
+    """Open COUNTER CSV/TSV report with given filename and delimiter
+    and parse into a CounterReport object"""
+    with csvhelper.UnicodeReader(filename,
+                                 delimiter=delimiter) as report_reader:
         report = CounterReport()
 
         line1 = six.next(report_reader)
@@ -180,6 +182,7 @@ def parse_csv(filename):
         first_date_col = 10 if report.report_version == 4 else 5
         if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
             first_date_col = 8
+
         report.year = int(header[first_date_col].split('-')[1])
         if report.year < 100:
             report.year += 2000
@@ -211,63 +214,13 @@ def parse_csv(filename):
                     raise UnknownReportTypeError(report.report_type)
 
         return report
+
+
+def parse_csv(filename):
+    warnings.warn(".parse_csv is deprecated; use parse_separated",
+                  DeprecationWarning)
 
 
 def parse_tsv(filename):
-    """Open COUNTER TSV report with given filename and parse into a
-    CounterReport object"""
-    with csvhelper.UnicodeReader(filename, delimiter="\t") as report_reader:
-        report = CounterReport()
-
-        line1 = six.next(report_reader)
-
-        rt_match = re.match(
-            r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
-            line1[0])
-        if rt_match:
-            report.report_type = (rt_match.group(1)[0].capitalize() + 'R' +
-                                  rt_match.group(2))
-            report.report_version = int(rt_match.group(3))
-
-        for _ in range(3):
-            six.next(report_reader)
-        if report.report_version == 4:
-            # COUNTER 4 has 3 more lines of introduction
-            for _ in range(3):
-                six.next(report_reader)
-        header = six.next(report_reader)
-        first_date_col = 10 if report.report_version == 4 else 5
-        if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
-            first_date_col = 8
-
-        report.year = int(header[first_date_col].split('-')[1])
-        if report.year < 100:
-            report.year += 2000
-
-        if report.report_version == 4:
-            last_col = len(header)
-        else:
-            for last_col, v in enumerate(header):
-                if 'YTD' in v:
-                    break
-        six.next(report_reader)
-        for line in report_reader:
-            if not line:
-                continue
-            if report.report_version == 4:
-                if report.report_type == 'JR1':
-                    line = line[0:3] + line[5:7] + line[10:last_col]
-                elif report.report_type in ('BR1', 'BR2'):
-                    line = line[0:3] + line[5:7] + line[8:last_col]
-            else:
-                line = line[0:last_col]
-            logging.debug(line)
-            if report.report_type:
-                if report.report_type.startswith('JR'):
-                    report.pubs.append(CounterPublication(line))
-                elif report.report_type.startswith('BR'):
-                    report.pubs.append(CounterBook(line))
-                else:
-                    raise UnknownReportTypeError(report.report_type)
-
-        return report
+    warnings.warn(".parse_tsv is deprecated; use parse_separated",
+                  DeprecationWarning)
