@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
-from pycounter._version import __version__
+
+exec(open('pycounter/_version.py', 'rb'))
 
 setup(
     name='pycounter',
