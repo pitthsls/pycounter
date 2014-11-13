@@ -5,23 +5,27 @@
 
 Welcome to pycounter's documentation!
 =====================================
+Release v\ |version|
 
-Contents:
+pycounter provides access to `COUNTER
+<http://www.projectcounter.org/>`_ usage statistics, including `SUSHI
+<http://www.niso.org/workrooms/sushi>`_ requests.
 
-.. toctree::
-   :maxdepth: 2
 
+API Docs
+========
 
-.. automodule:: pycounter
+.. currentmodule:: pycounter
 
-.. automodule:: pycounter.report
+.. autosummary::
 
-.. automodule:: pycounter.sushi
-
+   pycounter.report
+   pycounter.sushi
 
 
 Indices and tables
 ==================
+
 
 * :ref:`genindex`
 * :ref:`modindex`

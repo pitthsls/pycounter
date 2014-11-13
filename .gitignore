@@ -8,3 +8,4 @@
 htmlcov
 *.orig
 docs/build
+venv/

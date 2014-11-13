@@ -1,9 +1,7 @@
+"""Read CSV as unicode from both python 2 and 3 transparently"""
 from __future__ import absolute_import
 
-"""Read CSV as unicode from both python 2 and 3 transparently"""
-
 import csv
-
 import six
 
 

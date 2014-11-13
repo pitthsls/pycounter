@@ -1,5 +1,5 @@
-from __future__ import absolute_import
 """NISO SUSHI support"""
+from __future__ import absolute_import
 
 from suds.client import Client
 

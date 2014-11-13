@@ -10,7 +10,7 @@ import pyisbn
 import six
 from six.moves import range
 
-from pycounter import csvhelper
+from pycounter import _csvhelper
 
 
 class UnknownReportTypeError(Exception):
@@ -95,7 +95,7 @@ def parse(filename):
 
 def parse_xlsx(filename):
     from openpyxl import load_workbook
-    workbook = load_workbook(filename = filename)
+    workbook = load_workbook(filename=filename)
     worksheet = workbook.get_sheet_by_name(workbook.get_sheet_names()[0])
     row_it = worksheet.iter_rows()
     split_row_list = ([cell.value if cell.value is not None else ""
@@ -107,8 +107,8 @@ def parse_xlsx(filename):
 def parse_separated(filename, delimiter):
     """Open COUNTER CSV/TSV report with given filename and delimiter
     and parse into a CounterReport object"""
-    with csvhelper.UnicodeReader(filename,
-                                 delimiter=delimiter) as report_reader:
+    with _csvhelper.UnicodeReader(filename,
+                                  delimiter=delimiter) as report_reader:
         return parse_generic(report_reader)
 
 
@@ -173,7 +173,6 @@ def parse_generic(report_reader):
                 raise UnknownReportTypeError(report.report_type)
 
     return report
-
 
 
 def parse_csv(filename):
