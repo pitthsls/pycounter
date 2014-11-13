@@ -12,6 +12,13 @@ Contents:
    :maxdepth: 2
 
 
+.. automodule:: pycounter
+
+.. automodule:: pycounter.report
+
+.. automodule:: pycounter.sushi
+
+
 
 Indices and tables
 ==================

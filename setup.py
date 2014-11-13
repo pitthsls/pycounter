@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+from pycounter._version import __version__
 
 setup(
     name='pycounter',
-    version='0.3',
+    version=__version__,
     packages=find_packages(),
     author='Geoffrey Spear',
     author_email='geoffspear@gmail.com',
