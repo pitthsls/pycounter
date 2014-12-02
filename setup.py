@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 __version__ = None  # will be set by exec below
 
-exec(open('pycounter/_version.py', 'rb'))
+exec(open('pycounter/_version.py', 'rb').read())
 
 setup(
     name='pycounter',
