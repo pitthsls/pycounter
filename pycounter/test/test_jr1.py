@@ -44,3 +44,6 @@ class ParseCounter4(unittest.TestCase):
         publication = self.report.pubs[1]
         self.assertEqual(publication.monthdata,
                          [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 0])
+
+    def test_metric(self):
+        self.assertEqual(self.report.metric, u"FT Article Requests")

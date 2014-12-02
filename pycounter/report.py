@@ -12,17 +12,22 @@ from six.moves import range
 
 from pycounter import _csvhelper
 
+METRICS = {u"JR1": u"FT Article Requests",
+           u"BR1": u"Book Title Requests",
+           u"BR2": u"Book Section Requests",
+           }
 
 class UnknownReportTypeError(Exception):
     pass
 
 
 class CounterReport(object):
-    def __init__(self):
+    def __init__(self, metric=None):
         self.pubs = []
         self.year = None
         self.report_type = None
         self.report_version = 0
+        self.metric = metric
 
     def __str__(self):
         return "CounterReport %s version %s for %s" % (self.report_type,
@@ -126,6 +131,8 @@ def parse_generic(report_reader):
         report.report_type = (rt_match.group(1)[0].capitalize() + 'R' +
                               rt_match.group(2))
         report.report_version = int(rt_match.group(3))
+
+    report.metric = METRICS.get(report.report_type)
 
     for _ in range(3):
         six.next(report_reader)
