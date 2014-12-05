@@ -74,7 +74,7 @@ class CounterBook(object):
             logging.debug("monthdata: %s", self.monthdata)
 
     def __str__(self):
-        return """<CounterPublication %s (ISBN: %s), publisher %s,
+        return """<CounterBook %s (ISBN: %s), publisher %s,
         platform %s>""" % (self.title, self.isbn, self.publisher,
                            self.platform)
 
