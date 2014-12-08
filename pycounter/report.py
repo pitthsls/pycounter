@@ -5,6 +5,8 @@ from __future__ import absolute_import
 import logging
 import re
 import warnings
+import datetime
+import calendar
 
 import pyisbn
 import six
@@ -138,12 +140,24 @@ def parse_generic(report_reader):
 
     report.metric = METRICS.get(report.report_type)
 
-    for _ in range(3):
-        six.next(report_reader)
+    custline = six.next(report_reader)
+    report.customer = custline[0]
+
     if report.report_version == 4:
-        # COUNTER 4 has 3 more lines of introduction
-        for _ in range(3):
-            six.next(report_reader)
+        inst_id_line = six.next(report_reader)
+        if inst_id_line:
+            report.institutional_identifier = inst_id_line[0]
+
+        six.next(report_reader)
+
+        covered_line = six.next(report_reader)
+        report.period = _convert_covered(covered_line[0])
+
+    six.next(report_reader)
+
+    date_run_line = six.next(report_reader)
+    report.date_run = _convert_date_run(date_run_line[0])
+    
     header = six.next(report_reader)
     first_date_col = 10 if report.report_version == 4 else 5
     if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
@@ -163,6 +177,10 @@ def parse_generic(report_reader):
         for last_col, v in enumerate(header):
             if 'YTD' in v:
                 break
+        start_date = datetime.date(report.year, 1, 1)
+        end_date = _last_day(_convert_date_column(header[last_col - 1]))
+        report.period = (start_date, end_date)
+
     six.next(report_reader)
     for line in report_reader:
         if not line:
@@ -196,3 +214,20 @@ def parse_tsv(filename):
     warnings.warn(".parse_tsv is deprecated; use parse_separated",
                   DeprecationWarning)
     return parse_separated(filename, "\t")
+
+def _convert_covered(datestring):
+    start_string, end_string = datestring.split(" to ")
+    start_date = datetime.datetime.strptime(start_string, "%Y-%m-%d").date()
+    end_date = datetime.datetime.strptime(end_string, "%Y-%m-%d").date()
+
+    return (start_date, end_date)
+
+def _convert_date_run(datestring):
+    return datetime.datetime.strptime(datestring, "%Y-%m-%d").date()
+
+def _convert_date_column(datestring):
+    return datetime.datetime.strptime(datestring, "%b-%Y").date()
+
+def _last_day(first_of_month):
+    daynum = calendar.monthrange(first_of_month.year, first_of_month.month)[1]
+    return datetime.date(first_of_month.year, first_of_month.month, daynum)
