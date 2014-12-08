@@ -28,6 +28,10 @@ class CounterReport(object):
         self.report_type = None
         self.report_version = 0
         self.metric = metric
+        self.customer = None
+        self.institutional_identifier = None
+        self.period = (None, None)
+        self.date_run = None
 
     def __str__(self):
         return "CounterReport %s version %s for %s" % (self.report_type,
