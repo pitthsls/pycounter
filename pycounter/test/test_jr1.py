@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from pycounter import report as pycounter
 import unittest
 import os
+import datetime
 
 
 class ParseExample(unittest.TestCase):
@@ -30,6 +31,17 @@ class ParseExample(unittest.TestCase):
         self.assertEqual(publication.monthdata,
                          [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 0])
 
+    def test_customer(self):
+        self.assertEqual(self.report.customer, u"Univ of Pittsburgh")
+
+    def test_date_run(self):
+        self.assertEqual(self.report.date_run, datetime.date(2012, 2, 21))
+
+    def test_period(self):
+        self.assertEqual(self.report.period,
+                         (datetime.date(2011, 1, 1),
+                          datetime.date(2011, 12, 31)))
+
 
 class ParseCounter4(unittest.TestCase):
     def setUp(self):
@@ -47,3 +59,14 @@ class ParseCounter4(unittest.TestCase):
 
     def test_metric(self):
         self.assertEqual(self.report.metric, u"FT Article Requests")
+
+    def test_customer(self):
+        self.assertEqual(self.report.customer, u"Univ of Pittsburgh")
+
+    def test_date_run(self):
+        self.assertEqual(self.report.date_run, datetime.date(2012, 2, 21))
+
+    def test_period(self):
+        self.assertEqual(self.report.period,
+                         (datetime.date(2011, 1, 1),
+                          datetime.date(2011, 12, 31)))
