@@ -46,7 +46,7 @@ class ParseExample(unittest.TestCase):
 class ParseCounter4(unittest.TestCase):
     def setUp(self):
         self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
-                                                   'data/C4JR1.csv'))        
+                                                   'data/C4JR1.csv'))
 
     def test_counter4_csv_data(self):
 

@@ -10,7 +10,6 @@ import calendar
 
 import pyisbn
 import six
-from six.moves import range
 
 from pycounter import _csvhelper
 
@@ -18,6 +17,7 @@ METRICS = {u"JR1": u"FT Article Requests",
            u"BR1": u"Book Title Requests",
            u"BR2": u"Book Section Requests",
            }
+
 
 class UnknownReportTypeError(Exception):
     pass
@@ -157,7 +157,7 @@ def parse_generic(report_reader):
 
     date_run_line = six.next(report_reader)
     report.date_run = _convert_date_run(date_run_line[0])
-    
+
     header = six.next(report_reader)
     first_date_col = 10 if report.report_version == 4 else 5
     if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
@@ -215,6 +215,7 @@ def parse_tsv(filename):
                   DeprecationWarning)
     return parse_separated(filename, "\t")
 
+
 def _convert_covered(datestring):
     start_string, end_string = datestring.split(" to ")
     start_date = datetime.datetime.strptime(start_string, "%Y-%m-%d").date()
@@ -222,11 +223,14 @@ def _convert_covered(datestring):
 
     return (start_date, end_date)
 
+
 def _convert_date_run(datestring):
     return datetime.datetime.strptime(datestring, "%Y-%m-%d").date()
 
+
 def _convert_date_column(datestring):
     return datetime.datetime.strptime(datestring, "%b-%Y").date()
+
 
 def _last_day(first_of_month):
     daynum = calendar.monthrange(first_of_month.year, first_of_month.month)[1]
