@@ -20,10 +20,28 @@ METRICS = {u"JR1": u"FT Article Requests",
 
 
 class UnknownReportTypeError(Exception):
+    """We can't parse this kind of report yet."""
     pass
 
 
 class CounterReport(object):
+    """
+    a COUNTER usage statistics report.
+
+    Iterate over the report object to get its rows (each of which is a
+    :class:`CounterBook <CounterBook>` or :class:`CounterPublication
+    <CounterPublication>` instance.
+
+    :param metric: metric being tracked by this report. For database
+        reports (which have multiple metrics per report, and which aren't
+        implemented yet), this should be set to `None`.
+
+
+    Other attributes aren't currently set at creation time, but rather
+    are set by the parser after creating the object. (This should
+    change in the future.)
+    
+    """
     def __init__(self, metric=None):
         self.pubs = []
         self.year = None
@@ -45,6 +63,14 @@ class CounterReport(object):
 
 
 class CounterPublication(object):
+    """
+    statistics for a single electronic journal.
+
+    :param line: a list containing the usage data for this line, in
+        COUNTER 3 layout. (This is an ugly hack that should be fixed
+        very soon)
+
+    """
     def __init__(self, line=None):
         if line is not None:
             self.title = line[0]
@@ -64,6 +90,14 @@ class CounterPublication(object):
 
 
 class CounterBook(object):
+    """
+    statistics for a single electronic book.
+
+    :param line: a list containing the usage data for this line, in
+        COUNTER 3 layout. (This is an ugly hack that should be fixed
+        very soon)
+    
+    """
     def __init__(self, line=None):
         if line is not None:
             self.title = line[0]
@@ -94,7 +128,12 @@ def format_stat(stat):
 
 
 def parse(filename):
-    """Parse a COUNTER file, first attempting to determine type"""
+    """Parse a COUNTER file, first attempting to determine type
+
+    Returns a :class:`CounterReport <CounterReport>` object.
+    
+    :param filename: path to COUNTER report to load and parse.
+    """
     if filename.endswith('.tsv'):
         # Horrible filename-based hack; in future examine contents of file here
         return parse_separated(filename, '\t')
@@ -105,6 +144,13 @@ def parse(filename):
 
 
 def parse_xlsx(filename):
+    """Parse a COUNTER file in Excel format.
+
+    Invoked automatically by ``parse``.
+
+    :param filename: path to XLSX-format COUNTER report file.
+
+    """
     from openpyxl import load_workbook
     workbook = load_workbook(filename=filename)
     worksheet = workbook.get_sheet_by_name(workbook.get_sheet_names()[0])
@@ -117,7 +163,15 @@ def parse_xlsx(filename):
 
 def parse_separated(filename, delimiter):
     """Open COUNTER CSV/TSV report with given filename and delimiter
-    and parse into a CounterReport object"""
+    and parse into a CounterReport object
+
+    Invoked automatically by ``parse``.
+
+    :param filename: path to delimited COUNTER report file.
+    :param delimiter: character (such as ',' or '\t') used as the
+        delimiter for this file
+
+    """
     with _csvhelper.UnicodeReader(filename,
                                   delimiter=delimiter) as report_reader:
         return parse_generic(report_reader)
@@ -125,7 +179,12 @@ def parse_separated(filename, delimiter):
 
 def parse_generic(report_reader):
     """Takes an iterator of COUNTER report rows and
-    returns a CounterReport object"""
+    returns a CounterReport object
+
+    :param report_reader: a iterable object that yields lists COUNTER
+        data formatted as tablular lists
+    
+    """
     report = CounterReport()
 
     line1 = six.next(report_reader)
@@ -205,18 +264,27 @@ def parse_generic(report_reader):
 
 
 def parse_csv(filename):
+    """Parse CSV files; deprecated."""
     warnings.warn(".parse_csv is deprecated; use parse_separated",
                   DeprecationWarning)
     return parse_separated(filename, ",")
 
 
 def parse_tsv(filename):
+    """Parse tab-separated files; deprecated."""
     warnings.warn(".parse_tsv is deprecated; use parse_separated",
                   DeprecationWarning)
     return parse_separated(filename, "\t")
 
 
 def _convert_covered(datestring):
+    """
+    Convert a string of the format 'YYYY-MM-DD to YYYY-MM-DD' to a
+    tuple of datetime.date instances.
+
+    :param datestring: the string to convert to a date.
+    
+    """
     start_string, end_string = datestring.split(" to ")
     start_date = datetime.datetime.strptime(start_string, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_string, "%Y-%m-%d").date()
@@ -225,13 +293,44 @@ def _convert_covered(datestring):
 
 
 def _convert_date_run(datestring):
+    """
+    Convert a date of the format 'YYYY-MM-DD' to a datetime.date object
+
+    :param datestring: the string to convert to a date.
+
+    """
     return datetime.datetime.strptime(datestring, "%Y-%m-%d").date()
 
 
 def _convert_date_column(datestring):
+    """
+    Convert a month expressed as, e.g., 'Jan-2014' to a datetime.date
+    object representing the first day of that month/
+
+    :param datestring: the string to convert to a date.
+
+    """
     return datetime.datetime.strptime(datestring, "%b-%Y").date()
 
+def _last_day(orig_date):
+    """
+    Return a datetime.date object representing the last day of a
+    calendar month, given a datetime.date for any day in that month
 
-def _last_day(first_of_month):
-    daynum = calendar.monthrange(first_of_month.year, first_of_month.month)[1]
-    return datetime.date(first_of_month.year, first_of_month.month, daynum)
+    :param orig_date: the date within the month for which we want the
+        last day.
+
+    """
+    daynum = calendar.monthrange(orig_date.year, orig_date.month)[1]
+    return datetime.date(orig_date.year, orig_date.month, daynum)
+
+def _next_month(dateobj):
+    """Return a datetime.date for the first day of the next month
+    after the given date
+
+    :param orig_date: the date within the month for which we want the
+        next month's first day.
+
+    """
+    year_delta, prev_month = divmod(dateobj.month, 12)
+    return datetime.date(dateobj.year + year_delta, prev_month + 1, 1)

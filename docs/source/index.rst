@@ -19,6 +19,7 @@ API Docs
 
 .. autosummary::
 
+
    pycounter.report
    pycounter.sushi
 
