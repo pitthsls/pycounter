@@ -70,3 +70,16 @@ class ParseCounter4(unittest.TestCase):
         self.assertEqual(self.report.period,
                          (datetime.date(2011, 1, 1),
                           datetime.date(2011, 12, 31)))
+
+class ParseMultiyear(unittest.TestCase):
+    """Multi-year COUNTER report
+    """
+    
+    def setUp(self):
+        self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
+                                                   'data/C4JR1my.csv'))        
+
+    def test_period(self):
+        self.assertEqual(self.report.period,
+                         (datetime.date(2011, 10, 1),
+                          datetime.date(2012, 2, 29)))
