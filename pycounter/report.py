@@ -81,13 +81,16 @@ class CounterReport(object):
         self._year = value
         
 
-class CounterEresource(object):
+class CounterEresource(six.Iterator):
     """
     base class for COUNTER statistics lines
+
+    Iterating returns (first_day_of_month, metric, usage) tuples.
     """
 
-    def __init__(self, line=None, period=None):
+    def __init__(self, line=None, period=None, metric=None):
         self.period=period
+        self.metric=metric
         """period covered by this report"""
         if line is not None:
             self.title = line[0]
@@ -114,6 +117,13 @@ class CounterEresource(object):
         warnings.warn("monthdata is deprecated", DeprecationWarning)
         return self._monthdata
 
+    def __iter__(self):
+        currmonth = self.period[0]
+        md = iter(self._monthdata)
+        while currmonth < self.period[1]:
+            currusage = next(md)
+            yield (currmonth, self.metric, currusage)
+            currmonth = _next_month(currmonth)
 
 class CounterPublication(CounterEresource):
     """
@@ -123,9 +133,13 @@ class CounterPublication(CounterEresource):
         COUNTER 3 layout. (This is an ugly hack that should be fixed
         very soon)
 
+    :param metric: the metric tracked by this statistics line.
+        (Should probably always be "FT Article Requests" for
+        CounterPublication objects, as long as only JR1 is supported.)
+
     """
-    def __init__(self, line=None, period=None):
-        super(CounterPublication, self).__init__(line, period)
+    def __init__(self, line=None, period=None, metric=METRICS[u"JR1"]):
+        super(CounterPublication, self).__init__(line, period, metric)
         if line is not None:
             self.issn = line[3].strip()
             """eJournal's print ISSN"""
@@ -147,8 +161,8 @@ class CounterBook(CounterEresource):
         very soon)
     
     """
-    def __init__(self, line=None, period=None):
-        super(CounterBook, self).__init__(line, period)
+    def __init__(self, line=None, period=None, metric=None):
+        super(CounterBook, self).__init__(line, period, metric)
         if line is not None:
             self.isbn = line[3].strip().replace('-', '')
             """eBook's ISBN"""
@@ -301,9 +315,13 @@ def parse_generic(report_reader):
         logging.debug(line)
         if report.report_type:
             if report.report_type.startswith('JR'):
-                report.pubs.append(CounterPublication(line, report.period))
+                report.pubs.append(CounterPublication(line,
+                                                      report.period,
+                                                      report.metric))
             elif report.report_type.startswith('BR'):
-                report.pubs.append(CounterBook(line, report.period))
+                report.pubs.append(CounterBook(line,
+                                               report.period,
+                                               report.metric))
             else:
                 raise UnknownReportTypeError(report.report_type)
 
