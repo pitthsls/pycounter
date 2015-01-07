@@ -66,6 +66,7 @@ class CounterReport(object):
         if (self.period[0].month != 1 or
             self.period[0].year != self.period[1].year):
             raise AttributeError("no year attribute for multiyear reports")
+        warnings.warn("year attribute is deprecated", DeprecationWarning)
         return self._year
 
     @year.setter
@@ -99,7 +100,7 @@ class CounterEresource(object):
         if (self.period[0].month != 1 or
             self.period[0].year != self.period[1].year):
             raise AttributeError("no monthdata for multiyear reports")
-        warnings.warn("deprecated", DeprecationWarning)
+        warnings.warn("monthdata is deprecated", DeprecationWarning)
         return self._monthdata
 
 
