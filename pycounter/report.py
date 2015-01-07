@@ -63,6 +63,13 @@ class CounterReport(object):
 
     @property
     def year(self):
+        """year covered by report.
+
+        Raises AttributeError if report is for multiple years
+        or if it doesn't begin in January.
+
+        This attribute is deprecated.
+        """
         if (self.period[0].month != 1 or
             self.period[0].year != self.period[1].year):
             raise AttributeError("no year attribute for multiyear reports")
