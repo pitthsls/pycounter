@@ -88,10 +88,14 @@ class CounterEresource(object):
 
     def __init__(self, line=None, period=None):
         self.period=period
+        """period covered by this report"""
         if line is not None:
             self.title = line[0]
+            """title of eResource"""
             self.publisher = line[1]
+            """publisher of eResource"""
             self.platform = line[2]
+            """platform hosting eResource"""
             self._monthdata = [format_stat(x) for x in line[5:]]
             while len(self._monthdata) < 12:
                 self._monthdata.append(None)
@@ -124,7 +128,9 @@ class CounterPublication(CounterEresource):
         super(CounterPublication, self).__init__(line, period)
         if line is not None:
             self.issn = line[3].strip()
+            """eJournal's print ISSN"""
             self.eissn = line[4].strip()
+            """eJournal's eISSN"""
             self.isbn = None
 
     def __str__(self):
@@ -145,9 +151,11 @@ class CounterBook(CounterEresource):
         super(CounterBook, self).__init__(line, period)
         if line is not None:
             self.isbn = line[3].strip().replace('-', '')
+            """eBook's ISBN"""
             if len(self.isbn) == 10:
                 self.isbn = pyisbn.convert(self.isbn)
             self.issn = line[4].strip()
+            """eBook's ISSN (if any)"""
             self.eissn = None
 
     def __str__(self):
