@@ -83,3 +83,11 @@ class ParseMultiyear(unittest.TestCase):
         self.assertEqual(self.report.period,
                          (datetime.date(2011, 10, 1),
                           datetime.date(2012, 2, 29)))
+
+    def test_year_exception(self):
+        with self.assertRaises(AttributeError):
+            self.report.year
+
+    def test_monthdata_exception(self):
+        with self.assertRaises(AttributeError):
+            self.report.pubs[0].monthdata

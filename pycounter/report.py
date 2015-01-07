@@ -44,7 +44,7 @@ class CounterReport(object):
     """
     def __init__(self, metric=None):
         self.pubs = []
-        self.year = None
+        self._year = None
         self.report_type = None
         self.report_version = 0
         self.metric = metric
@@ -61,8 +61,49 @@ class CounterReport(object):
     def __iter__(self):
         return iter(self.pubs)
 
+    @property
+    def year(self):
+        if (self.period[0].month != 1 or
+            self.period[0].year != self.period[1].year):
+            raise AttributeError("no year attribute for multiyear reports")
+        return self._year
 
-class CounterPublication(object):
+    @year.setter
+    def year(self, value):
+        self._year = value
+        
+
+class CounterEresource(object):
+    """
+    base class for COUNTER statistics lines
+    """
+
+    def __init__(self, line=None, period=None):
+        self.period=period
+        if line is not None:
+            self.title = line[0]
+            self.publisher = line[1]
+            self.platform = line[2]
+            self._monthdata = [format_stat(x) for x in line[5:]]
+            while len(self._monthdata) < 12:
+                self._monthdata.append(None)
+            logging.debug("monthdata: %s", self._monthdata)
+        
+    @property
+    def monthdata(self):
+        """
+        Return month data when applicable.
+
+        Deprecated. Raises AttributeError for multi-year reports
+        """
+        if (self.period[0].month != 1 or
+            self.period[0].year != self.period[1].year):
+            raise AttributeError("no monthdata for multiyear reports")
+        warnings.warn("deprecated", DeprecationWarning)
+        return self._monthdata
+
+
+class CounterPublication(CounterEresource):
     """
     statistics for a single electronic journal.
 
@@ -71,25 +112,19 @@ class CounterPublication(object):
         very soon)
 
     """
-    def __init__(self, line=None):
+    def __init__(self, line=None, period=None):
+        super(CounterPublication, self).__init__(line, period)
         if line is not None:
-            self.title = line[0]
-            self.publisher = line[1]
-            self.platform = line[2]
             self.issn = line[3].strip()
             self.eissn = line[4].strip()
             self.isbn = None
-            self.monthdata = [format_stat(x) for x in line[5:]]
-            while len(self.monthdata) < 12:
-                self.monthdata.append(None)
-            logging.debug("monthdata: %s", self.monthdata)
 
     def __str__(self):
         return """<CounterPublication %s, publisher %s,
         platform %s>""" % (self.title, self.publisher, self.platform)
 
 
-class CounterBook(object):
+class CounterBook(CounterEresource):
     """
     statistics for a single electronic book.
 
@@ -98,20 +133,14 @@ class CounterBook(object):
         very soon)
     
     """
-    def __init__(self, line=None):
+    def __init__(self, line=None, period=None):
+        super(CounterBook, self).__init__(line, period)
         if line is not None:
-            self.title = line[0]
-            self.publisher = line[1]
-            self.platform = line[2]
             self.isbn = line[3].strip().replace('-', '')
             if len(self.isbn) == 10:
                 self.isbn = pyisbn.convert(self.isbn)
             self.issn = line[4].strip()
             self.eissn = None
-            self.monthdata = [format_stat(x) for x in line[5:]]
-            while len(self.monthdata) < 12:
-                self.monthdata.append(None)
-            logging.debug("monthdata: %s", self.monthdata)
 
     def __str__(self):
         return """<CounterBook %s (ISBN: %s), publisher %s,
@@ -222,9 +251,11 @@ def parse_generic(report_reader):
     if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
         first_date_col = 8
 
-    report.year = int(header[first_date_col].split('-')[1])
-    if report.year < 100:
-        report.year += 2000
+    year = int(header[first_date_col].split('-')[1])
+    if year < 100:
+        year += 2000
+
+    report.year = year
 
     if report.report_version == 4:
         countable_header = header[0:8]
@@ -236,7 +267,7 @@ def parse_generic(report_reader):
         for last_col, v in enumerate(header):
             if 'YTD' in v:
                 break
-        start_date = datetime.date(report.year, 1, 1)
+        start_date = datetime.date(year, 1, 1)
         end_date = _last_day(_convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
 
@@ -254,9 +285,9 @@ def parse_generic(report_reader):
         logging.debug(line)
         if report.report_type:
             if report.report_type.startswith('JR'):
-                report.pubs.append(CounterPublication(line))
+                report.pubs.append(CounterPublication(line, report.period))
             elif report.report_type.startswith('BR'):
-                report.pubs.append(CounterBook(line))
+                report.pubs.append(CounterBook(line, report.period))
             else:
                 raise UnknownReportTypeError(report.report_type)
 
