@@ -1,0 +1,11 @@
+"Journal Report 1(R4)","Number of Successful Full-Text Article Requests by Month and Journal"
+"Example University Libary"
+""
+"Period covered by Report"
+"2011-01-01 to 2012-12-31"
+"Date Run: "
+2012-03-21
+Journal,Publisher,Platform,"Journal DOI","Propriatary Identifier","Print ISSN","Online ISSN","Reporting Period Total","Reporting Period HTML", "Reporting Period PDF",Jan-2012,Feb-2012,Mar-2012,Apr-2012,May-2012,Jun-2012,Jul-2012,Aug-2012,Sep-2012,Oct-2012,Nov-2012,Dec-2012,Jan-2013,Feb-2013,Mar-2013,Apr-2013,May-2013,Jun-2013,Jul-2013,Aug-2013,Sep-2013,Oct-2013,Nov-2013,Dec-2013
+"Total for all journals",,,,,,,16,0,16,2,1
+"Abstracts of Working Papers in Economics","Cambridge University Press",CJO,,,0951-0079,0951-0079,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+"Acta Numerica","Cambridge University Press",CJO,,,0962-4929,1474-0508,35,35,0,16,0,16,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
