@@ -2,7 +2,8 @@
 from __future__ import absolute_import
 
 from suds.client import Client
-
+import pycounter.report
+import six
 
 def get_sushi_stats_raw(wsdlurl, start_date, end_date, requestor_id=None,
                         requestor_email=None, customer_reference=None,
@@ -39,3 +40,34 @@ def get_sushi_stats_raw(wsdlurl, start_date, end_date, requestor_id=None,
     report = client.service.GetReport(reqr, cref, rdef)
 
     return report
+
+
+def get_report(*args, **kwargs):
+    raw_report = get_sushi_stats_raw(*args, **kwargs)
+    return _raw_to_full(raw_report)
+
+
+def _raw_to_full(raw_report):
+    """Convert a raw report to a pycounter.report.CounterReport object"""
+    startdate = raw_report.ReportDefinition.Filters.UsageDateRange.Begin
+    enddate = raw_report.ReportDefinition.Filters.UsageDateRange.End
+    report_data = {}
+    report_data['period'] = (startdate, enddate)
+    
+    report_data['report_version'] = raw_report.ReportDefinition._Release
+    report_data['report_type'] = raw_report.ReportDefinition._Name
+
+    report_data['customer'] = raw_report.Report.Report[0].Customer[0].Name
+    report_data['institutional_identifier'] = raw_report.Report.Report[0].Customer[0].ID
+
+    report_data['date_run'] = raw_report.Report.Report[0]._Created.date()
+
+    report = pycounter.report.CounterReport()
+
+    for k, v in six.iteritems(report_data):
+        setattr(report, k, v)
+
+    report.metric = pycounter.report.METRICS.get(report_data['report_type'])
+
+    return report
+
