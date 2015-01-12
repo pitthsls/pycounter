@@ -74,7 +74,10 @@ class CounterReport(object):
             self.period[0].year != self.period[1].year):
             raise AttributeError("no year attribute for multiyear reports")
         warnings.warn("year attribute is deprecated", DeprecationWarning)
-        return self._year
+        if self._year is None:
+            return self.period[0].year
+        else:
+            return self._year
 
     @year.setter
     def year(self, value):
