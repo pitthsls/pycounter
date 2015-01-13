@@ -40,7 +40,7 @@ class CounterReport(object):
     Other attributes aren't currently set at creation time, but rather
     are set by the parser after creating the object. (This should
     change in the future.)
-    
+
     """
     def __init__(self, metric=None):
         self.pubs = []
@@ -71,7 +71,7 @@ class CounterReport(object):
         This attribute is deprecated.
         """
         if (self.period[0].month != 1 or
-            self.period[0].year != self.period[1].year):
+                self.period[0].year != self.period[1].year):
             raise AttributeError("no year attribute for multiyear reports")
         warnings.warn("year attribute is deprecated", DeprecationWarning)
         if self._year is None:
@@ -82,7 +82,7 @@ class CounterReport(object):
     @year.setter
     def year(self, value):
         self._year = value
-        
+
 
 class CounterEresource(six.Iterator):
     """
@@ -92,8 +92,8 @@ class CounterEresource(six.Iterator):
     """
 
     def __init__(self, line=None, period=None, metric=None):
-        self.period=period
-        self.metric=metric
+        self.period = period
+        self.metric = metric
         """period covered by this report"""
         if line is not None:
             self.title = line[0]
@@ -106,7 +106,7 @@ class CounterEresource(six.Iterator):
             while len(self._monthdata) < 12:
                 self._monthdata.append(None)
             logging.debug("monthdata: %s", self._monthdata)
-        
+
     @property
     def monthdata(self):
         """
@@ -115,7 +115,7 @@ class CounterEresource(six.Iterator):
         Deprecated. Raises AttributeError for multi-year reports
         """
         if (self.period[0].month != 1 or
-            self.period[0].year != self.period[1].year):
+                self.period[0].year != self.period[1].year):
             raise AttributeError("no monthdata for multiyear reports")
         warnings.warn("monthdata is deprecated", DeprecationWarning)
         return self._monthdata
@@ -127,6 +127,7 @@ class CounterEresource(six.Iterator):
             currusage = next(md)
             yield (currmonth, self.metric, currusage)
             currmonth = _next_month(currmonth)
+
 
 class CounterPublication(CounterEresource):
     """
@@ -162,7 +163,7 @@ class CounterBook(CounterEresource):
     :param line: a list containing the usage data for this line, in
         COUNTER 3 layout. (This is an ugly hack that should be fixed
         very soon)
-    
+
     """
     def __init__(self, line=None, period=None, metric=None):
         super(CounterBook, self).__init__(line, period, metric)
@@ -193,7 +194,7 @@ def parse(filename):
     """Parse a COUNTER file, first attempting to determine type
 
     Returns a :class:`CounterReport <CounterReport>` object.
-    
+
     :param filename: path to COUNTER report to load and parse.
     """
     if filename.endswith('.tsv'):
@@ -245,7 +246,7 @@ def parse_generic(report_reader):
 
     :param report_reader: a iterable object that yields lists COUNTER
         data formatted as tablular lists
-    
+
     """
     report = CounterReport()
 
@@ -351,7 +352,7 @@ def _convert_covered(datestring):
     tuple of datetime.date instances.
 
     :param datestring: the string to convert to a date.
-    
+
     """
     start_string, end_string = datestring.split(" to ")
     start_date = datetime.datetime.strptime(start_string, "%Y-%m-%d").date()
@@ -380,6 +381,7 @@ def _convert_date_column(datestring):
     """
     return datetime.datetime.strptime(datestring, "%b-%Y").date()
 
+
 def _last_day(orig_date):
     """
     Return a datetime.date object representing the last day of a
@@ -391,6 +393,7 @@ def _last_day(orig_date):
     """
     daynum = calendar.monthrange(orig_date.year, orig_date.month)[1]
     return datetime.date(orig_date.year, orig_date.month, daynum)
+
 
 def _next_month(dateobj):
     """Return a datetime.date for the first day of the next month
