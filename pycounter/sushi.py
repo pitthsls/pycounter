@@ -5,6 +5,7 @@ from suds.client import Client
 import pycounter.report
 import six
 
+
 def get_sushi_stats_raw(wsdlurl, start_date, end_date, requestor_id=None,
                         requestor_email=None, customer_reference=None,
                         report="JR1", release=4):
@@ -43,6 +44,10 @@ def get_sushi_stats_raw(wsdlurl, start_date, end_date, requestor_id=None,
 
 
 def get_report(*args, **kwargs):
+    """Get a usage report from a SUSHI server
+
+    returns a pycounter.report.CounterReport object.
+    """
     raw_report = get_sushi_stats_raw(*args, **kwargs)
     return _raw_to_full(raw_report)
 
@@ -53,21 +58,55 @@ def _raw_to_full(raw_report):
     enddate = raw_report.ReportDefinition.Filters.UsageDateRange.End
     report_data = {}
     report_data['period'] = (startdate, enddate)
-    
+
     report_data['report_version'] = raw_report.ReportDefinition._Release
     report_data['report_type'] = raw_report.ReportDefinition._Name
 
     report_data['customer'] = raw_report.Report.Report[0].Customer[0].Name
-    report_data['institutional_identifier'] = raw_report.Report.Report[0].Customer[0].ID
+    inst_id = raw_report.Report.Report[0].Customer[0].ID
+    report_data['institutional_identifier'] = inst_id
 
     report_data['date_run'] = raw_report.Report.Report[0]._Created.date()
 
     report = pycounter.report.CounterReport()
 
-    for k, v in six.iteritems(report_data):
-        setattr(report, k, v)
+    for key, value in six.iteritems(report_data):
+        setattr(report, key, value)
 
     report.metric = pycounter.report.METRICS.get(report_data['report_type'])
 
-    return report
+    for item in raw_report.Report.Report[0].Customer[0].ReportItems:
+        itemline = []
+        itemline.append(item.ItemName)
+        itemline.append(item.ItemPublisher)
+        itemline.append(item.ItemPlatform)
 
+        eissn = issn = ""
+        for identifier in item.ItemIdentifier:
+            if identifier.Type == "Print_ISSN":
+                issn = identifier.Value
+            elif identifier.Type == "Online_ISSN":
+                eissn = identifier.Value
+        itemline.append(issn)
+        itemline.append(eissn)
+
+        for perfitem in item.ItemPerformance:
+            usage = 0
+            for inst in perfitem.Instance:
+                if inst.MetricType == "ft_total":
+                    usage = str(inst.Count)
+                    break
+            itemline.append(usage)
+        if report.report_type:
+            if report.report_type.startswith('JR'):
+                report.pubs.append(pycounter.report.CounterPublication(
+                    itemline,
+                    report.period,
+                    report.metric))
+            elif report.report_type.startswith('BR'):
+                report.pubs.append(
+                    pycounter.report.CounterBook(itemline,
+                                                 report.period,
+                                                 report.metric))
+
+    return report
