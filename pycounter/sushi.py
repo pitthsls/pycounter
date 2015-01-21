@@ -6,12 +6,12 @@ import pycounter.report
 import six
 
 
-def get_sushi_stats_raw(wsdlurl, start_date, end_date, requestor_id=None,
+def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                         requestor_email=None, customer_reference=None,
                         report="JR1", release=4):
     """Get SUSHI stats for a given site in raw XML format.
 
-    :param wsdlurl: URL to SOAP WSDL for this provider
+    :param wsdl_url: URL to SOAP WSDL for this provider
     :param start_date: start date for report (must be first day of a month)
     :param end_date: end date for report (must be last day of a month)
     :param requestor_id: requestor ID as defined by SUSHI protocol
@@ -22,7 +22,7 @@ def get_sushi_stats_raw(wsdlurl, start_date, end_date, requestor_id=None,
     :param release: report release number (should generally be `4`.)
 
     """
-    client = Client(wsdlurl)
+    client = Client(wsdl_url)
     rdef = client.factory.create('ns1:ReportDefinition')
 
     rdef._Name = report
