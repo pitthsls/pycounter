@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by Oliver Pesch (EBSCO) -->
+<!-- DETAILS
+		Schema: counter.xsd
+		Major version: 4.1
+				Purpose: Changes to schema to support SUSHI Lite and article reports.
+			2014-10-31 | Oliver Pesch | Added a series of optional elements needed to support COUNTER Article Reports.
+							- ParentItem added to ReportItems to provide support for describing report items that are part of an identifiable parent.
+							  When the the ReportItems instance is an article, the parent is a journal; when the ReportItems Instance is an image or
+							  data set, the parent may be an article.
+							- ItemContributor added to ReportItems and ParentItem to support inclusion of authors, editors and other contributors. 
+							  The element has subelements of Type (an enumerated value of ItemContributorType) and Value.
+							- ItemAttribute was added to ReportsItems and ParentItem to define attributes like article version and article type (needed for Article Reports).
+							  This element has subelements of Type (enumerated under AttributeType) and Value.
+							- ItemDate was added to ReportsItems and ParentItem to include date of publication of an item or date item was first accessed.
+							  This element has subelements of Type (enumerated under DateType) and Value.
+		Major version: 4.0
+		Purpose: This schema is used to represent all COUNTER reports as defined in 
+			Release 4 of the COUNTER Code of Practice for E-Resources. 
+                        See http:\\www.projectcounter.org for more details.
+			
+		Change History (revision date|by|description of change)
+		  5/30/2012 Oliver Pesch | Confirmed that this is the latest version of the file.
+		  9/8/2011|Oliver Pesch|Updated to version 4.
+		  					- Update to include counterElements4_0.xsd
+		  					- Changed ItemIdentifier to have minOccurs=0
+		  					- Changed ItemPublisher to have minOccurs=0
+		  					- Change data type for PubYr attribute to xs:gYear
+		  					- Added PubYrFrom and PubYrTo attributes with data type of xs:gYear
+			5/27/2009|Tae Kim & Oliver Pesch| Added include for counterElements3_0.xd. Changed data type for Count element to 
+								nonNegativeInteger (it was float).
+			10/20/2008|Oliver Pesch|Added file-level documentation
+			10/20/2008|Oliver Pesch|Documented Reports elements
+			2/21/2009|Oliver Pesch|Edited documentation for Name and Title attributes of Report element
+	-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:c="http://www.niso.org/schemas/counter" targetNamespace="http://www.niso.org/schemas/counter" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3">
+	<xs:include schemaLocation="counterElements4_1.xsd"/>
+	<xs:element name="Reports" type="c:Reports">
+		<xs:annotation>
+			<xs:documentation>COUNTER Reports. The "Reports" (plural) is not actually used in SUSHI. The COUNTER_SUSHI schema includes is own "Report" element which is of type c:Reports (see below). Which means the the SUSHI ReportResponse will include usually just one "Report" (singular) element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="Reports">
+		<xs:annotation>
+			<xs:documentation>Can contain many Reports.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Report" type="c:Report" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>An instance of a COUNTER Report.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Report">
+		<xs:annotation>
+			<xs:documentation>An individual COUNTER Report. (See comments in the XSD for attribute definitions).</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Vendor" type="c:Vendor">
+				<xs:annotation>
+					<xs:documentation>The content provider preparing the report.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Customer" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The organization for which the usage statistics are being reported.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="c:Customer">
+							<xs:sequence>
+								<xs:element name="ReportItems" type="c:ReportItem" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>The Journal, Book, Database, Platform, etc. being reported on.  Note that  one "ReportItems" contains usage stats for one item.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Created" type="xs:dateTime">
+			<xs:annotation>
+				<xs:documentation>Date/time the report was created.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ID" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>An identifier  assigned by the application creating the  message for tracking purposes.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Version" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>The version of the COUNTER report.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Name" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>The short name of the report as would be defined in the SUSHI request. See the reports registry at http://www.niso.org/workrooms/sushi/reports </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Title" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>The COUNTER report name, e.g. Journal Report 1. See the reports registry at http://www.niso.org/workrooms/sushi/reports</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<!--ATTRIBUTES FOR REPORT -->
+		<!--Created: When the report was created using international format of yyyy-mm-dd hh:mm:ss-->
+		<!--ID: An ID assigned to the XML by the content provider to uniquely identify the message sent-->
+		<!--Version: The version or release of the Code of Practice the report complies with-->
+		<!--Name: The name of the person or process creating the report (often left empty)-->
+		<!--Title: The title or name of the COUNTER report, e.g.,  Journal Report 1-->
+	</xs:complexType>
+	<xs:complexType name="Customer">
+		<xs:annotation>
+			<xs:documentation>Details about the customer whose data the report represents.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="c:Organization">
+				<xs:sequence>
+					<xs:element name="Consortium" type="c:Consortium" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>For Consortium Reports, identify the consortium the customer is part of (the one requestnig the report).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="InstitutionalIdentifier" type="c:Identifier" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Include any known standard identifiers which identify the Customer, e.g. MARC code.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IPAddress">
+		<xs:annotation>
+			<xs:documentation>(UNUSED)This is included to allow reference to the customer's IP Addresses if used to define the "customer".</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="type" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="single"/>
+							<xs:enumeration value="range"/>
+							<xs:enumeration value="wildcard"/>
+							<xs:enumeration value="subnet"/>
+							<xs:enumeration value="cidr"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="Identifier">
+		<xs:annotation>
+			<xs:documentation>Used by ItemIdentifiers and InstitutionIdentifiers.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Type" type="c:IdentifierType">
+				<xs:annotation>
+					<xs:documentation>Defines the internationally recognized identifier for items and (in the future) institutions e.g. ISSN, ISBN, DOI.  See: http://www.niso.org/workrooms/sushi/values/#item for the list of identifier types registered for use with COUNTER reports.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ItemAttribute">
+		<xs:annotation>
+			<xs:documentation>Used to describe various attributes of an item, such as article version and article type.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Type" type="c:AttributeType">
+				<xs:annotation>
+					<xs:documentation>Defines the well-know attributes of an item, e.g. ArticleVersion and ArticleType for articles and QualificationName and QualificationLevel for thesis. .  See: http://www.niso.org/workrooms/sushi/values/#item for the list of attribute types registered for use with COUNTER reports.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ItemContributorID">
+		<xs:annotation>
+			<xs:documentation>An author, editor or other contributor to a work.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Type" type="c:ContributorIdentifierType">
+				<xs:annotation>
+					<xs:documentation>Defines the type of contributor identifier, e.g. isni, orcid, name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ItemContributor">
+		<xs:annotation>
+			<xs:documentation>An author, editor or other contributor to a work.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ItemContributorID" type="c:ItemContributorID" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Defines the type of contributor identifier, e.g. isni, orcid, name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemContributorName" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name of the contributor usually as lastname, firstname initials, e.g. Smith, Paul J. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemContributorAffiliation" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Name of organization contributor was affilated with in the context of the contribution.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemContributorRole" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Contributor's role in creation of item, e.g. Author, Editor, etc.</xs:documentation>
+				</xs:annotation>
+			</xs:element>		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ItemDate">
+		<xs:annotation>
+			<xs:documentation>Date of publication or date first accessed online.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Type" type="c:DateType">
+				<xs:annotation>
+					<xs:documentation>Defines publication or first access date for the item  See: http://www.niso.org/workrooms/sushi/values/#item for the list of attribute types registered for use with COUNTER reports.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParentItem">
+		<xs:annotation>
+			<xs:documentation>When usage is for articles or chapters, the ParentItem identifies the journal or book.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ItemIdentifier" type="c:Identifier" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Well known item identifiers (ISSN, ISBN, etc.).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemContributor" type="c:ItemContributor" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Author, editor or other contributor of to the parent work if an article or other authored work. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemDate" type="c:ItemDate" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Date of publication or date item first accessed.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemAttribute" type="c:ItemAttribute" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Well known attributes of an item (ArticleVersion, ArticleType).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemPublisher" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name of the publisher of an item.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemName" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Name for the item e.g. Journal Title,  Book Title, Database Name.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemDataType" type="c:DataType">
+				<xs:annotation>
+					<xs:documentation>Describes the nature of the item: e.g. Journal, Database, Platform, Books, Reference works item data type. See: http://www.niso.org/workrooms/sushi/values/#data for the list of registered values.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReportItem">
+		<xs:annotation>
+			<xs:documentation>The container for usage data and other information related to an item such as a journal, book, database, etc.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ParentItem" type="c:ParentItem" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Well known item identifiers (ISSN, ISBN, etc.).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemIdentifier" type="c:Identifier" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Well known item identifiers (ISSN, ISBN, etc.).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemContributor" type="c:ItemContributor" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Author, editor or other contributor of to the parent work if an article or other authored work.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemDate" type="c:ItemDate" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Date of publication or date item first accessed.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemAttribute" type="c:ItemAttribute" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Well known attributes of an item (ArticleVersion, ArticleType).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemPlatform" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The platform is the name of the online host as determined by the service provider, e.g.,  EBSCOhost, ScienceDirect, etc.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemPublisher" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name of the publisher of an item.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemName" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Name for the item e.g. Journal Title,  Book Title, Database Name.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemDataType" type="c:DataType">
+				<xs:annotation>
+					<xs:documentation>Describes the nature of the item: e.g. Journal, Database, Platform, Books, Reference works item data type. See: http://www.niso.org/workrooms/sushi/values/#data for the list of registered values.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemPerformance" type="c:Metric" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The set of statistics representing one category of usage (e.g. Searches) for the period of one month. Note: the Attribute PubYear is currently only used for Journal Report 5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Vendor">
+		<xs:annotation>
+			<xs:documentation>The Content Provider.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="c:Organization"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Contact">
+		<xs:annotation>
+			<xs:documentation>Details of a person to contact.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Contact" type="xs:string" minOccurs="0"/>
+			<xs:element name="E-mail" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Organization">
+		<xs:annotation>
+			<xs:documentation>Details for the Vendor or Customer.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name of the organization.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ID" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The ID by which this organization is known by the content provider. In the case of the customer, it is the CustomerID as used by the content provider.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Contact" type="c:Contact" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="WebSiteUrl" type="xs:anyURI" minOccurs="0"/>
+			<xs:element name="LogoUrl" type="xs:anyURI" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Consortium">
+		<xs:annotation>
+			<xs:documentation>Each report item represents usage for a title. Note: it may have been more appropriate if the element name "ReportItems" was not plural since there can be many "ReportItems" one would expect each one to be a "ReportItem" without the 's'. As it stands there will be many "ReportItems" elements.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Code" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If there is an abbreviation or code that identifies the consortium, include it here.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WellKnownName" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DateRange">
+		<xs:annotation>
+			<xs:documentation>The time period (representing a month) for the the usage.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Begin" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Use the first day of the month.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!--First day of the month for the period being represented.-->
+			<xs:element name="End" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Use the last day of the month.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!--Last day of the month for the period being represented-->
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Metric">
+		<xs:annotation>
+			<xs:documentation>The actual usage details.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Period" type="c:DateRange">
+				<xs:annotation>
+					<xs:documentation>Defines the MONTH for the itemPerformance instance. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Category" type="c:Category">
+				<xs:annotation>
+					<xs:documentation>E.G., Requests, Searches, Turnaways, Sessions. See http://www.niso.org/workrooms/sushi/values/#category for list of registered values.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Instance" type="c:PerformanceCounter" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Actual performance measure.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="PubYr" type="xs:gYear">
+			<xs:annotation>
+				<xs:documentation>Year of publication. (This is currently ONLY used by Journal Report 5 which requires a breakdown of usage by year published; therefore, omit for all other reports)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="PubYrFrom" type="xs:gYear">
+			<xs:annotation>
+				<xs:documentation>Year of publication when represented as a range of years -- beginning year in the range (This is currently ONLY used by Journal Report 5 which requires a breakdown of usage by year published; therefore, omit for all other reports)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="PubYrTo" type="xs:gYear">
+			<xs:annotation>
+				<xs:documentation>Year of publication when represented as a range of years -- ending year in the range. (This is currently ONLY used by Journal Report 5 which requires a breakdown of usage by year published; therefore, omit for all other reports)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<!-- ATTRIBUTE: PubYr represents the year of publication and is currently only used in Journal Report 5 where usage for a given title is broken out by PubYr.-->
+		<!-- ATTRIBUTE: PubYrFrom and PubYrTo represents the range of years of publication and is currently only used in Journal Report 5 where usage for a given title is broken out by publication year -->
+		<!-- ATTRIBUTE: For JR5 a metric element can have EITHER a PubYr OR PubYrFrom and PubYrTo.  -->
+	</xs:complexType>
+	<xs:complexType name="PerformanceCounter">
+		<xs:annotation>
+			<xs:documentation>UNUSED</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="MetricType" type="c:MetricType">
+				<xs:annotation>
+					<xs:documentation>E.G.,  ft_html, ft_pdf, ft_total, other. See http://www.niso.org/workrooms/sushi/values/#MetricType for list of registered values.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Count" type="xs:nonNegativeInteger">
+				<xs:annotation>
+					<xs:documentation>Integer value for the perfomance counter type.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

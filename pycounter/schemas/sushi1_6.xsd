@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- DETAILS
+		Schema: sushi.xsd
+		Major version: 1.6
+		
+		Change History (revision date|by|description of change
+		10/20/2008|Oliver Pesch|Added header documentation
+		10/20/2008|Oliver Pesch|Documented various elements
+                02/24/2013|Cynthia Hodgson|Corrected some typos and punctuation in the description/instructions - no changes to schema elements
+	-->
+<xs:schema xmlns:s="http://www.niso.org/schemas/sushi" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.niso.org/schemas/sushi" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.6">
+	<xs:element name="ReportRequest" type="s:ReportRequest"/>
+	<xs:element name="ReportResponse" type="s:ReportResponse"/>
+	<xs:complexType name="ReportResponse">
+		<xs:sequence>
+			<xs:element name="Exception" type="s:Exception" nillable="true" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>One or more exceptions found in the request or while processing the request.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Requestor" type="s:Requestor">
+				<xs:annotation>
+					<xs:documentation>Repeated from the ReportRequest. The service or instance of the service requesting the report. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CustomerReference" type="s:CustomerReference">
+				<xs:annotation>
+					<xs:documentation>Repeated from the ReportRequest. The customer whose usage is being reported.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReportDefinition" type="s:ReportDefinition">
+				<xs:annotation>
+					<xs:documentation>Repeated from the ReportRequest. Defines the report being requested.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Created" type="xs:dateTime">
+			<xs:annotation>
+				<xs:documentation>Date/time the response was created.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ID" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>If the ReportRequest had an ID, return in this attribute.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ReportRequest">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Requestor" type="s:Requestor">
+				<xs:annotation>
+					<xs:documentation>Consumer of the service (client).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CustomerReference" type="s:CustomerReference">
+				<xs:annotation>
+					<xs:documentation>Identity of the customer for which data is requested.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReportDefinition" type="s:ReportDefinition">
+				<xs:annotation>
+					<xs:documentation>Report parameters including report name, version, and filters (e.g., date ranges).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Created" type="xs:dateTime">
+			<xs:annotation>
+				<xs:documentation>Date/time the request was created.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ID" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Identifier may be provided by client application for internal use/diagnostics.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<!-- ATTRIBUTE DETAILS
+				Created: When the Report request was created using format "yyyy-mm-dd hh:mm:ss"
+				ID: Identifier of the request as assigned by the requesting service for internal use.
+		 -->
+	</xs:complexType>
+	<xs:complexType name="Requestor">
+		<xs:annotation>
+			<xs:documentation>Service consumer(client). Identifies the customer or 3rd party acting on behalf of customer.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Identifier by which the service (server) knows the service consumer (client). For some services this may be the same as the Customer ID.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Name of the requestor organization. (This is not the name of a person.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Email" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Valid e-mail address that service can use to contact a human at the requestor organization.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReportDefinition">
+		<xs:annotation>
+			<xs:documentation>Input arguments for the report.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Filters">
+				<xs:annotation>
+					<xs:documentation>Current filters include only the date ranges for the COUNTER usage reports.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="UsageDateRange" type="s:Range">
+							<xs:annotation>
+								<xs:documentation>The date range for the report. For COUNTER reports statistics are pulled by month; therefore, the date range should cover a range of months.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Report name. See http://www.niso.org/workrooms/sushi/reports for a list of registered report names and releases.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Release" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>The release number corresponding to the COUNTER Code of Practice when the current definition of the report was introduced.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="Range">
+		<xs:annotation>
+			<xs:documentation>The Date Range Type made up of Begin and End dates. Note: COUNTER usage is only reported at the month level; therefore, this represents the range of months.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Begin" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Beginning date of range formatted as "yyyy-mm-dd". Specify 'dd' as  the first day of the month  for COUNTER reports.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="End" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Ending date of range formatted as "yyyy-mm-dd". Specify 'dd' as  the last day of the month for COUNTER reports.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CustomerReference">
+		<xs:annotation>
+			<xs:documentation>A reference to a customer for which data is requested.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The Customer ID (usually proprietary) that the service uses to identify the customer. The value of this ID for a given organization will be different for each service.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" type="xs:string" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Customer name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Exception">
+		<xs:annotation>
+			<xs:documentation>Service Exceptions</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Number" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>Error Number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Severity" type="s:ExceptionSeverity">
+				<xs:annotation>
+					<xs:documentation>Severity of the error.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Message" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Text describing the error.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HelpUrl" type="xs:anyURI" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>URL describing error details.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Data" type="xs:anyType" nillable="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Other optional data.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Created" type="xs:dateTime"/>
+	</xs:complexType>
+	<xs:simpleType name="ExceptionSeverity">
+		<xs:annotation>
+			<xs:documentation>Service exception levels: Info, Debug, Warning, Error.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Info">
+				<xs:annotation>
+					<xs:documentation>Info – type of severity that provides more information about the response. Can be included in a chain of other severity levels.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Debug">
+				<xs:annotation>
+					<xs:documentation>Debug – type of severity that provides debugging information about the response. Can be included in a chain of other severity levels.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Warning">
+				<xs:annotation>
+					<xs:documentation>Warning – type of severity that does not interrupt the completion of the transaction (defined as: request-&gt;data-&gt;response) but gives more information about the response. It could be followed by more exceptions (Info, Debug).</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Error">
+				<xs:annotation>
+					<xs:documentation>Error – type of severity that would return no payload. It could be followed by more exceptions (Info, Debug).</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Fatal">
+				<xs:annotation>
+					<xs:documentation>Fatal – type of severity that would return no payload. It could be followed by more exceptions (Info, Debug).</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Activity">
+		<xs:sequence/>
+	</xs:complexType>
+</xs:schema>

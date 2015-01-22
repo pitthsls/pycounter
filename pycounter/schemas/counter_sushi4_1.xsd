@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by Oliver Pesch (EBSCO) -->
+<!--DETAILS
+		Schema: counter_sushi.xsd
+		Major version: 4.1
+		Purpose: This schema binds the COUNTER 4.1 schema with the SUSHI 1.7 schema
+		 to allow COUNTER reports to be delivered via the SUSHI protocol.
+
+		Change History (revision date|by|description of change
+		11/30/2014| Oliver Pesch | Updated schema references from "counter4_0" to "counter4_1". Update to version 4.1
+		12/12/2013|Oliver Pesch|Updated schema references from SUSHI1_6 to SUSHI1_7. Update to version 4.1
+		9/8/2011|Oliver Pesch|Updated schema references from counter3_0 to counter4_0. Update to version 4
+		10/20/2008|Oliver Pesch|Added header documentation
+		10/20/2008|Oliver Pesch|Documented Reports elements
+	-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sc="http://www.niso.org/schemas/sushi/counter" xmlns:c="http://www.niso.org/schemas/counter" xmlns:s="http://www.niso.org/schemas/sushi" targetNamespace="http://www.niso.org/schemas/sushi/counter" elementFormDefault="qualified" attributeFormDefault="unqualified" version="4.1">
+	<xs:import namespace="http://www.niso.org/schemas/counter" schemaLocation="counter4_1.xsd"/>
+	<xs:import namespace="http://www.niso.org/schemas/sushi" schemaLocation="sushi1_6.xsd"/>
+	<xs:element name="ReportResponse" type="sc:CounterReportResponse">
+		<xs:annotation>
+			<xs:documentation>The report response for COUNTER reports (CounterReportResponse).</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ReportRequest" type="s:ReportRequest">
+		<xs:annotation>
+			<xs:documentation>Request from SUSHI Client requesting a COUNTER report.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="CounterReportResponse">
+		<xs:annotation>
+			<xs:documentation>This is the actual response expected from a COUNTER_SUSHI service. A combination of the SUSHI ReportResponse with the COUNTER "Report" added. NOTE: The ReportRequest and ReportResponse are defined in the SUSHI1_7.xsd and the COUNTER report is defined in the Counter4_1.xsd.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="s:ReportResponse">
+				<xs:sequence>
+					<xs:element name="Report" type="c:Reports" nillable="true">
+						<xs:annotation>
+							<xs:documentation>This represents the payload of the ReportResponsen by referencing the "Reports" element in the COUNTER schema.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

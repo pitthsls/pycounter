@@ -2,8 +2,10 @@
 from __future__ import absolute_import
 
 from suds.client import Client
+from suds.xsd import doctor
 import pycounter.report
 import six
+import os.path
 
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
@@ -22,7 +24,14 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     :param release: report release number (should generally be `4`.)
 
     """
-    client = Client(wsdl_url)
+    imp = doctor.Import("http://www.niso.org/schemas/sushi/counter",
+                        'file://' +
+                        os.path.dirname(__file__) +
+                        '/schemas/counter_sushi4_1.xsd')
+    doc = doctor.ImportDoctor(imp)
+
+    client = Client(wsdl_url, doctor=doc)
+    print client
     rdef = client.factory.create('ns1:ReportDefinition')
 
     rdef._Name = report

@@ -1,0 +1,166 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:c="http://www.niso.org/schemas/counter" targetNamespace="http://www.niso.org/schemas/counter" elementFormDefault="qualified" version="4">
+	<!--
+ DETAILS
+		Schema: counterElements.xsd
+		Major version: 4.1
+		Purpose: This schema lists enumerated elements referenced in the counter4_1.xsd
+		2014-10-31  |  Oliver Pesch  | Added new enumerated elements to support article reports
+			
+		
+		Major version: 4.0
+		Purpose: This schema lists the enumerated elements referenced in the counter4_0.xsd.
+			
+		Change History (revision date|by|description of change)
+		  5/30/2012	Oliver Pesch verified updates to version 4 and added Change History section
+				CHANGES to schema from VERSION 3.0
+					- Datatype Added
+						- Collection (used for Multimedia Report 2)
+						- Multimedia (used for Multimedia Report 1)
+					- Category Added
+						- Access_denied	(replaced 'Turnaways' in Access Denied reports)
+					- Category Removed
+						- Sessions  ('sessions' no longer supported by COUNTER)
+						- Turnaways (replaced by 'Access_denied')
+					- MetricTypes added
+						- ft_ps_mobile  (used in "mobile" version of JR and TR reports)
+						- ft_pdf_mobile
+						- ft_html_mobile
+						- ft_epub  (new metric type/format for JR and TR reports)
+						- sectioned_html  (used in Book Report 2, Consortium Report 1 and Title Report 1 to differntiate extent of book content delivered)
+						- record_view  (used in database reports)
+						- result_click  (used in database reports)
+						- turnaway  (used in Access Denied reports)
+						- no_license  (used in Access Denied reports)
+					- MetricTypes removed
+						- session_fed ('sessions' no longer supported by COUNTER)
+						- session_reg ('sessions' no longer supported by COUNTER)
+	
+-->
+	<xsd:simpleType name="IdentifierType">
+		<xsd:annotation>
+			<xsd:documentation>
+IdentifierType as defined at http://www.niso.org/workrooms/sushi/values/
+</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Online_ISSN"/>
+			<xsd:enumeration value="Print_ISSN"/>
+			<xsd:enumeration value="EISSN"/>
+			<!--
+ EISSN is not an "official" identifier type, but included for backward compatibility. Use Online_ISSN 
+-->
+			<xsd:enumeration value="ISSN"/>
+			<!--
+ ISSN is not an "official" identifier type, but included for backward compatibility. Use Print_ISSN 
+-->
+			<xsd:enumeration value="ISBN"/>
+			<!--
+ ISBN is not an "official" identifier type, but included for backward compatibility. Use Print_ISBN or Online_ISBN 
+-->
+			<xsd:enumeration value="Online_ISBN"/>
+			<xsd:enumeration value="Print_ISBN"/>
+			<xsd:enumeration value="DOI"/>
+			<xsd:enumeration value="Proprietary"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AttributeType">
+		<xsd:annotation>
+			<xsd:documentation>
+Attribute as defined at http://www.niso.org/workrooms/sushi/values/
+</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ArticleVersion"/>
+			<xsd:enumeration value="ArticleType"/>
+			<xsd:enumeration value="QualificationName"/>
+			<xsd:enumeration value="QualificationLevel"/>
+			<xsd:enumeration value="Proprietary"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ContributorIdentifierType">
+		<xsd:annotation>
+			<xsd:documentation>
+Attribute as defined at http://www.niso.org/workrooms/sushi/values/
+</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ISNI"/>
+			<xsd:enumeration value="ORCID"/>
+			<xsd:enumeration value="Name"/>
+			<xsd:enumeration value="Proprietary"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="DateType">
+		<xsd:annotation>
+			<xsd:documentation>
+Attribute as defined at http://www.niso.org/workrooms/sushi/values/
+</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="PubDate"/>
+			<xsd:enumeration value="FirstAccessedOnline"/>
+			<xsd:enumeration value="Proprietary"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="DataType">
+		<xsd:annotation>
+			<xsd:documentation>
+DataType as defined at http://www.niso.org/workrooms/sushi/values/
+</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Journal"/>
+			<xsd:enumeration value="Database"/>
+			<xsd:enumeration value="Platform"/>
+			<xsd:enumeration value="Book"/>
+			<xsd:enumeration value="Collection"/>
+			<xsd:enumeration value="Multimedia"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="Category">
+		<xsd:annotation>
+			<xsd:documentation>
+Category as defined at http://www.niso.org/workrooms/sushi/values/
+</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Requests"/>
+			<xsd:enumeration value="Searches"/>
+			<xsd:enumeration value="Access_denied"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="MetricType">
+		<xsd:annotation>
+			<xsd:documentation>
+MetricType as defined at http://www.niso.org/workrooms/sushi/values/
+</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ft_ps"/>
+			<xsd:enumeration value="ft_ps_mobile"/>
+			<xsd:enumeration value="ft_pdf"/>
+			<xsd:enumeration value="ft_pdf_mobile"/>
+			<xsd:enumeration value="ft_html"/>
+			<xsd:enumeration value="ft_html_mobile"/>
+			<xsd:enumeration value="ft_epub"/>
+			<xsd:enumeration value="ft_total"/>
+			<xsd:enumeration value="sectioned_html"/>
+			<xsd:enumeration value="toc"/>
+			<xsd:enumeration value="abstract"/>
+			<xsd:enumeration value="reference"/>
+			<xsd:enumeration value="data_set"/>
+			<xsd:enumeration value="audio"/>
+			<xsd:enumeration value="video"/>
+			<xsd:enumeration value="image"/>
+			<xsd:enumeration value="podcast"/>
+			<xsd:enumeration value="multimedia"/>
+			<xsd:enumeration value="record_view"/>
+			<xsd:enumeration value="result_click"/>
+			<xsd:enumeration value="search_reg"/>
+			<xsd:enumeration value="search_fed"/>
+			<xsd:enumeration value="turnaway"/>
+			<xsd:enumeration value="no_license"/>
+			<xsd:enumeration value="other"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
