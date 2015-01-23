@@ -1,28 +1,17 @@
 """NISO SUSHI support"""
 from __future__ import absolute_import
 
-from suds.client import Client
-from suds.xsd import doctor
 import pycounter.report
 import six
 import os.path
+import requests
+from lxml import etree
 
-import suds.bindings.binding
-suds.bindings.binding.envns = ('SOAP_ENV',
-                               'http://schemas.xmlsoap.org/soap/envelope/')
-
-from suds.plugin import MessagePlugin
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logging.getLogger('suds.client').setLevel(logging.DEBUG)
-
-class LogPlugin(MessagePlugin):
-    def sending(self, context):
-        print(str(context.envelope))
-    def received(self, context):
-        print(str(context.reply))
-
+NS = {
+    'SOAP-ENV': "http://schemas.xmlsoap.org/soap/envelope/",
+    'ns1': "http://www.niso.org/schemas/sushi",
+    'ns2': "http://www.niso.org/schemas/sushi/counter",
+    }
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                         requestor_email=None, customer_reference=None,
@@ -40,32 +29,42 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     :param release: report release number (should generally be `4`.)
 
     """
-    imp = doctor.Import("http://www.niso.org/schemas/sushi/counter",
-                        'file://' +
-                        os.path.dirname(__file__) +
-                        '/schemas/counter_sushi4_1.xsd')
-    doc = doctor.ImportDoctor(imp)
+    root = etree.Element("{%(SOAP-ENV)s}Envelope" % NS, nsmap=NS)
+    body = etree.SubElement(root, "{%(SOAP-ENV)s}Body" % NS)
+    rr = etree.SubElement(body, "{%(ns2)s}ReportRequest" % NS)
 
-    client = Client(wsdl_url, doctor=doc, plugins=[LogPlugin()])
+    req = etree.SubElement(rr, "{%(ns1)s}Requestor" % NS)
+    rid = etree.SubElement(req, "{%(ns1)s}ID" % NS)
+    rid.text = requestor_id
+    req.append(etree.Element("{%(ns1)s}Name" % NS))
+    remail = etree.SubElement(req, "{%(ns1)s}Email" % NS)
+    remail.text = requestor_email
 
-    rdef = client.factory.create('ns1:ReportDefinition')
+    custref = etree.SubElement(rr, "{%(ns1)s}CustomerReference" % NS)
+    cid = etree.SubElement(custref, "{%(ns1)s}ID" % NS)
+    cid.text = requestor_id
+    custref.append(etree.Element("{%(ns1)s}Name" % NS))
 
-    rdef._Name = report
-    rdef._Release = release
-    rdef.Filters.UsageDateRange.Begin = start_date
-    rdef.Filters.UsageDateRange.End = end_date
+    repdef = etree.SubElement(rr, "{%(ns1)s}ReportDefinition" % NS,
+                              Name=report, Release=str(release))
+    filters = etree.SubElement(repdef, "{%(ns1)s}Filters" % NS)
+    udr = etree.SubElement(filters, "{%(ns1)s}UsageDateRange" % NS)
+    beg = etree.SubElement(udr, "{%(ns1)s}Begin" % NS)
+    beg.text = start_date.strftime("%Y-%m-%d")
+    end = etree.SubElement(udr, "{%(ns1)s}End" % NS)
+    end.text = end_date.strftime("%Y-%m-%d")
 
-    cref = client.factory.create('ns1:CustomerReference')
-    cref.ID = customer_reference
+    payload = etree.tostring(root, xml_declaration=True, encoding="utf-8")
+    headers = {"SOAPAction": '"SushiService:GetReportIn"',
+               "Content-Type": "text/xml; charset=UTF-8",
+               "Content-Length": len(payload)}
 
-    reqr = client.factory.create('ns1:Requestor')
-    reqr.ID = requestor_id
-    if requestor_email is not None:
-        reqr.Email = requestor_email
+    response = requests.post(url=wsdl_url,
+                             headers=headers,
+                             data=payload,
+                             verify=False)
 
-    report = client.service.GetReport(reqr, cref, rdef)
-
-    return report
+    return response.content
 
 
 def get_report(*args, **kwargs):
