@@ -7,6 +7,22 @@ import pycounter.report
 import six
 import os.path
 
+import suds.bindings.binding
+suds.bindings.binding.envns = ('SOAP_ENV',
+                               'http://schemas.xmlsoap.org/soap/envelope/')
+
+from suds.plugin import MessagePlugin
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger('suds.client').setLevel(logging.DEBUG)
+
+class LogPlugin(MessagePlugin):
+    def sending(self, context):
+        print(str(context.envelope))
+    def received(self, context):
+        print(str(context.reply))
+
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                         requestor_email=None, customer_reference=None,
@@ -30,8 +46,8 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                         '/schemas/counter_sushi4_1.xsd')
     doc = doctor.ImportDoctor(imp)
 
-    client = Client(wsdl_url, doctor=doc)
-    print client
+    client = Client(wsdl_url, doctor=doc, plugins=[LogPlugin()])
+
     rdef = client.factory.create('ns1:ReportDefinition')
 
     rdef._Name = report
