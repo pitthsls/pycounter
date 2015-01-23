@@ -5,12 +5,15 @@ import pycounter.report
 import six
 import os.path
 import requests
+import datetime
 from lxml import etree
+from lxml import objectify
 
 NS = {
     'SOAP-ENV': "http://schemas.xmlsoap.org/soap/envelope/",
-    'ns1': "http://www.niso.org/schemas/sushi",
-    'ns2': "http://www.niso.org/schemas/sushi/counter",
+    'sushi': "http://www.niso.org/schemas/sushi",
+    'sushicounter': "http://www.niso.org/schemas/sushi/counter",
+    'counter': "http://www.niso.org/schemas/counter",
     }
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
@@ -31,30 +34,31 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     """
     root = etree.Element("{%(SOAP-ENV)s}Envelope" % NS, nsmap=NS)
     body = etree.SubElement(root, "{%(SOAP-ENV)s}Body" % NS)
-    rr = etree.SubElement(body, "{%(ns2)s}ReportRequest" % NS)
+    rr = etree.SubElement(body, "{%(sushicounter)s}ReportRequest" % NS)
 
-    req = etree.SubElement(rr, "{%(ns1)s}Requestor" % NS)
-    rid = etree.SubElement(req, "{%(ns1)s}ID" % NS)
+    req = etree.SubElement(rr, "{%(sushi)s}Requestor" % NS)
+    rid = etree.SubElement(req, "{%(sushi)s}ID" % NS)
     rid.text = requestor_id
-    req.append(etree.Element("{%(ns1)s}Name" % NS))
-    remail = etree.SubElement(req, "{%(ns1)s}Email" % NS)
+    req.append(etree.Element("{%(sushi)s}Name" % NS))
+    remail = etree.SubElement(req, "{%(sushi)s}Email" % NS)
     remail.text = requestor_email
 
-    custref = etree.SubElement(rr, "{%(ns1)s}CustomerReference" % NS)
-    cid = etree.SubElement(custref, "{%(ns1)s}ID" % NS)
-    cid.text = requestor_id
-    custref.append(etree.Element("{%(ns1)s}Name" % NS))
+    custref = etree.SubElement(rr, "{%(sushi)s}CustomerReference" % NS)
+    cid = etree.SubElement(custref, "{%(sushi)s}ID" % NS)
+    cid.text = customer_reference
+    custref.append(etree.Element("{%(sushi)s}Name" % NS))
 
-    repdef = etree.SubElement(rr, "{%(ns1)s}ReportDefinition" % NS,
+    repdef = etree.SubElement(rr, "{%(sushi)s}ReportDefinition" % NS,
                               Name=report, Release=str(release))
-    filters = etree.SubElement(repdef, "{%(ns1)s}Filters" % NS)
-    udr = etree.SubElement(filters, "{%(ns1)s}UsageDateRange" % NS)
-    beg = etree.SubElement(udr, "{%(ns1)s}Begin" % NS)
+    filters = etree.SubElement(repdef, "{%(sushi)s}Filters" % NS)
+    udr = etree.SubElement(filters, "{%(sushi)s}UsageDateRange" % NS)
+    beg = etree.SubElement(udr, "{%(sushi)s}Begin" % NS)
     beg.text = start_date.strftime("%Y-%m-%d")
-    end = etree.SubElement(udr, "{%(ns1)s}End" % NS)
+    end = etree.SubElement(udr, "{%(sushi)s}End" % NS)
     end.text = end_date.strftime("%Y-%m-%d")
 
-    payload = etree.tostring(root, xml_declaration=True, encoding="utf-8")
+    payload = etree.tostring(root, pretty_print=True,xml_declaration=True, encoding="utf-8")
+
     headers = {"SOAPAction": '"SushiService:GetReportIn"',
                "Content-Type": "text/xml; charset=UTF-8",
                "Content-Length": len(payload)}
@@ -76,21 +80,47 @@ def get_report(*args, **kwargs):
     return _raw_to_full(raw_report)
 
 
+def _ns(namespace, name):
+    """Convenience function to make a namespaced XML name"""
+    return "{" + NS[namespace] + "}" + name
+
+
 def _raw_to_full(raw_report):
     """Convert a raw report to a pycounter.report.CounterReport object"""
-    startdate = raw_report.ReportDefinition.Filters.UsageDateRange.Begin
-    enddate = raw_report.ReportDefinition.Filters.UsageDateRange.End
+    root = etree.fromstring(raw_report)
+    oroot = objectify.fromstring(raw_report)
+    rep = oroot.Body[_ns('sushicounter', "ReportResponse")]
+    creport = rep.Report[_ns('counter', 'Report')]
+
+    startdate = datetime.datetime.strptime(
+        root.find('.//%s' % _ns('sushi', 'Begin')).text,
+        "%Y-%m-%d").date()
+    
+    enddate = datetime.datetime.strptime(
+        root.find('.//%s' % _ns('sushi', 'End')).text,
+        "%Y-%m-%d").date()
+
     report_data = {}
     report_data['period'] = (startdate, enddate)
 
-    report_data['report_version'] = raw_report.ReportDefinition._Release
-    report_data['report_type'] = raw_report.ReportDefinition._Name
+    rdef = root.find('.//%s' % _ns('sushi','ReportDefinition'))
+    report_data['report_version'] = rdef.get('Release')
+        
+    report_data['report_type'] = rdef.get('Name')
+    
 
-    report_data['customer'] = raw_report.Report.Report[0].Customer[0].Name
-    inst_id = raw_report.Report.Report[0].Customer[0].ID
+    customer=root.find('.//%s' % _ns('counter','Customer'))
+    report_data['customer'] = (customer.find('.//%s' %
+                                             _ns('counter','Name')).text)
+
+    inst_id = customer.find('.//%s' % _ns('counter', 'ID')).text
     report_data['institutional_identifier'] = inst_id
 
-    report_data['date_run'] = raw_report.Report.Report[0]._Created.date()
+    reproot = root.find('.//%s' %_ns('counter','Report'))
+    created_string = reproot.get('Created')
+    report_data['date_run'] = datetime.datetime.strptime(
+        created_string,
+        "%Y-%m-%dT%H:%M:%S.%fZ")
 
     report = pycounter.report.CounterReport()
 
@@ -99,21 +129,21 @@ def _raw_to_full(raw_report):
 
     report.metric = pycounter.report.METRICS.get(report_data['report_type'])
 
-    for item in raw_report.Report.Report[0].Customer[0].ReportItems:
+    for item in creport.Customer.ReportItems:
         itemline = []
-        itemline.append(item.ItemName)
-        itemline.append(item.ItemPublisher)
-        itemline.append(item.ItemPlatform)
+
+        itemline.append(item.ItemName.text)
+        itemline.append(item.ItemPublisher.text)
+        itemline.append(item.ItemPlatform.text)
 
         eissn = issn = ""
         for identifier in item.ItemIdentifier:
             if identifier.Type == "Print_ISSN":
-                issn = identifier.Value
+                issn = identifier.Value.text
             elif identifier.Type == "Online_ISSN":
-                eissn = identifier.Value
+                eissn = identifier.Value.text
         itemline.append(issn)
         itemline.append(eissn)
-
         for perfitem in item.ItemPerformance:
             usage = 0
             for inst in perfitem.Instance:
@@ -121,6 +151,7 @@ def _raw_to_full(raw_report):
                     usage = str(inst.Count)
                     break
             itemline.append(usage)
+
         if report.report_type:
             if report.report_type.startswith('JR'):
                 report.pubs.append(pycounter.report.CounterPublication(
