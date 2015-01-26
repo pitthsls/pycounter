@@ -132,7 +132,13 @@ def _raw_to_full(raw_report):
         itemline = []
 
         itemline.append(item.ItemName.text)
-        itemline.append(item.ItemPublisher.text)
+
+        try:
+            publisher_name = item.ItemPublisher.text
+        except AttributeError:
+            publisher_name = ""
+        itemline.append(publisher_name)
+
         itemline.append(item.ItemPlatform.text)
 
         eissn = issn = ""
