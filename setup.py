@@ -20,5 +20,5 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         ],
-    install_requires=['pyisbn', 'openpyxl', 'lxml', 'requests', 'six']
+    install_requires=['pyisbn', 'openpyxl', 'lxml', 'requests', 'six', 'dateutil']
     )

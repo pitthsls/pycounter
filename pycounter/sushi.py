@@ -6,6 +6,7 @@ import six
 import os.path
 import requests
 import datetime
+import dateutil.parser
 from lxml import etree
 from lxml import objectify
 
@@ -118,9 +119,7 @@ def _raw_to_full(raw_report):
 
     reproot = root.find('.//%s' %_ns('counter','Report'))
     created_string = reproot.get('Created')
-    report_data['date_run'] = datetime.datetime.strptime(
-        created_string,
-        "%Y-%m-%dT%H:%M:%S.%fZ")
+    report_data['date_run'] = dateutil.parser.parse(created_string)
 
     report = pycounter.report.CounterReport()
 
@@ -144,8 +143,9 @@ def _raw_to_full(raw_report):
                 eissn = identifier.Value.text
         itemline.append(issn)
         itemline.append(eissn)
+
         for perfitem in item.ItemPerformance:
-            usage = 0
+            usage = '0'
             for inst in perfitem.Instance:
                 if inst.MetricType == "ft_total":
                     usage = str(inst.Count)
