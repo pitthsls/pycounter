@@ -88,6 +88,7 @@ def _ns(namespace, name):
 
 def _raw_to_full(raw_report):
     """Convert a raw report to a pycounter.report.CounterReport object"""
+    print raw_report
     root = etree.fromstring(raw_report)
     oroot = objectify.fromstring(raw_report)
     rep = oroot.Body[_ns('sushicounter', "ReportResponse")]
@@ -96,7 +97,7 @@ def _raw_to_full(raw_report):
     startdate = datetime.datetime.strptime(
         root.find('.//%s' % _ns('sushi', 'Begin')).text,
         "%Y-%m-%d").date()
-    
+
     enddate = datetime.datetime.strptime(
         root.find('.//%s' % _ns('sushi', 'End')).text,
         "%Y-%m-%d").date()
@@ -106,9 +107,8 @@ def _raw_to_full(raw_report):
 
     rdef = root.find('.//%s' % _ns('sushi','ReportDefinition'))
     report_data['report_version'] = rdef.get('Release')
-        
+
     report_data['report_type'] = rdef.get('Name')
-    
 
     customer=root.find('.//%s' % _ns('counter','Customer'))
     report_data['customer'] = (customer.find('.//%s' %
@@ -145,12 +145,13 @@ def _raw_to_full(raw_report):
         itemline.append(eissn)
 
         for perfitem in item.ItemPerformance:
-            usage = '0'
+            usage = None
             for inst in perfitem.Instance:
                 if inst.MetricType == "ft_total":
                     usage = str(inst.Count)
                     break
-            itemline.append(usage)
+            if usage is not None:
+                itemline.append(usage)
 
         if report.report_type:
             if report.report_type.startswith('JR'):
