@@ -111,7 +111,7 @@ def _raw_to_full(raw_report):
     report_data['period'] = (startdate, enddate)
 
     rdef = root.find('.//%s' % _ns('sushi', 'ReportDefinition'))
-    report_data['report_version'] = rdef.get('Release')
+    report_data['report_version'] = int(rdef.get('Release'))
 
     report_data['report_type'] = rdef.get('Name')
 
