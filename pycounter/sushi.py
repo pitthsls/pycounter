@@ -3,7 +3,6 @@ from __future__ import absolute_import
 
 import pycounter.report
 import six
-import os.path
 import requests
 import datetime
 import dateutil.parser
@@ -16,6 +15,7 @@ NS = {
     'sushicounter': "http://www.niso.org/schemas/sushi/counter",
     'counter': "http://www.niso.org/schemas/counter",
     }
+
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                         requestor_email=None, customer_reference=None,
@@ -58,7 +58,8 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     end = etree.SubElement(udr, "{%(sushi)s}End" % NS)
     end.text = end_date.strftime("%Y-%m-%d")
 
-    payload = etree.tostring(root, pretty_print=True,xml_declaration=True, encoding="utf-8")
+    payload = etree.tostring(root, pretty_print=True,
+                             xml_declaration=True, encoding="utf-8")
 
     headers = {"SOAPAction": '"SushiService:GetReportIn"',
                "Content-Type": "text/xml; charset=UTF-8",
@@ -82,7 +83,11 @@ def get_report(*args, **kwargs):
 
 
 def _ns(namespace, name):
-    """Convenience function to make a namespaced XML name"""
+    """Convenience function to make a namespaced XML name.
+
+    :param namespace: one of 'SOAP-ENV', 'sushi', 'sushicounter', 'counter'
+    :param name: tag name within the given namespace
+    """
     return "{" + NS[namespace] + "}" + name
 
 
@@ -105,19 +110,19 @@ def _raw_to_full(raw_report):
     report_data = {}
     report_data['period'] = (startdate, enddate)
 
-    rdef = root.find('.//%s' % _ns('sushi','ReportDefinition'))
+    rdef = root.find('.//%s' % _ns('sushi', 'ReportDefinition'))
     report_data['report_version'] = rdef.get('Release')
 
     report_data['report_type'] = rdef.get('Name')
 
-    customer=root.find('.//%s' % _ns('counter','Customer'))
+    customer = root.find('.//%s' % _ns('counter', 'Customer'))
     report_data['customer'] = (customer.find('.//%s' %
-                                             _ns('counter','Name')).text)
+                                             _ns('counter', 'Name')).text)
 
     inst_id = customer.find('.//%s' % _ns('counter', 'ID')).text
     report_data['institutional_identifier'] = inst_id
 
-    reproot = root.find('.//%s' %_ns('counter','Report'))
+    reproot = root.find('.//%s' % _ns('counter', 'Report'))
     created_string = reproot.get('Created')
     report_data['date_run'] = dateutil.parser.parse(created_string)
 
