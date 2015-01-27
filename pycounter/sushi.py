@@ -93,7 +93,6 @@ def _ns(namespace, name):
 
 def _raw_to_full(raw_report):
     """Convert a raw report to a pycounter.report.CounterReport object"""
-    print raw_report
     root = etree.fromstring(raw_report)
     oroot = objectify.fromstring(raw_report)
     rep = oroot.Body[_ns('sushicounter', "ReportResponse")]
