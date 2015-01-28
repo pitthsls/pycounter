@@ -15,8 +15,7 @@ from pycounter import _csvhelper
 
 METRICS = {u"JR1": u"FT Article Requests",
            u"BR1": u"Book Title Requests",
-           u"BR2": u"Book Section Requests",
-           }
+           u"BR2": u"Book Section Requests",}
 
 
 class UnknownReportTypeError(Exception):
