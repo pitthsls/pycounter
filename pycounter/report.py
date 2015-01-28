@@ -11,16 +11,12 @@ import calendar
 import pyisbn
 import six
 
+from pycounter.exceptions import UnknownReportTypeError
 from pycounter import _csvhelper
 
 METRICS = {u"JR1": u"FT Article Requests",
            u"BR1": u"Book Title Requests",
-           u"BR2": u"Book Section Requests",}
-
-
-class UnknownReportTypeError(Exception):
-    """We can't parse this kind of report yet."""
-    pass
+           u"BR2": u"Book Section Requests"}
 
 
 class CounterReport(object):
