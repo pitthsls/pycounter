@@ -80,6 +80,7 @@ class CounterReport(object):
 
     @year.setter
     def year(self, value):
+        """Set the year covered by the report"""
         self._year = value
 
 
@@ -121,9 +122,9 @@ class CounterEresource(six.Iterator):
 
     def __iter__(self):
         currmonth = self.period[0]
-        md = iter(self._monthdata)
+        mondat = iter(self._monthdata)
         while currmonth < self.period[1]:
-            currusage = next(md)
+            currusage = next(mondat)
             yield (currmonth, self.metric, currusage)
             currmonth = _next_month(currmonth)
 
@@ -182,6 +183,9 @@ class CounterBook(CounterEresource):
 
 
 def format_stat(stat):
+    """Turn string numbers that might have an embedded comma into
+    integers
+    """
     stat = stat.replace(',', '')
     try:
         return int(stat)
@@ -297,9 +301,12 @@ def parse_generic(report_reader):
                 countable_header.append(col)
         last_col = len(countable_header)
     else:
-        for last_col, v in enumerate(header):
-            if 'YTD' in v:
+        last_col = 0
+        for val in header:
+            if 'YTD' in val:
                 break
+            last_col += 1
+
         start_date = datetime.date(year, 1, 1)
         end_date = _last_day(_convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
