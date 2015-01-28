@@ -1,2 +1,3 @@
 [run]
 source = pycounter
+omit = pycounter/pycounter.py
