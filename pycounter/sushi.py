@@ -103,8 +103,11 @@ def _raw_to_full(raw_report):
         rep = oroot.Body[_ns('sushicounter', "ReportResponse")]
         creport = rep.Report[_ns('counter', 'Report')]
     except AttributeError:
-        print("report not found in XML: %s" % raw_report) #FIXME
-        raise
+        try:
+            creport = rep.Report[_ns('counter', 'Reports')].Report
+        except AttributeError:
+            print("report not found in XML: %s" % raw_report) #FIXME
+            raise
 
     startdate = datetime.datetime.strptime(
         root.find('.//%s' % _ns('sushi', 'Begin')).text,
