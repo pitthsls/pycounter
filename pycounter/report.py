@@ -385,7 +385,7 @@ def _convert_date_column(datestring):
     :param datestring: the string to convert to a date.
 
     """
-    return datetime.datetime.strptime(datestring, "%b-%Y").date()
+    return datetime.datetime.strptime(datestring.strip(), "%b-%Y").date()
 
 
 def _last_day(orig_date):
