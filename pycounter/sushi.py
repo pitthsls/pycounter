@@ -19,7 +19,7 @@ NS = {
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                         requestor_email=None, customer_reference=None,
-                        report="JR1", release=4):
+                        report="JR1", release=4, sushi_dump=False):
     """Get SUSHI stats for a given site in raw XML format.
 
     :param wsdl_url: URL to SOAP WSDL for this provider
@@ -70,6 +70,8 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                              data=payload,
                              verify=False)
 
+    if sushi_dump:
+        print("SUSHI DUMP: request: %s \n\n response: %s" % (payload, response.content))
     return response.content
 
 
