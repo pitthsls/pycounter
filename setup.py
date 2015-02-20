@@ -10,6 +10,7 @@ setup(
     packages=find_packages(),
     author='Geoffrey Spear',
     author_email='geoffspear@gmail.com',
+    description='Project COUNTER/NISO SUSHI statistics',
     keywords='library COUNTER journals usage_statistics SUSHI',
     test_suite='pycounter.test',
     classifiers=[

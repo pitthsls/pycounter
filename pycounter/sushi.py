@@ -19,7 +19,7 @@ NS = {
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                         requestor_email=None, customer_reference=None,
-                        report="JR1", release=4):
+                        report="JR1", release=4, sushi_dump=False):
     """Get SUSHI stats for a given site in raw XML format.
 
     :param wsdl_url: URL to SOAP WSDL for this provider
@@ -70,6 +70,8 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                              data=payload,
                              verify=False)
 
+    if sushi_dump:
+        print("SUSHI DUMP: request: %s \n\n response: %s" % (payload, response.content))
     return response.content
 
 
@@ -93,10 +95,21 @@ def _ns(namespace, name):
 
 def _raw_to_full(raw_report):
     """Convert a raw report to a pycounter.report.CounterReport object"""
-    root = etree.fromstring(raw_report)
+    try:
+        root = etree.fromstring(raw_report)
+    except etree.XMLSyntaxError:
+        print("XML syntax error: %s" % raw_report)  #FIXME
+        raise
     oroot = objectify.fromstring(raw_report)
-    rep = oroot.Body[_ns('sushicounter', "ReportResponse")]
-    creport = rep.Report[_ns('counter', 'Report')]
+    try:
+        rep = oroot.Body[_ns('sushicounter', "ReportResponse")]
+        creport = rep.Report[_ns('counter', 'Report')]
+    except AttributeError:
+        try:
+            creport = rep.Report[_ns('counter', 'Reports')].Report
+        except AttributeError:
+            print("report not found in XML: %s" % raw_report) #FIXME
+            raise
 
     startdate = datetime.datetime.strptime(
         root.find('.//%s' % _ns('sushi', 'Begin')).text,
@@ -115,15 +128,21 @@ def _raw_to_full(raw_report):
     report_data['report_type'] = rdef.get('Name')
 
     customer = root.find('.//%s' % _ns('counter', 'Customer'))
-    report_data['customer'] = (customer.find('.//%s' %
-                                             _ns('counter', 'Name')).text)
+    try:
+        report_data['customer'] = (customer.find('.//%s' %
+                                                 _ns('counter', 'Name')).text)
+    except AttributeError:
+        report_data['customer'] = ""
 
     inst_id = customer.find('.//%s' % _ns('counter', 'ID')).text
     report_data['institutional_identifier'] = inst_id
 
     reproot = root.find('.//%s' % _ns('counter', 'Report'))
     created_string = reproot.get('Created')
-    report_data['date_run'] = dateutil.parser.parse(created_string)
+    if created_string is not None:
+        report_data['date_run'] = dateutil.parser.parse(created_string)
+    else:
+        report_data['date_run'] = datetime.datetime.now()
 
     report = pycounter.report.CounterReport()
 
@@ -149,8 +168,12 @@ def _raw_to_full(raw_report):
         for identifier in item.ItemIdentifier:
             if identifier.Type == "Print_ISSN":
                 issn = identifier.Value.text
+                if issn is None:
+                    issn = ""
             elif identifier.Type == "Online_ISSN":
                 eissn = identifier.Value.text
+                if eissn is None:
+                    eissn = ""
         itemline.append(issn)
         itemline.append(eissn)
 
