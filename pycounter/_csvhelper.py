@@ -5,6 +5,7 @@ import csv
 import six
 
 
+# noinspection PyUnusedLocal
 class UnicodeReader(six.Iterator):
     def __init__(self, filename, dialect=csv.excel,
                  encoding="utf-8", **kw):
@@ -23,7 +24,7 @@ class UnicodeReader(six.Iterator):
                                  **self.kw)
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type_, value, traceback):
         self.f.close()
 
     def __next__(self):
@@ -36,6 +37,7 @@ class UnicodeReader(six.Iterator):
         return self
 
 
+# noinspection PyUnusedLocal
 class UnicodeWriter(object):
     def __init__(self, filename, dialect=csv.excel,
                  encoding="utf-8", **kw):
@@ -54,7 +56,7 @@ class UnicodeWriter(object):
                                  **self.kw)
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type_, value, traceback):
         self.f.close()
 
     def writerow(self, row):

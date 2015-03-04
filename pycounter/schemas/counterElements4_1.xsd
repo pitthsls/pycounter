@@ -1,3 +1,4 @@
+<!--suppress XmlUnusedNamespaceDeclaration -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:c="http://www.niso.org/schemas/counter" targetNamespace="http://www.niso.org/schemas/counter" elementFormDefault="qualified" version="4">
 	<!--
  DETAILS
