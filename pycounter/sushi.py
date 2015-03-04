@@ -31,6 +31,7 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
         protocol
     :param report: report type, values defined by SUSHI protocol
     :param release: report release number (should generally be `4`.)
+    :param sushi_dump: produces dump of XML to stdout
 
     """
     root = etree.Element("{%(SOAP-ENV)s}Envelope" % NS, nsmap=NS)
@@ -98,9 +99,10 @@ def _raw_to_full(raw_report):
     try:
         root = etree.fromstring(raw_report)
     except etree.XMLSyntaxError:
-        print("XML syntax error: %s" % raw_report)  #FIXME
+        print("XML syntax error: %s" % raw_report)  # FIXME
         raise
     oroot = objectify.fromstring(raw_report)
+    rep = None
     try:
         rep = oroot.Body[_ns('sushicounter', "ReportResponse")]
         creport = rep.Report[_ns('counter', 'Report')]
@@ -108,7 +110,7 @@ def _raw_to_full(raw_report):
         try:
             creport = rep.Report[_ns('counter', 'Reports')].Report
         except AttributeError:
-            print("report not found in XML: %s" % raw_report) #FIXME
+            print("report not found in XML: %s" % raw_report)  # FIXME
             raise
 
     startdate = datetime.datetime.strptime(
@@ -119,8 +121,7 @@ def _raw_to_full(raw_report):
         root.find('.//%s' % _ns('sushi', 'End')).text,
         "%Y-%m-%d").date()
 
-    report_data = {}
-    report_data['period'] = (startdate, enddate)
+    report_data = {'period': (startdate, enddate)}
 
     rdef = root.find('.//%s' % _ns('sushi', 'ReportDefinition'))
     report_data['report_version'] = int(rdef.get('Release'))
@@ -152,17 +153,12 @@ def _raw_to_full(raw_report):
     report.metric = pycounter.report.METRICS.get(report_data['report_type'])
 
     for item in creport.Customer.ReportItems:
-        itemline = []
-
-        itemline.append(item.ItemName.text)
-
         try:
             publisher_name = item.ItemPublisher.text
         except AttributeError:
             publisher_name = ""
-        itemline.append(publisher_name)
 
-        itemline.append(item.ItemPlatform.text)
+        itemline = [item.ItemName.text, publisher_name, item.ItemPlatform.text]
 
         eissn = issn = ""
         for identifier in item.ItemIdentifier:

@@ -11,16 +11,13 @@ import calendar
 import pyisbn
 import six
 
+from pycounter.exceptions import UnknownReportTypeError
+# noinspection PyProtectedMember
 from pycounter import _csvhelper
 
 METRICS = {u"JR1": u"FT Article Requests",
            u"BR1": u"Book Title Requests",
-           u"BR2": u"Book Section Requests",}
-
-
-class UnknownReportTypeError(Exception):
-    """We can't parse this kind of report yet."""
-    pass
+           u"BR2": u"Book Section Requests"}
 
 
 class CounterReport(object):
@@ -41,6 +38,7 @@ class CounterReport(object):
     change in the future.)
 
     """
+
     def __init__(self, metric=None):
         self.pubs = []
         self._year = None
@@ -53,9 +51,9 @@ class CounterReport(object):
         self.date_run = None
 
     def __str__(self):
-        return "CounterReport %s version %s for %s" % (self.report_type,
-                                                       self.report_version,
-                                                       self.year)
+        return "CounterReport %s version %s for date range %s to %s" % (self.report_type,
+                                                                        self.report_version,
+                                                                        self.period[0], self.period[1])
 
     def __iter__(self):
         return iter(self.pubs)
@@ -69,8 +67,7 @@ class CounterReport(object):
 
         This attribute is deprecated.
         """
-        if (self.period[0].month != 1 or
-                self.period[0].year != self.period[1].year):
+        if self.period[0].month != 1 or self.period[0].year != self.period[1].year:
             raise AttributeError("no year attribute for multiyear reports")
         warnings.warn("year attribute is deprecated", DeprecationWarning)
         if self._year is None:
@@ -114,8 +111,7 @@ class CounterEresource(six.Iterator):
 
         Deprecated. Raises AttributeError for multi-year reports
         """
-        if (self.period[0].month != 1 or
-                self.period[0].year != self.period[1].year):
+        if self.period[0].month != 1 or self.period[0].year != self.period[1].year:
             raise AttributeError("no monthdata for multiyear reports")
         warnings.warn("monthdata is deprecated", DeprecationWarning)
         return self._monthdata
@@ -142,6 +138,7 @@ class CounterPublication(CounterEresource):
         CounterPublication objects, as long as only JR1 is supported.)
 
     """
+
     def __init__(self, line=None, period=None, metric=METRICS[u"JR1"]):
         super(CounterPublication, self).__init__(line, period, metric)
         if line is not None:
@@ -165,6 +162,7 @@ class CounterBook(CounterEresource):
         very soon)
 
     """
+
     def __init__(self, line=None, period=None, metric=None):
         super(CounterBook, self).__init__(line, period, metric)
         if line is not None:
@@ -218,6 +216,7 @@ def parse_xlsx(filename):
 
     """
     from openpyxl import load_workbook
+
     workbook = load_workbook(filename=filename)
     worksheet = workbook.get_sheet_by_name(workbook.get_sheet_names()[0])
     row_it = worksheet.iter_rows()
@@ -263,6 +262,7 @@ def parse_generic(report_reader):
                               rt_match.group(2))
         report.report_version = int(rt_match.group(3))
 
+    # noinspection PyTypeChecker
     report.metric = METRICS.get(report.report_type)
 
     custline = six.next(report_reader)
@@ -364,7 +364,7 @@ def _convert_covered(datestring):
     start_date = datetime.datetime.strptime(start_string, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_string, "%Y-%m-%d").date()
 
-    return (start_date, end_date)
+    return start_date, end_date
 
 
 def _convert_date_run(datestring):
@@ -405,7 +405,7 @@ def _next_month(dateobj):
     """Return a datetime.date for the first day of the next month
     after the given date
 
-    :param orig_date: the date within the month for which we want the
+    :param dateobj: the date within the month for which we want the
         next month's first day.
 
     """
