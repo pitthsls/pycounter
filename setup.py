@@ -22,5 +22,6 @@ setup(
         'Programming Language :: Python :: 3.4',
         ],
     install_requires=['pyisbn', 'openpyxl', 'lxml', 'requests',
-                      'six', 'python-dateutil']
+                      'six', 'python-dateutil'],
+    tests_require=['httmock'],
     )
