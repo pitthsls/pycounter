@@ -20,8 +20,8 @@ class ParseExample(unittest.TestCase):
     def test_platform(self):
         for publication in self.report:
             self.assertEqual(publication.publisher,
-                             u"Cambridge University Press")
-            self.assertEqual(publication.platform, u"CJO")
+                             u"Maximegalon University Press")
+            self.assertEqual(publication.platform, u"MJO")
 
     def test_stats(self):
         publication = self.report.pubs[0]
@@ -32,7 +32,7 @@ class ParseExample(unittest.TestCase):
                          [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 0])
 
     def test_customer(self):
-        self.assertEqual(self.report.customer, u"Univ of Pittsburgh")
+        self.assertEqual(self.report.customer, u"University of Maximegalon")
 
     def test_date_run(self):
         self.assertEqual(self.report.date_run, datetime.date(2012, 2, 21))
@@ -61,7 +61,7 @@ class ParseCounter4(unittest.TestCase):
         self.assertEqual(self.report.metric, u"FT Article Requests")
 
     def test_customer(self):
-        self.assertEqual(self.report.customer, u"Univ of Pittsburgh")
+        self.assertEqual(self.report.customer, u"University of Maximegalon")
 
     def test_date_run(self):
         self.assertEqual(self.report.date_run, datetime.date(2012, 2, 21))

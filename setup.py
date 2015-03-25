@@ -1,12 +1,14 @@
 from setuptools import setup, find_packages
+from __future__ import with_statement
 
-__version__ = None  # will be set by exec below
+version = {}  # will be set by exec below
 
-exec(open('pycounter/_version.py', 'rb').read())
+with open('pycounter/version.py', 'rb') as fp:
+    exec(fp.read(), version)
 
 setup(
     name='pycounter',
-    version=__version__,
+    version=version['__version__'],
     packages=find_packages(),
     author='Geoffrey Spear',
     author_email='geoffspear@gmail.com',

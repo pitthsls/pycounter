@@ -9,6 +9,7 @@ import datetime
 
 from pycounter import sushi
 
+
 @urlmatch(netloc=r'(.*\.)?example\.com$')
 def sushi_mock(url, request):
     path = os.path.join(os.path.dirname(__file__),
@@ -35,13 +36,14 @@ class TestConvertRawSimple(unittest.TestCase):
         self.assertEqual(self.report.report_type, u'JR1')
         self.assertEqual(self.report.report_version, 4)
 
+
 class TestSushiRequest(unittest.TestCase):
     def setUp(self):
         with HTTMock(sushi_mock):
             self.report = sushi.get_report('http://www.example.com/SushiService',
-                                                    datetime.date(2015,1,1),
-                                                    datetime.date(2015,1,31)
-                                                    )
+                                           datetime.date(2015, 1, 1),
+                                           datetime.date(2015, 1, 31)
+                                           )
 
     def test_report(self):
         self.assertEqual(self.report.report_type, u'JR1')

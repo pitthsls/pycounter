@@ -19,8 +19,8 @@ class ParseExample(unittest.TestCase):
 
     def test_platform(self):
         for publication in self.report:
-            self.assertEqual(publication.publisher, u"John Wiley and Sons")
-            self.assertEqual(publication.platform, u"Wiley Online Library")
+            self.assertEqual(publication.publisher, u"Megadodo Publications")
+            self.assertEqual(publication.platform, u"HHGTTG Online")
 
     def test_stats(self):
         publication = self.report.pubs[0]
@@ -30,7 +30,7 @@ class ParseExample(unittest.TestCase):
 
     def test_customer(self):
         self.assertEqual(self.report.customer,
-                         u"University of Pittsburgh Health Sci Lib")
+                         u"University of Maximegalon")
 
     def test_date_run(self):
         self.assertEqual(self.report.date_run, datetime.date(2012, 7, 9))
@@ -55,8 +55,8 @@ class ParseCounter4Example(unittest.TestCase):
 
     def test_platform(self):
         for publication in self.report:
-            self.assertEqual(publication.publisher, u"John Wiley and Sons")
-            self.assertEqual(publication.platform, u"Wiley Online Library")
+           self.assertEqual(publication.publisher, u"Megadodo Publications")
+           self.assertEqual(publication.platform, u"HHGTTG Online")
 
     def test_stats(self):
         publication = self.report.pubs[0]
@@ -69,7 +69,7 @@ class ParseCounter4Example(unittest.TestCase):
 
     def test_customer(self):
         self.assertEqual(self.report.customer,
-                         u"University of Pittsburgh Health Sci Lib")
+                         u"University of Maximegalon")
 
     def test_date_run(self):
         self.assertEqual(self.report.date_run, datetime.date(2012, 7, 9))

@@ -32,7 +32,7 @@ class ParseExample(unittest.TestCase):
                          [3, 0, 0, 0, 1, 0, 14, 1, 3, 5, None, None])
 
     def test_customer(self):
-        self.assertEqual(self.report.customer, u"Univ of Pittsburgh")
+        self.assertEqual(self.report.customer, u"University of Maximegalon")
 
     def test_date_run(self):
         self.assertEqual(self.report.date_run, datetime.date(2013, 11, 22))
