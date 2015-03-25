@@ -55,8 +55,8 @@ class ParseCounter4Example(unittest.TestCase):
 
     def test_platform(self):
         for publication in self.report:
-           self.assertEqual(publication.publisher, u"Megadodo Publications")
-           self.assertEqual(publication.platform, u"HHGTTG Online")
+            self.assertEqual(publication.publisher, u"Megadodo Publications")
+            self.assertEqual(publication.platform, u"HHGTTG Online")
 
     def test_stats(self):
         publication = self.report.pubs[0]

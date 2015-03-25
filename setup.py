@@ -1,5 +1,5 @@
-from setuptools import setup, find_packages
 from __future__ import with_statement
+from setuptools import setup, find_packages
 
 version = {}  # will be set by exec below
 
