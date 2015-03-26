@@ -1,13 +1,13 @@
 from __future__ import absolute_import
-from pycounter import report as pycounter
+from pycounter import report
 import unittest
 import os
 
 
 class ParseExample(unittest.TestCase):
     def setUp(self):
-        self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
-                                                   'data/JR1.xlsx'))
+        self.report = report.parse(os.path.join(os.path.dirname(__file__),
+                                   'data/JR1.xlsx'))
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u'JR1')

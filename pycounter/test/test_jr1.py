@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from pycounter import report as pycounter
+from pycounter import report
 import unittest
 import os
 import datetime
@@ -7,7 +7,7 @@ import datetime
 
 class ParseExample(unittest.TestCase):
     def setUp(self):
-        self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
+        self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                    'data/simpleJR1.csv'))
 
     def test_reportname(self):
@@ -45,7 +45,7 @@ class ParseExample(unittest.TestCase):
 
 class ParseCounter4(unittest.TestCase):
     def setUp(self):
-        self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
+        self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                    'data/C4JR1.csv'))
 
     def test_counter4_csv_data(self):
@@ -77,7 +77,7 @@ class ParseMultiyear(unittest.TestCase):
     """
 
     def setUp(self):
-        self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
+        self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                    'data/C4JR1my.csv'))
 
     def test_period(self):
@@ -115,7 +115,7 @@ class ParseBigMultiyear(unittest.TestCase):
     """
 
     def setUp(self):
-        self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
+        self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                    'data/C4JR1big.csv'))
 
     def test_period(self):

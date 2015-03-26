@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from pycounter import report as pycounter
+from pycounter import report
 import unittest
 import os
 import datetime
@@ -7,7 +7,7 @@ import datetime
 
 class ParseExample(unittest.TestCase):
     def setUp(self):
-        self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
+        self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                    'data/simpleJR1.tsv'))
 
     def test_reportname(self):

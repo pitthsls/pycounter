@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from pycounter import report as pycounter
+import pycounter.report
 import unittest
 import os
 import datetime
@@ -7,8 +7,9 @@ import datetime
 
 class ParseExample(unittest.TestCase):
     def setUp(self):
-        self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
-                                                   'data/simpleBR1.csv'))
+        self.report = pycounter.report.parse(
+            os.path.join(os.path.dirname(__file__),
+                         'data/simpleBR1.csv'))
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u'BR1')
@@ -43,8 +44,9 @@ class ParseExample(unittest.TestCase):
 
 class ParseCounter4Example(unittest.TestCase):
     def setUp(self):
-        self.report = pycounter.parse(os.path.join(os.path.dirname(__file__),
-                                                   'data/C4BR1.tsv'))
+        self.report = pycounter.report.parse(
+            os.path.join(os.path.dirname(__file__),
+                         'data/C4BR1.tsv'))
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u'BR1')
