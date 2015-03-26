@@ -12,8 +12,7 @@ import pyisbn
 import six
 
 from pycounter.exceptions import UnknownReportTypeError
-# noinspection PyProtectedMember
-from pycounter import _csvhelper
+from pycounter import csvhelper
 
 METRICS = {u"JR1": u"FT Article Requests",
            u"BR1": u"Book Title Requests",
@@ -25,8 +24,8 @@ class CounterReport(object):
     a COUNTER usage statistics report.
 
     Iterate over the report object to get its rows (each of which is a
-    :class:`CounterBook <CounterBook>` or :class:`CounterPublication
-    <CounterPublication>` instance.
+    :class:`CounterBook <CounterBook>` or :class:`CounterJournal
+    <CounterJournal>` instance.
 
     :param metric: metric being tracked by this report. For database
         reports (which have multiple metrics per report, and which aren't
@@ -51,9 +50,10 @@ class CounterReport(object):
         self.date_run = None
 
     def __str__(self):
-        return "CounterReport %s version %s for date range %s to %s" % (self.report_type,
-                                                                        self.report_version,
-                                                                        self.period[0], self.period[1])
+        return ("CounterReport %s version %s for date range %s to %s" %
+                (self.report_type,
+                self.report_version,
+                self.period[0], self.period[1]))
 
     def __iter__(self):
         return iter(self.pubs)
@@ -67,7 +67,8 @@ class CounterReport(object):
 
         This attribute is deprecated.
         """
-        if self.period[0].month != 1 or self.period[0].year != self.period[1].year:
+        if (self.period[0].month != 1 or
+                self.period[0].year != self.period[1].year):
             raise AttributeError("no year attribute for multiyear reports")
         warnings.warn("year attribute is deprecated", DeprecationWarning)
         if self._year is None:
@@ -111,7 +112,8 @@ class CounterEresource(six.Iterator):
 
         Deprecated. Raises AttributeError for multi-year reports
         """
-        if self.period[0].month != 1 or self.period[0].year != self.period[1].year:
+        if (self.period[0].month != 1 or
+                self.period[0].year != self.period[1].year):
             raise AttributeError("no monthdata for multiyear reports")
         warnings.warn("monthdata is deprecated", DeprecationWarning)
         return self._monthdata
@@ -125,7 +127,7 @@ class CounterEresource(six.Iterator):
             currmonth = _next_month(currmonth)
 
 
-class CounterPublication(CounterEresource):
+class CounterJournal(CounterEresource):
     """
     statistics for a single electronic journal.
 
@@ -135,12 +137,12 @@ class CounterPublication(CounterEresource):
 
     :param metric: the metric tracked by this statistics line.
         (Should probably always be "FT Article Requests" for
-        CounterPublication objects, as long as only JR1 is supported.)
+        CounterJournal objects, as long as only JR1 is supported.)
 
     """
 
     def __init__(self, line=None, period=None, metric=METRICS[u"JR1"]):
-        super(CounterPublication, self).__init__(line, period, metric)
+        super(CounterJournal, self).__init__(line, period, metric)
         if line is not None:
             self.issn = line[3].strip()
             """eJournal's print ISSN"""
@@ -149,8 +151,12 @@ class CounterPublication(CounterEresource):
             self.isbn = None
 
     def __str__(self):
-        return """<CounterPublication %s, publisher %s,
+        return """<CounterJournal %s, publisher %s,
         platform %s>""" % (self.title, self.publisher, self.platform)
+
+
+# for backward compatability
+CounterPublication = CounterJournal
 
 
 class CounterBook(CounterEresource):
@@ -237,7 +243,7 @@ def parse_separated(filename, delimiter):
         delimiter for this file
 
     """
-    with _csvhelper.UnicodeReader(filename,
+    with csvhelper.UnicodeReader(filename,
                                   delimiter=delimiter) as report_reader:
         return parse_generic(report_reader)
 
@@ -325,7 +331,7 @@ def parse_generic(report_reader):
         logging.debug(line)
         if report.report_type:
             if report.report_type.startswith('JR'):
-                report.pubs.append(CounterPublication(line,
+                report.pubs.append(CounterJournal(line,
                                                       report.period,
                                                       report.metric))
             elif report.report_type.startswith('BR'):

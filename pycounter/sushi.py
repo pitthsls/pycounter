@@ -184,7 +184,7 @@ def _raw_to_full(raw_report):
 
         if report.report_type:
             if report.report_type.startswith('JR'):
-                report.pubs.append(pycounter.report.CounterPublication(
+                report.pubs.append(pycounter.report.CounterJournal(
                     itemline,
                     report.period,
                     report.metric))
