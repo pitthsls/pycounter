@@ -5,10 +5,19 @@ pycounter makes working with [COUNTER](http://www.projectcounter.org/)
 usage statistics in Python easy, including fetching statistics with NISO
 [SUSHI](http://www.niso.org/workrooms/sushi)
 
+Developed by the [Health Sciences Library System](http://www.hsls.pitt.edu) 
+of the [University of Pittsburgh](http://www.pitt.edu)  to support importing
+usage data into our in-house Electronic Resources Management (ERM) system.
+
+Licensed under the MIT license. See the file LICENSE for details.
+
 pycounter is tested on Python 2.6, 2.7, 3.3, 3.4, 3.5, and pypy
 
 Installing
 ----------
+From [pypi](http://pypi.python.org/pypi/pycounter):
+
+    pip install pycounter
 
 From inside the source distribution:
 
