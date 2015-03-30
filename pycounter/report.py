@@ -31,6 +31,20 @@ class CounterReport(object):
         reports (which have multiple metrics per report, and which aren't
         implemented yet), this should be set to `None`.
 
+    :ivar report_type: type of report (e.g., "JR1", "BR2")
+
+    :ivar report_version: COUNTER version
+
+    :ivar customer: name of customer on report
+
+    :ivar institutional_identifier: unique ID assigned by vendor for
+        customer
+
+    :ivar period: tuple of datetime.date objects corresponding to the
+        beginning and end of the covered range
+
+    :ivar date_run: date the COUNTER report was generated
+
 
     Other attributes aren't currently set at creation time, but rather
     are set by the parser after creating the object. (This should
@@ -87,10 +101,26 @@ class CounterEresource(six.Iterator):
     base class for COUNTER statistics lines
 
     Iterating returns (first_day_of_month, metric, usage) tuples.
+
+    :param line: COUNTER 3 line of data to parse
+
+    :param period: two-tuple of datetime.date objects corresponding
+        to the beginning and end dates of the covered range
+
+    :param metric: metric tracked by this report. Should be a value
+        from pycounter.report.METRICS dict.
+
+    :ivar title: title of the resource
+
+    :ivar publisher: name of the resource's publisher
+
+    :ivar platform: name of the platform providing the resource
     """
 
     def __init__(self, line=None, period=None, metric=None):
         self.period = period
+        if metric not in METRICS:
+            warnings.warn("metric %s not known" % metric)
         self.metric = metric
         """period covered by this report"""
         if line is not None:

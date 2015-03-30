@@ -36,7 +36,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
     'sphinx.ext.coverage',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
@@ -57,7 +56,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pycounter'
-copyright = u'2014, University of Pittsburgh'
+copyright = u'2014-2015, University of Pittsburgh'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -124,6 +123,3 @@ texinfo_documents = [
      u'Geoffrey Spear', 'pycounter', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
