@@ -119,7 +119,7 @@ class CounterEresource(six.Iterator):
 
     def __init__(self, line=None, period=None, metric=None):
         self.period = period
-        if metric not in METRICS:
+        if metric not in METRICS.values():
             warnings.warn("metric %s not known" % metric)
         self.metric = metric
         """period covered by this report"""
