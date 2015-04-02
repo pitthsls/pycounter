@@ -13,6 +13,16 @@ Licensed under the MIT license. See the file LICENSE for details.
 
 pycounter is tested on Python 2.6, 2.7, 3.3, 3.4, 3.5, and pypy2
 
+.. image:: https://travis-ci.org/pitthsls/pycounter.svg?branch=master
+    :target: https://travis-ci.org/pitthsls/pycounter
+
+.. image:: https://coveralls.io/repos/pitthsls/pycounter/badge.svg?branch=master
+  :target: https://coveralls.io/r/pitthsls/pycounter?branch=master
+.. image:: https://pypip.in/version/pycounter/badge.svg
+    :target: https://pypi.python.org/pypi/pycounter/
+    :alt: Latest Version
+
+
 Installing
 ----------
 From `pypi <http://pypi.python.org/pypi/pycounter>`_:
