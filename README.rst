@@ -24,7 +24,7 @@ pycounter is tested on Python 2.6, 2.7, 3.3, 3.4, 3.5, and pypy2
     :alt: Latest Version
 
 .. image:: https://readthedocs.org/projects/pycounter/badge/?version=latest
-    :target: https://readthedocs.org/projects/pycounter/?badge=latest
+    :target: https://pycounter.readthedocs.org/
     :alt: Documentation Status
 
 
