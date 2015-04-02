@@ -10,3 +10,4 @@ htmlcov
 docs/build
 venv/
 .tox/
+dist/
