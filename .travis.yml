@@ -8,7 +8,6 @@ python:
   - "3.4"
   - "nightly"
   - "pypy"
-  - "pypy3"
 
 install:
   - pip install .
