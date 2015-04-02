@@ -2,12 +2,15 @@
 from __future__ import absolute_import
 
 import pycounter.report
+import logging
 import six
 import requests
 import datetime
 import dateutil.parser
 from lxml import etree
 from lxml import objectify
+
+logger = logging.getLogger(__name__)
 
 NS = {
     'SOAP-ENV': "http://schemas.xmlsoap.org/soap/envelope/",
@@ -72,7 +75,9 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                              verify=False)
 
     if sushi_dump:
-        print("SUSHI DUMP: request: %s \n\n response: %s" % (payload, response.content))
+        logger.debug("SUSHI DUMP: request: %s \n\n response: %s",
+                     payload,
+                     response.content)
     return response.content
 
 
@@ -99,7 +104,7 @@ def _raw_to_full(raw_report):
     try:
         root = etree.fromstring(raw_report)
     except etree.XMLSyntaxError:
-        print("XML syntax error: %s" % raw_report)  # FIXME
+        logging.error("XML syntax error: %s", raw_report)
         raise
     oroot = objectify.fromstring(raw_report)
     rep = None
@@ -110,7 +115,7 @@ def _raw_to_full(raw_report):
         try:
             creport = rep.Report[_ns('counter', 'Reports')].Report
         except AttributeError:
-            print("report not found in XML: %s" % raw_report)  # FIXME
+            logging.error("report not found in XML: %s", raw_report)
             raise
 
     startdate = datetime.datetime.strptime(

@@ -165,6 +165,9 @@ class CounterJournal(CounterEresource):
         COUNTER 3 layout. (This is an ugly hack that should be fixed
         very soon)
 
+    :param period: two-tuple of datetime.date objects corresponding
+        to the beginning and end dates of the covered range
+
     :param metric: the metric tracked by this statistics line.
         (Should probably always be "FT Article Requests" for
         CounterJournal objects, as long as only JR1 is supported.)
