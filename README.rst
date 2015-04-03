@@ -42,7 +42,7 @@ Usage
 -----
 
 Parsing COUNTER reports (currently supports COUNTER 3 and 4, in .csv, .tsv, 
-or .xlsx files, reports JR1, BR1, and BR2):
+or .xlsx files, reports JR1, BR1, and BR2)::
 
     >>> import pycounter.report
     >>> report = pycounter.report.parse("COUNTER4_2015.tsv")  # filename or path to file
@@ -58,7 +58,7 @@ or .xlsx files, reports JR1, BR1, and BR2):
     (datetime.date(2015, 2, 1), 'FT Article Requests', 42)
     (datetime.date(2015, 3, 1), 'FT Article Requests', 23)
     
-Fetching SUSHI data:
+Fetching SUSHI data::
 
     >>> import pycounter.sushi
     >>> import datetime

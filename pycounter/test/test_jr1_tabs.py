@@ -8,7 +8,7 @@ import datetime
 class ParseExample(unittest.TestCase):
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                   'data/simpleJR1.tsv'))
+                                                'data/simpleJR1.tsv'))
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u'JR1')

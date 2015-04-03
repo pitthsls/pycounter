@@ -40,7 +40,7 @@ class TestConvertRawSimple(unittest.TestCase):
 class TestSushiRequest(unittest.TestCase):
     def setUp(self):
         with HTTMock(sushi_mock):
-            self.report = sushi.get_report('http://www.example.com/SushiService',
+            self.report = sushi.get_report('http://www.example.com/Sushi',
                                            datetime.date(2015, 1, 1),
                                            datetime.date(2015, 1, 31)
                                            )

@@ -8,7 +8,7 @@ import datetime
 class ParseExample(unittest.TestCase):
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                   'data/simpleJR1.csv'))
+                                                'data/simpleJR1.csv'))
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u'JR1')
@@ -46,7 +46,7 @@ class ParseExample(unittest.TestCase):
 class ParseCounter4(unittest.TestCase):
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                   'data/C4JR1.csv'))
+                                                'data/C4JR1.csv'))
 
     def test_counter4_csv_data(self):
 
@@ -78,7 +78,7 @@ class ParseMultiyear(unittest.TestCase):
 
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                   'data/C4JR1my.csv'))
+                                                'data/C4JR1my.csv'))
 
     def test_period(self):
         self.assertEqual(self.report.period,
@@ -116,7 +116,7 @@ class ParseBigMultiyear(unittest.TestCase):
 
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                   'data/C4JR1big.csv'))
+                                                'data/C4JR1big.csv'))
 
     def test_period(self):
         self.assertEqual(self.report.period,

@@ -64,10 +64,12 @@ class CounterReport(object):
         self.date_run = None
 
     def __str__(self):
-        return ("CounterReport %s version %s for date range %s to %s" %
-                (self.report_type,
-                self.report_version,
-                self.period[0], self.period[1]))
+        return (
+            "CounterReport %s version %s for date range %s to %s" %
+            (self.report_type,
+             self.report_version,
+             self.period[0], self.period[1])
+        )
 
     def __iter__(self):
         return iter(self.pubs)
@@ -277,7 +279,7 @@ def parse_separated(filename, delimiter):
 
     """
     with csvhelper.UnicodeReader(filename,
-                                  delimiter=delimiter) as report_reader:
+                                 delimiter=delimiter) as report_reader:
         return parse_generic(report_reader)
 
 
@@ -365,8 +367,8 @@ def parse_generic(report_reader):
         if report.report_type:
             if report.report_type.startswith('JR'):
                 report.pubs.append(CounterJournal(line,
-                                                      report.period,
-                                                      report.metric))
+                                                  report.period,
+                                                  report.metric))
             elif report.report_type.startswith('BR'):
                 report.pubs.append(CounterBook(line,
                                                report.period,
