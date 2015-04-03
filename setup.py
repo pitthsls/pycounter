@@ -14,6 +14,7 @@ setup(
     version=version['__version__'],
     packages=find_packages(),
     author='Health Sciences Library System, University of Pittsburgh',
+    author_email='speargh@pitt.edu',
     maintainer='Geoffrey Spear',
     maintainer_email='speargh@pitt.edu',
     url='http://www.github.com/pitthsls/pycounter',
