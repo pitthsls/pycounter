@@ -85,9 +85,6 @@ class ParseMultiyear(unittest.TestCase):
                          (datetime.date(2011, 10, 1),
                           datetime.date(2012, 2, 29)))
 
-    def test_year_exception(self):
-        self.assertRaises(AttributeError, getattr, self.report, 'year')
-
     def test_monthdata_exception(self):
         self.assertRaises(AttributeError, getattr,
                           self.report.pubs[0], 'monthdata')
@@ -122,9 +119,6 @@ class ParseBigMultiyear(unittest.TestCase):
         self.assertEqual(self.report.period,
                          (datetime.date(2011, 1, 1),
                           datetime.date(2012, 12, 31)))
-
-    def test_year_exception(self):
-        self.assertRaises(AttributeError, getattr, self.report, 'year')
 
     def test_monthdata_exception(self):
         self.assertRaises(AttributeError, getattr,

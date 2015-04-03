@@ -70,3 +70,4 @@ Fetching SUSHI data::
     ...     print(journal.title)
     Sqornshellous Swamptalk
     Acta Mattressica
+

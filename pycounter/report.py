@@ -54,7 +54,6 @@ class CounterReport(object):
 
     def __init__(self, metric=None):
         self.pubs = []
-        self._year = None
         self.report_type = None
         self.report_version = 0
         self.metric = metric
@@ -73,29 +72,6 @@ class CounterReport(object):
 
     def __iter__(self):
         return iter(self.pubs)
-
-    @property
-    def year(self):
-        """year covered by report.
-
-        Raises AttributeError if report is for multiple years
-        or if it doesn't begin in January.
-
-        This attribute is deprecated.
-        """
-        if (self.period[0].month != 1 or
-                self.period[0].year != self.period[1].year):
-            raise AttributeError("no year attribute for multiyear reports")
-        warnings.warn("year attribute is deprecated", DeprecationWarning)
-        if self._year is None:
-            return self.period[0].year
-        else:
-            return self._year
-
-    @year.setter
-    def year(self, value):
-        """Set the year covered by the report"""
-        self._year = value
 
 
 class CounterEresource(six.Iterator):
