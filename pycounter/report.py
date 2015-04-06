@@ -100,14 +100,10 @@ class CounterEresource(six.Iterator):
         if metric not in METRICS.values():
             warnings.warn("metric %s not known" % metric)
         self.metric = metric
-        """period covered by this report"""
         if line is not None:
             self.title = line[0]
-            """title of eResource"""
             self.publisher = line[1]
-            """publisher of eResource"""
             self.platform = line[2]
-            """platform hosting eResource"""
             self._monthdata = [format_stat(x) for x in line[5:]]
             while len(self._monthdata) < 12:
                 self._monthdata.append(None)
@@ -150,15 +146,17 @@ class CounterJournal(CounterEresource):
         (Should probably always be "FT Article Requests" for
         CounterJournal objects, as long as only JR1 is supported.)
 
+    :ivar issn: eJournal's print ISSN
+
+    :ivar eissn: eJournal's eISSN
+
     """
 
     def __init__(self, line=None, period=None, metric=METRICS[u"JR1"]):
         super(CounterJournal, self).__init__(line, period, metric)
         if line is not None:
             self.issn = line[3].strip()
-            """eJournal's print ISSN"""
             self.eissn = line[4].strip()
-            """eJournal's eISSN"""
             self.isbn = None
 
     def __str__(self):
@@ -178,17 +176,19 @@ class CounterBook(CounterEresource):
         COUNTER 3 layout. (This is an ugly hack that should be fixed
         very soon)
 
+    :ivar isbn: eBook's ISBN
+
+    :ivar issn: eBook's ISSN (if any)
+
     """
 
     def __init__(self, line=None, period=None, metric=None):
         super(CounterBook, self).__init__(line, period, metric)
         if line is not None:
             self.isbn = line[3].strip().replace('-', '')
-            """eBook's ISBN"""
             if len(self.isbn) == 10:
                 self.isbn = pyisbn.convert(self.isbn)
             self.issn = line[4].strip()
-            """eBook's ISSN (if any)"""
             self.eissn = None
 
     def __str__(self):
