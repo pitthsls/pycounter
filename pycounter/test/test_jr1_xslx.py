@@ -24,10 +24,10 @@ class ParseExample(unittest.TestCase):
 
     def test_stats(self):
         publication = self.report.pubs[0]
-        self.assertEqual(publication.monthdata,
+        self.assertEqual([x[2] for x in publication],
                          [4, 14, 13, 30, 19, 7, 31, 6, 16, 12, 8, 12])
         publication = self.report.pubs[1]
         self.assertEqual(
-            publication.monthdata,
+            [x[2] for x in publication],
             [5414, 5459, 4936, 5172, 4064, 3904, 4054,
              4090, 5010, 6680, 5961, 3742])

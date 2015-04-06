@@ -110,18 +110,6 @@ class CounterEresource(six.Iterator):
                 self._monthdata.append(None)
             logging.debug("monthdata: %s", self._monthdata)
 
-    @property
-    def monthdata(self):
-        """
-        Return month data when applicable.
-
-        Deprecated. Raises AttributeError for multi-year reports
-        """
-        if (self.period[0].month != 1 or
-                self.period[0].year != self.period[1].year):
-            raise AttributeError("no monthdata for multiyear reports")
-        warnings.warn("monthdata is deprecated", DeprecationWarning)
-        return self._monthdata
 
     def __iter__(self):
         currmonth = self.period[0]
@@ -356,20 +344,6 @@ def parse_generic(report_reader):
                 raise UnknownReportTypeError(report.report_type)
 
     return report
-
-
-def parse_csv(filename):
-    """Parse CSV files; deprecated."""
-    warnings.warn(".parse_csv is deprecated; use parse_separated",
-                  DeprecationWarning)
-    return parse_separated(filename, ",")
-
-
-def parse_tsv(filename):
-    """Parse tab-separated files; deprecated."""
-    warnings.warn(".parse_tsv is deprecated; use parse_separated",
-                  DeprecationWarning)
-    return parse_separated(filename, "\t")
 
 
 def _convert_covered(datestring):

@@ -26,8 +26,8 @@ class ParseExample(unittest.TestCase):
     def test_stats(self):
         publication = self.report.pubs[0]
         self.assertEqual(
-            publication.monthdata,
-            [0, 25, 0, 0, 0, 0, None, None, None, None, None, None])
+            [x[2] for x in publication],
+            [0, 25, 0, 0, 0, 0])
 
     def test_customer(self):
         self.assertEqual(self.report.customer,
@@ -63,8 +63,8 @@ class ParseCounter4Example(unittest.TestCase):
     def test_stats(self):
         publication = self.report.pubs[0]
         self.assertEqual(
-            publication.monthdata,
-            [0, 25, 0, 0, 0, 0, None, None, None, None, None, None])
+            [x[2] for x in publication],
+            [0, 25, 0, 0, 0, 0])
 
     def test_metric(self):
         self.assertEqual(self.report.metric, u"Book Title Requests")
