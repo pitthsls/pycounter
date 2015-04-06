@@ -93,6 +93,7 @@ class CounterEresource(six.Iterator):
     :ivar publisher: name of the resource's publisher
 
     :ivar platform: name of the platform providing the resource
+
     """
 
     def __init__(self, line=None, period=None, metric=None):
@@ -214,6 +215,7 @@ def parse(filename):
     Returns a :class:`CounterReport <CounterReport>` object.
 
     :param filename: path to COUNTER report to load and parse.
+
     """
     if filename.endswith('.tsv'):
         # Horrible filename-based hack; in future examine contents of file here
@@ -250,6 +252,7 @@ def parse_separated(filename, delimiter):
     Invoked automatically by ``parse``.
 
     :param filename: path to delimited COUNTER report file.
+
     :param delimiter: character (such as ',' or '\t') used as the
         delimiter for this file
 

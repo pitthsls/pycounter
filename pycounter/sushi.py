@@ -26,14 +26,22 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     """Get SUSHI stats for a given site in raw XML format.
 
     :param wsdl_url: URL to SOAP WSDL for this provider
+
     :param start_date: start date for report (must be first day of a month)
+
     :param end_date: end date for report (must be last day of a month)
+
     :param requestor_id: requestor ID as defined by SUSHI protocol
+
     :param requestor_email: requestor email address, if required by provider
+
     :param customer_reference: customer reference number as defined by SUSHI
         protocol
+
     :param report: report type, values defined by SUSHI protocol
+
     :param release: report release number (should generally be `4`.)
+
     :param sushi_dump: produces dump of XML to stdout
 
     """
