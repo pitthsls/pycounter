@@ -15,6 +15,7 @@ from pycounter.exceptions import UnknownReportTypeError
 from pycounter import csvhelper
 
 METRICS = {u"JR1": u"FT Article Requests",
+           u"JR1 GOA": u"Gold Open Access Article Requests",
            u"BR1": u"Book Title Requests",
            u"BR2": u"Book Section Requests"}
 
@@ -110,7 +111,6 @@ class CounterEresource(six.Iterator):
                 self._monthdata.append(None)
             logging.debug("monthdata: %s", self._monthdata)
 
-
     def __iter__(self):
         currmonth = self.period[0]
         mondat = iter(self._monthdata)
@@ -153,7 +153,7 @@ class CounterJournal(CounterEresource):
         platform %s>""" % (self.title, self.publisher, self.platform)
 
 
-# for backward compatability
+# for backward compatibility
 CounterPublication = CounterJournal
 
 
@@ -255,7 +255,7 @@ def parse_generic(report_reader):
     returns a CounterReport object
 
     :param report_reader: a iterable object that yields lists COUNTER
-        data formatted as tablular lists
+        data formatted as tabular lists
 
     """
     report = CounterReport()
@@ -263,7 +263,7 @@ def parse_generic(report_reader):
     line1 = six.next(report_reader)
 
     rt_match = re.match(
-        r'.*(Journal|Book|Database) Report (\d) ?\(R(\d)\)',
+        r'.*(Journal|Book|Database) Report (\d(?: GOA)?) ?\(R(\d)\)',
         line1[0])
     if rt_match:
         report.report_type = (rt_match.group(1)[0].capitalize() + 'R' +
@@ -273,8 +273,7 @@ def parse_generic(report_reader):
     # noinspection PyTypeChecker
     report.metric = METRICS.get(report.report_type)
 
-    custline = six.next(report_reader)
-    report.customer = custline[0]
+    report.customer = six.next(report_reader)[0]
 
     if report.report_version == 4:
         inst_id_line = six.next(report_reader)
@@ -324,7 +323,7 @@ def parse_generic(report_reader):
         if not line:
             continue
         if report.report_version == 4:
-            if report.report_type == 'JR1':
+            if report.report_type.startswith('JR1'):
                 line = line[0:3] + line[5:7] + line[10:last_col]
             elif report.report_type in ('BR1', 'BR2'):
                 line = line[0:3] + line[5:7] + line[8:last_col]

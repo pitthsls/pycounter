@@ -130,3 +130,27 @@ class ParseBigMultiyear(unittest.TestCase):
                          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                           ])
+
+
+class ParseGOA(unittest.TestCase):
+    """Gold Open Access Report
+    """
+
+    def setUp(self):
+        self.report = report.parse(os.path.join(os.path.dirname(__file__),
+                                                'data/C4JR1GOA.csv'))
+
+    def test_metric(self):
+        self.assertEqual(self.report.metric,
+                         u"Gold Open Access Article Requests")
+
+    def test_customer(self):
+        self.assertEqual(self.report.customer, u"University of Maximegalon")
+
+    def test_date_run(self):
+        self.assertEqual(self.report.date_run, datetime.date(2012, 2, 21))
+
+    def test_period(self):
+        self.assertEqual(self.report.period,
+                         (datetime.date(2011, 1, 1),
+                          datetime.date(2011, 12, 31)))
