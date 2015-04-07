@@ -112,7 +112,7 @@ def _raw_to_full(raw_report):
     try:
         root = etree.fromstring(raw_report)
     except etree.XMLSyntaxError:
-        logging.error("XML syntax error: %s", raw_report)
+        logger.error("XML syntax error: %s", raw_report)
         raise
     oroot = objectify.fromstring(raw_report)
     rep = None
@@ -123,7 +123,7 @@ def _raw_to_full(raw_report):
         try:
             creport = rep.Report[_ns('counter', 'Reports')].Report
         except AttributeError:
-            logging.error("report not found in XML: %s", raw_report)
+            logger.error("report not found in XML: %s", raw_report)
             raise
 
     startdate = datetime.datetime.strptime(

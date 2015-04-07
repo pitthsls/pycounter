@@ -29,8 +29,8 @@ class CounterReport(object):
     <CounterJournal>` instance.
 
     :param metric: metric being tracked by this report. For database
-        reports (which have multiple metrics per report, and which aren't
-        implemented yet), this should be set to `None`.
+        reports (which have multiple metrics per report), this should be
+        set to `None`.
 
     :ivar report_type: type of report (e.g., "JR1", "BR2")
 
