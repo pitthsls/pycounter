@@ -11,8 +11,8 @@ pycounter
     :target: https://pypi.python.org/pypi/pycounter/
     :alt: Latest Version
 
-.. image:: https://readthedocs.org/projects/pycounter/badge/?version=latest
-    :target: https://pycounter.readthedocs.org/
+.. image:: https://readthedocs.org/projects/pycounter/badge/?version=stable
+    :target: https://readthedocs.org/projects/pycounter/?badge=stable
     :alt: Documentation Status
 
 
@@ -27,6 +27,8 @@ usage data into our in-house Electronic Resources Management (ERM) system.
 Licensed under the MIT license. See the file LICENSE for details.
 
 pycounter is tested on Python 2.6, 2.7, 3.3, 3.4, 3.5, and pypy2
+
+Documentation is on `Read the Docs <http://pycounter.readthedocs.org>`.
 
 
 Installing
