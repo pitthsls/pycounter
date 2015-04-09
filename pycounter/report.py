@@ -50,7 +50,7 @@ class CounterReport(object):
 
     def __init__(self, report_type=None, report_version=4, metric=None,
                  customer=None, institutional_identifier=None,
-                 period=(None,None), date_run=None):
+                 period=(None, None), date_run=None):
         self.pubs = []
         self.report_type = report_type
         self.report_version = report_version
@@ -62,7 +62,6 @@ class CounterReport(object):
             self.date_run = datetime.date.today()
         else:
             self.date_run = date_run
-
 
     def __str__(self):
         return (
@@ -234,7 +233,7 @@ def parse_separated(filename, delimiter):
     """Open COUNTER CSV/TSV report with given filename and delimiter
     and parse into a CounterReport object
 
-    Invoked automatically by ``parse``.
+    Invoked automatically by :py:func:`parse`.
 
     :param filename: path to delimited COUNTER report file.
 

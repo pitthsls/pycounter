@@ -14,8 +14,6 @@ Release v\ |version|
 API Docs
 ========
 
-.. currentmodule:: pycounter
-
 .. autosummary::
 
    pycounter.report

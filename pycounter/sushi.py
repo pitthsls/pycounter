@@ -42,7 +42,7 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
 
     :param release: report release number (should generally be `4`.)
 
-    :param sushi_dump: produces dump of XML to stdout
+    :param sushi_dump: produces dump of XML to DEBUG logger
 
     """
     root = etree.Element("{%(SOAP-ENV)s}Envelope" % NS, nsmap=NS)
@@ -92,7 +92,27 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
 def get_report(*args, **kwargs):
     """Get a usage report from a SUSHI server
 
-    returns a pycounter.report.CounterReport object.
+    returns a :class:`pycounter.report.CounterReport` object.
+
+    :param wsdl_url: URL to SOAP WSDL for this provider
+
+    :param start_date: start date for report (must be first day of a month)
+
+    :param end_date: end date for report (must be last day of a month)
+
+    :param requestor_id: requestor ID as defined by SUSHI protocol
+
+    :param requestor_email: requestor email address, if required by provider
+
+    :param customer_reference: customer reference number as defined by SUSHI
+        protocol
+
+    :param report: report type, values defined by SUSHI protocol
+
+    :param release: report release number (should generally be `4`.)
+
+    :param sushi_dump: produces dump of XML to DEBUG logger
+
     """
     raw_report = get_sushi_stats_raw(*args, **kwargs)
     return _raw_to_full(raw_report)
@@ -108,7 +128,8 @@ def _ns(namespace, name):
 
 
 def _raw_to_full(raw_report):
-    """Convert a raw report to a pycounter.report.CounterReport object"""
+    """Convert a raw report to a :class:`pycounter.report.CounterReport` object
+    """
     try:
         root = etree.fromstring(raw_report)
     except etree.XMLSyntaxError:

@@ -4,15 +4,40 @@ pycounter API Docs
 pycounter.report module
 -----------------------
 
-.. automodule:: pycounter.report
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. module:: pycounter.report
+
+Commonly-used function
+----------------------
+
+.. autofunction:: parse
+
+Classes
+-------
+
+.. autoclass:: CounterReport
+.. autoclass:: CounterEresource
+.. autoclass:: CounterJournal
+.. autoclass:: CounterBook
+
+Other functions
+---------------
+These are mostly for internal use by the module, but are available to be
+called directly if necessary
+
+.. autofunction:: format_stat
+.. autofunction:: parse_generic
+.. autofunction:: parse_separated
+.. autofunction:: parse_xlsx
+
 
 pycounter.sushi module
 ----------------------
+.. module:: pycounter.sushi
 
-.. automodule:: pycounter.sushi
-    :members:
-    :undoc-members:
-    :show-inheritance:
+Commonly-used function
+----------------------
+.. autofunction:: get_report
+
+Other functions
+---------------
+.. autofunction:: get_sushi_stats_raw
