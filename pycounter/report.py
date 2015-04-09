@@ -154,10 +154,6 @@ class CounterJournal(CounterEresource):
         platform %s>""" % (self.title, self.publisher, self.platform)
 
 
-# for backward compatibility
-CounterPublication = CounterJournal
-
-
 class CounterBook(CounterEresource):
     """
     statistics for a single electronic book.

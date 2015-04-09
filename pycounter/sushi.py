@@ -125,7 +125,7 @@ def _raw_to_full(raw_report):
         except AttributeError:
             logger.error("report not found in XML: %s", raw_report)
             raise
-
+    logger.debug("COUNTER report: %s", etree.tostring(creport))
     startdate = datetime.datetime.strptime(
         root.find('.//%s' % _ns('sushi', 'Begin')).text,
         "%Y-%m-%d").date()
