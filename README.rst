@@ -28,7 +28,7 @@ Licensed under the MIT license. See the file LICENSE for details.
 
 pycounter is tested on Python 2.6, 2.7, 3.3, 3.4, 3.5, and pypy2
 
-Documentation is on `Read the Docs <http://pycounter.readthedocs.org>`.
+Documentation is on `Read the Docs <http://pycounter.readthedocs.org>`_.
 
 
 Installing
