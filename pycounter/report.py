@@ -238,7 +238,7 @@ def parse_separated(filename, delimiter):
 
     :param filename: path to delimited COUNTER report file.
 
-    :param delimiter: character (such as ',' or '\t') used as the
+    :param delimiter: character (such as ',' or '\\\\t') used as the
         delimiter for this file
 
     """
