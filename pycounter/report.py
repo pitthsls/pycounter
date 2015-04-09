@@ -32,36 +32,37 @@ class CounterReport(object):
         reports (which have multiple metrics per report), this should be
         set to `None`.
 
-    :ivar report_type: type of report (e.g., "JR1", "BR2")
+    :param report_type: type of report (e.g., "JR1", "BR2")
 
-    :ivar report_version: COUNTER version
+    :param report_version: COUNTER version
 
-    :ivar customer: name of customer on report
+    :param customer: name of customer on report
 
-    :ivar institutional_identifier: unique ID assigned by vendor for
+    :param institutional_identifier: unique ID assigned by vendor for
         customer
 
-    :ivar period: tuple of datetime.date objects corresponding to the
+    :param period: tuple of datetime.date objects corresponding to the
         beginning and end of the covered range
 
-    :ivar date_run: date the COUNTER report was generated
-
-
-    Other attributes aren't currently set at creation time, but rather
-    are set by the parser after creating the object. (This should
-    change in the future.)
+    :param date_run: date the COUNTER report was generated
 
     """
 
-    def __init__(self, metric=None):
+    def __init__(self, report_type=None, report_version=4, metric=None,
+                 customer=None, institutional_identifier=None,
+                 period=(None,None), date_run=None):
         self.pubs = []
-        self.report_type = None
-        self.report_version = 0
+        self.report_type = report_type
+        self.report_version = report_version
         self.metric = metric
-        self.customer = None
-        self.institutional_identifier = None
-        self.period = (None, None)
-        self.date_run = None
+        self.customer = customer
+        self.institutional_identifier = institutional_identifier
+        self.period = period
+        if date_run is None:
+            self.date_run = datetime.date.today()
+        else:
+            self.date_run = date_run
+
 
     def __str__(self):
         return (
