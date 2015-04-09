@@ -1,15 +1,5 @@
-pycounter package
-=================
-
-Subpackages
------------
-
-.. toctree::
-
-    pycounter.test
-
-Submodules
-----------
+pycounter API Docs
+==================
 
 pycounter.report module
 -----------------------
