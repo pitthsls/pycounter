@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import pycounter.report
+import pycounter.exceptions
 import logging
 import six
 import requests
@@ -132,9 +133,9 @@ def _raw_to_full(raw_report):
     """
     try:
         root = etree.fromstring(raw_report)
-    except etree.XMLSyntaxError:
+    except etree.XMLSyntaxError as e:
         logger.error("XML syntax error: %s", raw_report)
-        raise
+        raise pycounter.exceptions.SushiException(e)
     oroot = objectify.fromstring(raw_report)
     rep = None
     try:

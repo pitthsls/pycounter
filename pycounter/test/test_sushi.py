@@ -8,7 +8,7 @@ from httmock import urlmatch, HTTMock
 import datetime
 
 from pycounter import sushi
-
+import pycounter.exceptions
 
 @urlmatch(netloc=r'(.*\.)?example\.com$')
 def sushi_mock(url, request):
@@ -17,6 +17,9 @@ def sushi_mock(url, request):
     with open(path, 'rb') as datafile:
         return datafile.read().decode('utf-8')
 
+@urlmatch(netloc=r'(.*\.)?example\.com$')
+def bogus_mock(url, request):
+    return "Bogus response with no XML"
 
 class TestHelpers(unittest.TestCase):
     def test_ns(self):
@@ -48,3 +51,13 @@ class TestSushiRequest(unittest.TestCase):
     def test_report(self):
         self.assertEqual(self.report.report_type, u'JR1')
         self.assertEqual(self.report.report_version, 4)
+
+class TestBogusXML(unittest.TestCase):
+    def test_request(self):
+        with HTTMock(bogus_mock):
+            self.assertRaises(pycounter.exceptions.SushiException,
+                              sushi.get_report,
+                              'http://www.example.com/bogus',
+                              datetime.date(2015, 1, 1),
+                              datetime.date(2015, 1, 31)
+                              )
