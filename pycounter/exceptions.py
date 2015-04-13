@@ -32,7 +32,7 @@ class TooManyRequestsError(SushiException):
 
 
 class RequestorNotAuthorizedError(SushiException):
-    """Requestor ID or CustumerReference are not recognized as giving
+    """Requestor ID or CustomerReference are not recognized as giving
     authorization to retrieve statistics
     """
     pass
@@ -59,7 +59,7 @@ class SushiWarning(Warning, SushiException):
 
 
 class PartialDataWarning(SushiWarning):
-    """Request not completely fullfilled, but available data was returned"""
+    """Request not completely fulfilled, but available data was returned"""
     pass
 
 
