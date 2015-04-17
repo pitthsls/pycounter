@@ -40,6 +40,15 @@ From `pypi <http://pypi.python.org/pypi/pycounter>`_:
 From inside the source distribution:
 
     python setup.py install
+
+**About dependencies:** pycounter uses
+`lxml <http://lxml.de/>`_, an XML parsing library with a C extension.
+It requires libxml2 and libxslt to be installed to build correctly.
+It may be helpful to install lxml manually before installing pycounter,
+either with the Windows binary installers,
+a linux distro package, or with macports or homebrew on OS X. See the
+`lxml installation docs <http://lxml.de/installation.html>`_ for more
+information.
     
 Usage
 -----
