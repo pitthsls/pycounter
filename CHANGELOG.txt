@@ -1,4 +1,4 @@
 
-version 0.5a3
+version 0.5
 
 - Added support for JR1 GOA (Gold Open Access) report
