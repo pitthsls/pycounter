@@ -40,6 +40,19 @@ class TestConvertRawSimple(unittest.TestCase):
         self.assertEqual(self.report.report_version, 4)
 
 
+class TestMissingMonth(unittest.TestCase):
+    def setUp(self):
+        path = os.path.join(os.path.dirname(__file__),
+                            'data', 'sushi_missing_jan.xml')
+        with open(path, 'rb') as datafile:
+            self.report = sushi._raw_to_full(datafile.read())
+    def test_february(self):
+        publication = next(iter(self.report))
+        first_month_data = next(iter(publication))
+        self.assertEqual(first_month_data[0],
+                         datetime.date(2013,2,1))
+
+
 class TestSushiRequest(unittest.TestCase):
     def setUp(self):
         with HTTMock(sushi_mock):
