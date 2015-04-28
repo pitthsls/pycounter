@@ -207,22 +207,31 @@ def _raw_to_full(raw_report):
                     eissn = ""
         itemline.append(issn)
         itemline.append(eissn)
+        month_data = []
 
         for perfitem in item.ItemPerformance:
+            logger.debug("Perfitem date: %r", pycounter.report._convert_date_run(perfitem.Period.Begin.text))
+            item_date = pycounter.report._convert_date_run(
+                perfitem.Period.Begin.text)
             usage = None
             for inst in perfitem.Instance:
                 if inst.MetricType == "ft_total":
                     usage = str(inst.Count)
                     break
             if usage is not None:
+                month_data.append((item_date, usage))
                 itemline.append(usage)
 
         if report.report_type:
             if report.report_type.startswith('JR'):
                 report.pubs.append(pycounter.report.CounterJournal(
-                    itemline,
-                    report.period,
-                    report.metric))
+                    line=itemline,
+                    period=report.period,
+                    metric=report.metric,
+                    issn=issn,
+                    eissn=eissn,
+                    month_data=month_data
+                ))
             elif report.report_type.startswith('BR'):
                 report.pubs.append(
                     pycounter.report.CounterBook(itemline,

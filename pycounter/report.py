@@ -89,6 +89,9 @@ class CounterEresource(six.Iterator):
     :param metric: metric tracked by this report. Should be a value
         from pycounter.report.METRICS dict.
 
+    :param month_data: a list containing usage data for this
+        resource, as (datetime.date, usage) tuples
+
     :ivar title: title of the resource
 
     :ivar publisher: name of the resource's publisher
@@ -97,11 +100,16 @@ class CounterEresource(six.Iterator):
 
     """
 
-    def __init__(self, line=None, period=None, metric=None):
+    def __init__(self, line=None, period=None, metric=None, month_data=None):
         self.period = period
         if metric not in METRICS.values():
             warnings.warn("metric %s not known" % metric)
         self.metric = metric
+        self._monthdata = []
+        self._full_data = []
+        if month_data is not None:
+            for item in month_data:
+                self._full_data.append(item)
         if line is not None:
             self.title = line[0]
             self.publisher = line[1]
@@ -112,12 +120,16 @@ class CounterEresource(six.Iterator):
             logging.debug("monthdata: %s", self._monthdata)
 
     def __iter__(self):
-        currmonth = self.period[0]
-        mondat = iter(self._monthdata)
-        while currmonth < self.period[1]:
-            currusage = next(mondat)
-            yield (currmonth, self.metric, currusage)
-            currmonth = _next_month(currmonth)
+        if self._full_data:
+            for item in self._full_data:
+                yield (item[0], self.metric, item[1])
+        else:
+            currmonth = self.period[0]
+            mondat = iter(self._monthdata)
+            while currmonth < self.period[1]:
+                currusage = next(mondat)
+                yield (currmonth, self.metric, currusage)
+                currmonth = _next_month(currmonth)
 
 
 class CounterJournal(CounterEresource):
@@ -135,14 +147,18 @@ class CounterJournal(CounterEresource):
         (Should probably always be "FT Article Requests" for
         CounterJournal objects, as long as only JR1 is supported.)
 
+    :param month_data: a list containing usage data for this
+        journal, as (datetime.date, usage) tuples
+
     :ivar issn: eJournal's print ISSN
 
     :ivar eissn: eJournal's eISSN
 
     """
 
-    def __init__(self, line=None, period=None, metric=METRICS[u"JR1"]):
-        super(CounterJournal, self).__init__(line, period, metric)
+    def __init__(self, line=None, period=None, metric=METRICS[u"JR1"],
+                 issn=None, eissn=None, month_data=None):
+        super(CounterJournal, self).__init__(line, period, metric, month_data)
         if line is not None:
             self.issn = line[3].strip()
             self.eissn = line[4].strip()
@@ -165,10 +181,13 @@ class CounterBook(CounterEresource):
 
     :ivar issn: eBook's ISSN (if any)
 
+    :param month_data: a list containing usage data for this
+        book, as (datetime.date, usage) tuples
+
     """
 
-    def __init__(self, line=None, period=None, metric=None):
-        super(CounterBook, self).__init__(line, period, metric)
+    def __init__(self, line=None, period=None, metric=None, month_data=None):
+        super(CounterBook, self).__init__(line, period, metric, month_data)
         if line is not None:
             self.isbn = line[3].strip().replace('-', '')
             if len(self.isbn) == 10:

@@ -21,6 +21,7 @@ def sushi_mock(url, request):
 def bogus_mock(url, request):
     return "Bogus response with no XML"
 
+
 class TestHelpers(unittest.TestCase):
     def test_ns(self):
         self.assertEqual(
@@ -39,6 +40,25 @@ class TestConvertRawSimple(unittest.TestCase):
         self.assertEqual(self.report.report_type, u'JR1')
         self.assertEqual(self.report.report_version, 4)
 
+    def test_title(self):
+        publication = next(iter(self.report))
+        self.assertEqual(publication.title, u'Journal of fake data')
+
+
+class TestMissingMonth(unittest.TestCase):
+    def setUp(self):
+        path = os.path.join(os.path.dirname(__file__),
+                            'data', 'sushi_missing_jan.xml')
+        with open(path, 'rb') as datafile:
+            self.report = sushi._raw_to_full(datafile.read())
+        self.publication = next(iter(self.report))
+    def test_february(self):
+        first_month_data = next(iter(self.publication))
+        self.assertEqual(first_month_data[0],
+                         datetime.date(2013,2,1))
+    def test_title(self):
+        self.assertEqual(self.publication.title, u'Journal of fake data')
+
 
 class TestSushiRequest(unittest.TestCase):
     def setUp(self):
@@ -51,6 +71,7 @@ class TestSushiRequest(unittest.TestCase):
     def test_report(self):
         self.assertEqual(self.report.report_type, u'JR1')
         self.assertEqual(self.report.report_version, 4)
+
 
 class TestBogusXML(unittest.TestCase):
     def test_request(self):
