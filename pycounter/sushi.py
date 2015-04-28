@@ -1,5 +1,6 @@
 """NISO SUSHI support"""
 from __future__ import absolute_import
+from pycounter.helpers import convert_date_run
 
 import pycounter.report
 import pycounter.exceptions
@@ -210,8 +211,9 @@ def _raw_to_full(raw_report):
         month_data = []
 
         for perfitem in item.ItemPerformance:
-            logger.debug("Perfitem date: %r", pycounter.report._convert_date_run(perfitem.Period.Begin.text))
-            item_date = pycounter.report._convert_date_run(
+            logger.debug("Perfitem date: %r",
+                         convert_date_run(perfitem.Period.Begin.text))
+            item_date = convert_date_run(
                 perfitem.Period.Begin.text)
             usage = None
             for inst in perfitem.Instance:
