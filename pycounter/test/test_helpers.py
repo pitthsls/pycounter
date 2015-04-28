@@ -1,7 +1,7 @@
 from __future__ import absolute_import
-from pycounter import report
 import unittest
 import datetime
+from pycounter.helpers import next_month
 
 
 class TestNextMonth(unittest.TestCase):
@@ -13,5 +13,5 @@ class TestNextMonth(unittest.TestCase):
                 ]
         for pair in data:
             self.assertEqual(datetime.date(*pair[1]),
-                             report._next_month(datetime.date(*pair[0]))
+                             next_month(datetime.date(*pair[0]))
                              )

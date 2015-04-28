@@ -6,13 +6,15 @@ import logging
 import re
 import warnings
 import datetime
-import calendar
 
 import pyisbn
 import six
 
 from pycounter.exceptions import UnknownReportTypeError
 from pycounter import csvhelper
+from pycounter.helpers import convert_covered, convert_date_run, \
+    convert_date_column, last_day, next_month
+
 
 METRICS = {u"JR1": u"FT Article Requests",
            u"JR1 GOA": u"Gold Open Access Article Requests",
@@ -129,7 +131,7 @@ class CounterEresource(six.Iterator):
             while currmonth < self.period[1]:
                 currusage = next(mondat)
                 yield (currmonth, self.metric, currusage)
-                currmonth = _next_month(currmonth)
+                currmonth = next_month(currmonth)
 
 
 class CounterJournal(CounterEresource):
@@ -298,12 +300,12 @@ def parse_generic(report_reader):
         six.next(report_reader)
 
         covered_line = six.next(report_reader)
-        report.period = _convert_covered(covered_line[0])
+        report.period = convert_covered(covered_line[0])
 
     six.next(report_reader)
 
     date_run_line = six.next(report_reader)
-    report.date_run = _convert_date_run(date_run_line[0])
+    report.date_run = convert_date_run(date_run_line[0])
 
     header = six.next(report_reader)
     first_date_col = 10 if report.report_version == 4 else 5
@@ -330,7 +332,7 @@ def parse_generic(report_reader):
             last_col += 1
 
         start_date = datetime.date(year, 1, 1)
-        end_date = _last_day(_convert_date_column(header[last_col - 1]))
+        end_date = last_day(convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
 
     six.next(report_reader)
@@ -358,64 +360,3 @@ def parse_generic(report_reader):
                 raise UnknownReportTypeError(report.report_type)
 
     return report
-
-
-def _convert_covered(datestring):
-    """
-    Convert a string of the format 'YYYY-MM-DD to YYYY-MM-DD' to a
-    tuple of datetime.date instances.
-
-    :param datestring: the string to convert to a date.
-
-    """
-    start_string, end_string = datestring.split(" to ")
-    start_date = datetime.datetime.strptime(start_string, "%Y-%m-%d").date()
-    end_date = datetime.datetime.strptime(end_string, "%Y-%m-%d").date()
-
-    return start_date, end_date
-
-
-def _convert_date_run(datestring):
-    """
-    Convert a date of the format 'YYYY-MM-DD' to a datetime.date object
-
-    :param datestring: the string to convert to a date.
-
-    """
-    return datetime.datetime.strptime(datestring, "%Y-%m-%d").date()
-
-
-def _convert_date_column(datestring):
-    """
-    Convert a month expressed as, e.g., 'Jan-2014' to a datetime.date
-    object representing the first day of that month/
-
-    :param datestring: the string to convert to a date.
-
-    """
-    return datetime.datetime.strptime(datestring.strip(), "%b-%Y").date()
-
-
-def _last_day(orig_date):
-    """
-    Return a datetime.date object representing the last day of a
-    calendar month, given a datetime.date for any day in that month
-
-    :param orig_date: the date within the month for which we want the
-        last day.
-
-    """
-    daynum = calendar.monthrange(orig_date.year, orig_date.month)[1]
-    return datetime.date(orig_date.year, orig_date.month, daynum)
-
-
-def _next_month(dateobj):
-    """Return a datetime.date for the first day of the next month
-    after the given date
-
-    :param dateobj: the date within the month for which we want the
-        next month's first day.
-
-    """
-    year_delta, prev_month = divmod(dateobj.month, 12)
-    return datetime.date(dateobj.year + year_delta, prev_month + 1, 1)
