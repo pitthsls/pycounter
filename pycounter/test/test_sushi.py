@@ -10,12 +10,14 @@ import datetime
 from pycounter import sushi
 import pycounter.exceptions
 
+
 @urlmatch(netloc=r'(.*\.)?example\.com$')
 def sushi_mock(url, request):
     path = os.path.join(os.path.dirname(__file__),
                         'data', 'sushi_simple.xml')
     with open(path, 'rb') as datafile:
         return datafile.read().decode('utf-8')
+
 
 @urlmatch(netloc=r'(.*\.)?example\.com$')
 def bogus_mock(url, request):
@@ -52,10 +54,12 @@ class TestMissingMonth(unittest.TestCase):
         with open(path, 'rb') as datafile:
             self.report = sushi._raw_to_full(datafile.read())
         self.publication = next(iter(self.report))
+
     def test_february(self):
         first_month_data = next(iter(self.publication))
         self.assertEqual(first_month_data[0],
-                         datetime.date(2013,2,1))
+                         datetime.date(2013, 2, 1))
+
     def test_title(self):
         self.assertEqual(self.publication.title, u'Journal of fake data')
 

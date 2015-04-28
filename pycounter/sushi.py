@@ -211,7 +211,8 @@ def _raw_to_full(raw_report):
         month_data = []
 
         for perfitem in item.ItemPerformance:
-            logger.debug("Perfitem date: %r", convert_date_run(perfitem.Period.Begin.text))
+            logger.debug("Perfitem date: %r",
+                         convert_date_run(perfitem.Period.Begin.text))
             item_date = convert_date_run(
                 perfitem.Period.Begin.text)
             usage = None

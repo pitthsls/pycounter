@@ -149,12 +149,12 @@ class CounterJournal(CounterEresource):
         (Should probably always be "FT Article Requests" for
         CounterJournal objects, as long as only JR1 is supported.)
 
+    :param issn: eJournal's print ISSN
+
+    :param eissn: eJournal's eISSN
+
     :param month_data: a list containing usage data for this
         journal, as (datetime.date, usage) tuples
-
-    :ivar issn: eJournal's print ISSN
-
-    :ivar eissn: eJournal's eISSN
 
     """
 
@@ -165,6 +165,12 @@ class CounterJournal(CounterEresource):
             self.issn = line[3].strip()
             self.eissn = line[4].strip()
             self.isbn = None
+
+        if issn is not None:
+            self.issn = issn
+
+        if eissn is not None:
+            self.eissn = eissn
 
     def __str__(self):
         return """<CounterJournal %s, publisher %s,
