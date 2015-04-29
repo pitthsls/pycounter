@@ -94,15 +94,16 @@ class CounterEresource(six.Iterator):
     :param month_data: a list containing usage data for this
         resource, as (datetime.date, usage) tuples
 
-    :ivar title: title of the resource
+    :param title: title of the resource
 
-    :ivar publisher: name of the resource's publisher
+    :param publisher: name of the resource's publisher
 
-    :ivar platform: name of the platform providing the resource
+    :param platform: name of the platform providing the resource
 
     """
 
-    def __init__(self, line=None, period=None, metric=None, month_data=None):
+    def __init__(self, line=None, period=None, metric=None, month_data=None,
+                 title="", platform="", publisher=""):
         self.period = period
         if metric not in METRICS.values():
             warnings.warn("metric %s not known" % metric)
@@ -120,6 +121,13 @@ class CounterEresource(six.Iterator):
             while len(self._monthdata) < 12:
                 self._monthdata.append(None)
             logging.debug("monthdata: %s", self._monthdata)
+
+        if title:
+            self.title = title
+        if platform:
+            self.platform = platform
+        if publisher:
+            self.publisher = publisher
 
     def __iter__(self):
         if self._full_data:
@@ -156,11 +164,19 @@ class CounterJournal(CounterEresource):
     :param month_data: a list containing usage data for this
         journal, as (datetime.date, usage) tuples
 
+    :param title: title of the resource
+
+    :param publisher: name of the resource's publisher
+
+    :param platform: name of the platform providing the resource
+
     """
 
     def __init__(self, line=None, period=None, metric=METRICS[u"JR1"],
-                 issn=None, eissn=None, month_data=None):
-        super(CounterJournal, self).__init__(line, period, metric, month_data)
+                 issn=None, eissn=None, month_data=None,
+                 title="", platform="", publisher=""):
+        super(CounterJournal, self).__init__(line, period, metric, month_data,
+                                             title, platform, publisher)
         if line is not None:
             self.issn = line[3].strip()
             self.eissn = line[4].strip()
@@ -192,16 +208,30 @@ class CounterBook(CounterEresource):
     :param month_data: a list containing usage data for this
         book, as (datetime.date, usage) tuples
 
+    :param title: title of the resource
+
+    :param publisher: name of the resource's publisher
+
+    :param platform: name of the platform providing the resource
+
     """
 
-    def __init__(self, line=None, period=None, metric=None, month_data=None):
-        super(CounterBook, self).__init__(line, period, metric, month_data)
+    def __init__(self, line=None, period=None, metric=None, month_data=None,
+                 title="", platform="", publisher="", isbn=None, issn=None):
+        super(CounterBook, self).__init__(line, period, metric, month_data,
+                                          title, platform, publisher)
+        self.eissn = None
         if line is not None:
             self.isbn = line[3].strip().replace('-', '')
             if len(self.isbn) == 10:
                 self.isbn = pyisbn.convert(self.isbn)
             self.issn = line[4].strip()
-            self.eissn = None
+
+        if isbn is not None:
+            self.isbn = isbn
+
+        if issn is not None:
+            self.issn = issn
 
     def __str__(self):
         return """<CounterBook %s (ISBN: %s), publisher %s,
