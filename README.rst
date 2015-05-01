@@ -7,9 +7,9 @@ pycounter
 .. image:: https://coveralls.io/repos/pitthsls/pycounter/badge.svg?branch=master
     :target: https://coveralls.io/r/pitthsls/pycounter?branch=master
 
-
-
-
+.. image:: https://img.shields.io/pypi/v/pycounter.svg
+    :target: https://pypi.python.org/pypi/pycounter/
+    :alt: Latest Version
 
 .. image:: https://readthedocs.org/projects/pycounter/badge/?version=stable
     :target: https://readthedocs.org/projects/pycounter/?badge=stable
