@@ -41,3 +41,19 @@ class ParseExample(unittest.TestCase):
         self.assertEqual(self.report.period,
                          (datetime.date(2013, 1, 1),
                           datetime.date(2013, 10, 31)))
+
+    def test_dates(self):
+        publication = self.report.pubs[0]
+        self.assertEqual([x[0] for x in publication],
+                         [datetime.date(2013, 1, 1),
+                          datetime.date(2013, 2, 1),
+                          datetime.date(2013, 3, 1),
+                          datetime.date(2013, 4, 1),
+                          datetime.date(2013, 5, 1),
+                          datetime.date(2013, 6, 1),
+                          datetime.date(2013, 7, 1),
+                          datetime.date(2013, 8, 1),
+                          datetime.date(2013, 9, 1),
+                          datetime.date(2013, 10, 1),
+                          ]
+                         )

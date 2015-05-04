@@ -383,15 +383,24 @@ def parse_generic(report_reader):
         else:
             line = line[0:last_col]
         logging.debug(line)
+        title = line[0]
+        publisher = line[1]
+        platform = line[2]
         if report.report_type:
             if report.report_type.startswith('JR'):
                 report.pubs.append(CounterJournal(line,
                                                   report.period,
-                                                  report.metric))
+                                                  report.metric,
+                                                  title=title,
+                                                  publisher=publisher,
+                                                  platform=platform))
             elif report.report_type.startswith('BR'):
                 report.pubs.append(CounterBook(line,
                                                report.period,
-                                               report.metric))
+                                               report.metric,
+                                               title=title,
+                                               publisher=publisher,
+                                               platform=platform))
             else:
                 raise UnknownReportTypeError(report.report_type)
 
