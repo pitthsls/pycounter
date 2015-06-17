@@ -34,8 +34,8 @@ class ParseCounter4Example(unittest.TestCase):
 
     def test_row_metric(self):
         publication = self.report.pubs[0]
-        jan_data = next(publication)
-        self.assertEqual(jan_data[1], "Regular searches")
+        jan_data = next(iter(publication))
+        self.assertEqual(jan_data[1], "Regular Searches")
 
     def test_customer(self):
         self.assertEqual(self.report.customer,

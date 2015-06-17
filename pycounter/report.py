@@ -111,7 +111,7 @@ class CounterEresource(six.Iterator):
     def __init__(self, line=None, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
         self.period = period
-        if metric not in METRICS.values():
+        if metric != line[3] and metric not in METRICS.values():
             warnings.warn("metric %s not known" % metric)
         self.metric = metric
         self._monthdata = []
@@ -245,6 +245,13 @@ class CounterBook(CounterEresource):
                            self.platform)
 
 
+class CounterDatabase(CounterEresource):
+    def __init__(self, line=None, period=None, metric=None, month_data=None,
+                 title="", platform="", publisher=""):
+        super(CounterDatabase, self).__init__(line, period, metric, month_data,
+                                              title, platform, publisher)
+
+
 def format_stat(stat):
     """Turn string numbers that might have an embedded comma into
     integers
@@ -353,7 +360,8 @@ def parse_generic(report_reader):
     first_date_col = 10 if report.report_version == 4 else 5
     if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
         first_date_col = 8
-
+    elif report.report_type == 'DB1' and report.report_version ==4:
+        first_date_col = 6
     year = int(header[first_date_col].split('-')[1])
     if year < 100:
         year += 2000
@@ -377,7 +385,9 @@ def parse_generic(report_reader):
         end_date = last_day(convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
 
-    six.next(report_reader)
+    if report.report_type != 'DB1':
+        six.next(report_reader)
+
     for line in report_reader:
         if not line:
             continue
@@ -386,6 +396,8 @@ def parse_generic(report_reader):
                 line = line[0:3] + line[5:7] + line[10:last_col]
             elif report.report_type in ('BR1', 'BR2'):
                 line = line[0:3] + line[5:7] + line[8:last_col]
+            elif report.report_type == 'DB1':
+                pass
         else:
             line = line[0:last_col]
         logging.debug(line)
@@ -407,6 +419,13 @@ def parse_generic(report_reader):
                                                title=title,
                                                publisher=publisher,
                                                platform=platform))
+            elif report.report_type.startswith('DB'):
+                report.pubs.append(CounterDatabase(line,
+                                                   report.period,
+                                                   line[3],
+                                                   title=title,
+                                                   publisher=publisher,
+                                                   platform=platform))
             else:
                 raise UnknownReportTypeError(report.report_type)
 
