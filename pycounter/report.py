@@ -360,7 +360,7 @@ def parse_generic(report_reader):
     first_date_col = 10 if report.report_version == 4 else 5
     if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
         first_date_col = 8
-    elif report.report_type == 'DB1' and report.report_version ==4:
+    elif report.report_type == 'DB1' and report.report_version == 4:
         first_date_col = 6
     year = int(header[first_date_col].split('-')[1])
     if year < 100:
