@@ -21,6 +21,12 @@ METRICS = {u"JR1": u"FT Article Requests",
            u"BR1": u"Book Title Requests",
            u"BR2": u"Book Section Requests"}
 
+CODES = {
+    u"Database": u"DB",
+    u"Journal": u"JR",
+    u"Book": u"BR",
+}
+
 
 class CounterReport(object):
     """
@@ -319,7 +325,7 @@ def parse_generic(report_reader):
         r'.*(Journal|Book|Database) Report (\d(?: GOA)?) ?\(R(\d)\)',
         line1[0])
     if rt_match:
-        report.report_type = (rt_match.group(1)[0].capitalize() + 'R' +
+        report.report_type = (CODES[rt_match.group(1)] +
                               rt_match.group(2))
         report.report_version = int(rt_match.group(3))
 
