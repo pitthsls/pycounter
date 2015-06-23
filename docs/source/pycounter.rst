@@ -18,6 +18,7 @@ Classes
 .. autoclass:: CounterEresource
 .. autoclass:: CounterJournal
 .. autoclass:: CounterBook
+.. autoclass:: CounterDatabase
 
 Other functions
 ---------------
