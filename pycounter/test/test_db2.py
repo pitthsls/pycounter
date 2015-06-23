@@ -35,7 +35,8 @@ class ParseCounter4Example(unittest.TestCase):
     def test_row_metric(self):
         publication = self.report.pubs[0]
         jan_data = next(iter(publication))
-        self.assertEqual(jan_data[1], "Access denied: concurrent/simultaneous user license limit exceeded")
+        m = "Access denied: concurrent/simultaneous user license limit exceeded"
+        self.assertEqual(jan_data[1], m)
 
     def test_customer(self):
         self.assertEqual(self.report.customer,
