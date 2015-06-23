@@ -362,6 +362,8 @@ def parse_generic(report_reader):
         first_date_col = 8
     elif report.report_type == 'DB1' and report.report_version == 4:
         first_date_col = 6
+    elif report.report_type == 'DB2' and report.report_version == 4:
+        first_date_col = 5
     year = int(header[first_date_col].split('-')[1])
     if year < 100:
         year += 2000
@@ -388,6 +390,9 @@ def parse_generic(report_reader):
     if report.report_type != 'DB1':
         six.next(report_reader)
 
+    if report.report_type == 'DB2':
+        six.next(report_reader)
+
     for line in report_reader:
         if not line:
             continue
@@ -396,7 +401,9 @@ def parse_generic(report_reader):
                 line = line[0:3] + line[5:7] + line[10:last_col]
             elif report.report_type in ('BR1', 'BR2'):
                 line = line[0:3] + line[5:7] + line[8:last_col]
-            elif report.report_type == 'DB1':
+            elif report.report_type in ('DB1', 'DB2'):
+                # format coincidentally works for these. This is a kludge
+                # so leaving this explicit...
                 pass
         else:
             line = line[0:last_col]
