@@ -75,7 +75,7 @@ Fetching SUSHI data::
     >>> import pycounter.sushi
     >>> import datetime
     >>> report = pycounter.sushi.get_report(wsdl_url='http://www.example.com/SushiService',
-    ...     startdate=datetime.date(2015,1,1), enddate=datetime.date(2015,1,31),
+    ...     start_date=datetime.date(2015,1,1), end_date=datetime.date(2015,1,31),
     ...     requestor_id="myreqid", customer_reference="refnum", report="JR1",
     ...     release=4)
     >>> for journal in report:
