@@ -30,7 +30,7 @@ CODES = {
 
 REPORT_DESCRIPTIONS = {
     u'JR1':
-        u'Number of Successful Full-Text Article Requests by'
+        u'Number of Successful Full-Text Article Requests by '
         u'Month and Journal',
 }
 
@@ -132,7 +132,7 @@ class CounterReport(object):
             u'Total for all journals',
             u'',
         ]
-        platforms = {resource.platform for resource in self.pubs}
+        platforms = set(resource.platform for resource in self.pubs)
         if len(platforms) == 1:
             total_cells.append(platforms.pop())
         else:
