@@ -29,7 +29,9 @@ CODES = {
 }
 
 REPORT_DESCRIPTIONS = {
-    u'JR1': u'Number of Successful Full-Text Article Requests by Month and Journal',
+    u'JR1':
+        u'Number of Successful Full-Text Article Requests by'
+        u'Month and Journal',
 }
 
 
@@ -98,10 +100,11 @@ class CounterReport(object):
             if code == self.report_type[0:2]:
                 rep_type = name
 
-        report_name = ("%s Report %s(R%s)" %(
+        report_name = ("%s Report %s(R%s)" % (
             rep_type, self.report_type[-1], self.report_version
         ))
-        output_lines.append([report_name, REPORT_DESCRIPTIONS[self.report_type]])
+        output_lines.append([report_name,
+                             REPORT_DESCRIPTIONS[self.report_type]])
         output_lines.append([self.customer])
         output_lines.append([self.institutional_identifier])
         output_lines.append([u'Period covered by Report:'])
@@ -124,7 +127,7 @@ class CounterReport(object):
         """
         Generate Totals line for COUNTER report, as list of cells
         """
-        #FIXME: don't hardcode JR1 values
+        # FIXME: don't hardcode JR1 values
         total_cells = [
             u'Total for all journals',
             u'',
@@ -145,7 +148,7 @@ class CounterReport(object):
                 total_usage += data[2]
                 month_data[month] += data[2]
         total_cells.append(six.text_type(total_usage))
-        total_cells.extend([u''] * 2) # FIXME: PDF, HTML support
+        total_cells.extend([u''] * 2)  # FIXME: PDF, HTML support
         total_cells.extend(six.text_type(d) for d in month_data)
 
         return total_cells
@@ -154,7 +157,7 @@ class CounterReport(object):
         """
         Generate header for COUNTER table for this report, as list of cells
         """
-        #FIXME: don't hardcode JR1 values.
+        # FIXME: don't hardcode JR1 values.
         header_cells = [
             u'Journal',
             u'Publisher',
@@ -167,10 +170,12 @@ class CounterReport(object):
             u'Reporting Period HTML',
             u'Reporting Period PDF',
         ]
-        for dt in rrule.rrule(rrule.MONTHLY, dtstart=self.period[0], until=self.period[1]):
+        for dt in rrule.rrule(rrule.MONTHLY, dtstart=self.period[0],
+                              until=self.period[1]):
             header_cells.append(dt.strftime('%b-%Y'))
 
         return header_cells
+
 
 class CounterEresource(six.Iterator):
     """
@@ -295,8 +300,8 @@ class CounterJournal(CounterEresource):
             self.title,
             self.publisher,
             self.platform,
-            u'',  #FIXME: DOI?
-            u'',  #FIXME: Propietary identifier?
+            u'',  # FIXME: DOI?
+            u'',  # FIXME: Propietary identifier?
             self.issn,
             self.eissn,
         ]
@@ -306,10 +311,11 @@ class CounterJournal(CounterEresource):
             total_usage += data[2]
             month_data.append(six.text_type(data[2]))
         data_line.append(six.text_type(total_usage))
-        data_line.extend([u'0'] * 2) #FIXME: PDF, HTML
+        data_line.extend([u'0'] * 2)  # FIXME: PDF, HTML
         data_line.extend(month_data)
 
         return data_line
+
 
 class CounterBook(CounterEresource):
     """
