@@ -9,6 +9,7 @@ import datetime
 
 import pyisbn
 import six
+from dateutil import rrule
 
 from pycounter.exceptions import UnknownReportTypeError
 from pycounter import csvhelper
@@ -25,6 +26,10 @@ CODES = {
     u"Database": u"DB",
     u"Journal": u"JR",
     u"Book": u"BR",
+}
+
+REPORT_DESCRIPTIONS = {
+    u'JR1': u'Number of Successful Full-Text Article Requests by Month and Journal',
 }
 
 
@@ -82,6 +87,90 @@ class CounterReport(object):
     def __iter__(self):
         return iter(self.pubs)
 
+    def as_generic(self):
+        """
+        Output report as list of lists, containing cells that would appear
+        in COUNTER report (suitable for writing as CSV, TSV, etc.)
+        """
+        output_lines = []
+        rep_type = ""
+        for name, code in CODES.items():
+            if code == self.report_type[0:2]:
+                rep_type = name
+
+        report_name = ("%s Report %s(R%s)" %(
+            rep_type, self.report_type[-1], self.report_version
+        ))
+        output_lines.append([report_name, REPORT_DESCRIPTIONS[self.report_type]])
+        output_lines.append([self.customer])
+        output_lines.append([self.institutional_identifier])
+        output_lines.append([u'Period covered by Report:'])
+        period = "%s to %s" % (
+            self.period[0].strftime('%Y-%m-%d'),
+            self.period[1].strftime('%Y-%m-%d')
+        )
+        output_lines.append([period])
+        output_lines.append([u'Date run:'])
+        output_lines.append([self.date_run.strftime('%Y-%m-%d')])
+        output_lines.append(self._table_header())
+        output_lines.append(self._totals_line())
+
+        for pub in self.pubs:
+            output_lines.append(pub.as_generic())
+
+        return output_lines
+
+    def _totals_line(self):
+        """
+        Generate Totals line for COUNTER report, as list of cells
+        """
+        #FIXME: don't hardcode JR1 values
+        total_cells = [
+            u'Total for all journals',
+            u'',
+        ]
+        platforms = {resource.platform for resource in self.pubs}
+        if len(platforms) == 1:
+            total_cells.append(platforms.pop())
+        else:
+            total_cells.append(u'')
+        total_cells.extend([u''] * 4)
+        total_usage = 0
+        number_of_months = len(list(rrule.rrule(rrule.MONTHLY,
+                                    dtstart=self.period[0],
+                                    until=self.period[1])))
+        month_data = [0] * number_of_months
+        for pub in self.pubs:
+            for month, data in enumerate(pub):
+                total_usage += data[2]
+                month_data[month] += data[2]
+        total_cells.append(six.text_type(total_usage))
+        total_cells.extend([u''] * 2) # FIXME: PDF, HTML support
+        total_cells.extend(six.text_type(d) for d in month_data)
+
+        return total_cells
+
+    def _table_header(self):
+        """
+        Generate header for COUNTER table for this report, as list of cells
+        """
+        #FIXME: don't hardcode JR1 values.
+        header_cells = [
+            u'Journal',
+            u'Publisher',
+            u'Platform',
+            u'Journal DOI',
+            u'Proprietary Identifier',
+            u'Print ISSN',
+            u'Online ISSN',
+            u'Reporting Period Total',
+            u'Reporting Period HTML',
+            u'Reporting Period PDF',
+        ]
+        for dt in rrule.rrule(rrule.MONTHLY, dtstart=self.period[0], until=self.period[1]):
+            header_cells.append(dt.strftime('%b-%Y'))
+
+        return header_cells
 
 class CounterEresource(six.Iterator):
     """
@@ -198,6 +287,29 @@ class CounterJournal(CounterEresource):
         return """<CounterJournal %s, publisher %s,
         platform %s>""" % (self.title, self.publisher, self.platform)
 
+    def as_generic(self):
+        """
+        return data for this line as list of COUNTER report cells
+        """
+        data_line = [
+            self.title,
+            self.publisher,
+            self.platform,
+            u'',  #FIXME: DOI?
+            u'',  #FIXME: Propietary identifier?
+            self.issn,
+            self.eissn,
+        ]
+        total_usage = 0
+        month_data = []
+        for data in self:
+            total_usage += data[2]
+            month_data.append(six.text_type(data[2]))
+        data_line.append(six.text_type(total_usage))
+        data_line.extend([u'0'] * 2) #FIXME: PDF, HTML
+        data_line.extend(month_data)
+
+        return data_line
 
 class CounterBook(CounterEresource):
     """
