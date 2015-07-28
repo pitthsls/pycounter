@@ -4,6 +4,7 @@ import unittest
 import os
 import datetime
 
+
 class ParseCSV(unittest.TestCase):
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
