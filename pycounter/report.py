@@ -11,7 +11,7 @@ import pyisbn
 import six
 from dateutil import rrule
 
-from pycounter.exceptions import UnknownReportTypeError
+from pycounter.exceptions import UnknownReportTypeError, PycounterException
 from pycounter import csvhelper
 from pycounter.helpers import convert_covered, convert_date_run, \
     convert_date_column, last_day, next_month
@@ -381,22 +381,45 @@ def format_stat(stat):
         return None
 
 
-def parse(filename):
+def parse(filename, filetype=None):
     """Parse a COUNTER file, first attempting to determine type
 
     Returns a :class:`CounterReport <CounterReport>` object.
 
     :param filename: path to COUNTER report to load and parse.
+    :param filetype: type of file provided, one of "csv", "tsv", "xlsx".
+        If set to None (the default), an attempt will be made to
+        detect the correct type, first from the file extension, then from
+        the file's contents.
 
     """
-    if filename.endswith('.tsv'):
-        # Horrible filename-based hack; in future examine contents of file here
-        return parse_separated(filename, '\t')
-    if filename.endswith('.xlsx'):
-        return parse_xlsx(filename)
-    # fallback to old assume-csv behavior
-    return parse_separated(filename, ',')
+    if filetype is None:
+        if filename.endswith('.tsv'):
+            filetype = 'tsv'
+        elif filename.endswith('.xlsx'):
+            filetype = 'xlsx'
+        elif filename.endswith('.csv'):
+            filetype = 'csv'
+        else:
+            with open(filename, 'rb') as f:
+                firstbytes = f.read(2)
+                if firstbytes == b"PK":
+                    filetype = 'xlsx'
+                else:
+                    content = f.read()
+                    if b'\t' in content:
+                        filetype = 'tsv'
+                    else:
+                        filetype = 'csv'
 
+    if filetype == 'tsv':
+        return parse_separated(filename, '\t')
+    elif filetype == 'xlsx':
+        return parse_xlsx(filename)
+    elif filetype == 'csv':
+        return parse_separated(filename, ',')
+    else:
+        raise PycounterException("Unknown file type %s" % filetype)
 
 def parse_xlsx(filename):
     """Parse a COUNTER file in Excel format.
