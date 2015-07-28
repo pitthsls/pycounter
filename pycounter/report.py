@@ -421,6 +421,7 @@ def parse(filename, filetype=None):
     else:
         raise PycounterException("Unknown file type %s" % filetype)
 
+
 def parse_xlsx(filename):
     """Parse a COUNTER file in Excel format.
 
