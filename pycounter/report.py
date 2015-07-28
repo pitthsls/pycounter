@@ -431,12 +431,12 @@ def parse_xlsx(filename):
 
     """
     from openpyxl import load_workbook
-
-    workbook = load_workbook(filename=filename)
-    worksheet = workbook.get_sheet_by_name(workbook.get_sheet_names()[0])
-    row_it = worksheet.iter_rows()
-    split_row_list = ([cell.value if cell.value is not None else ""
-                       for cell in row] for row in row_it)
+    with open(filename, 'rb') as xlsxfile:
+        workbook = load_workbook(xlsxfile)
+        worksheet = workbook.get_sheet_by_name(workbook.get_sheet_names()[0])
+        row_it = worksheet.iter_rows()
+        split_row_list = ([cell.value if cell.value is not None else ""
+                           for cell in row] for row in row_it)
 
     return parse_generic(split_row_list)
 
