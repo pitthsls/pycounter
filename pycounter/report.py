@@ -270,13 +270,21 @@ class CounterJournal(CounterEresource):
 
     :param platform: name of the platform providing the resource
 
+    :param html_total: total HTML usage for this title for reporting period
+
+    :param pdf_total: total PDF usage for this title for reporting period
+
     """
 
     def __init__(self, line=None, period=None, metric=METRICS[u"JR1"],
                  issn=None, eissn=None, month_data=None,
-                 title="", platform="", publisher=""):
+                 title="", platform="", publisher="", html_total=0,
+                 pdf_total=0):
         super(CounterJournal, self).__init__(line, period, metric, month_data,
                                              title, platform, publisher)
+        self.html_total = html_total
+        self.pdf_total = pdf_total
+
         if line is not None:
             self.issn = line[3].strip()
             self.eissn = line[4].strip()
@@ -311,9 +319,9 @@ class CounterJournal(CounterEresource):
             total_usage += data[2]
             month_data.append(six.text_type(data[2]))
         data_line.append(six.text_type(total_usage))
-        data_line.extend([u'0'] * 2)  # FIXME: PDF, HTML
+        data_line.append(six.text_type(self.html_total))
+        data_line.append(six.text_type(self.pdf_total))
         data_line.extend(month_data)
-
         return data_line
 
 
@@ -540,7 +548,10 @@ def parse_generic(report_reader):
             continue
         if report.report_version == 4:
             if report.report_type.startswith('JR1'):
+                oldline = line
                 line = line[0:3] + line[5:7] + line[10:last_col]
+                html_total = int(oldline[8])
+                pdf_total = int(oldline[9])
             elif report.report_type in ('BR1', 'BR2'):
                 line = line[0:3] + line[5:7] + line[8:last_col]
             elif report.report_type in ('DB1', 'DB2'):
@@ -548,11 +559,16 @@ def parse_generic(report_reader):
                 # so leaving this explicit...
                 pass
         else:
+            if report.report_type.startswith('JR1'):
+                html_total = int(line[-2])
+                pdf_total = int(line[-1])
             line = line[0:last_col]
+
         logging.debug(line)
         title = line[0]
         publisher = line[1]
         platform = line[2]
+
         if report.report_type:
             if report.report_type.startswith('JR'):
                 report.pubs.append(CounterJournal(line,
@@ -560,7 +576,9 @@ def parse_generic(report_reader):
                                                   report.metric,
                                                   title=title,
                                                   publisher=publisher,
-                                                  platform=platform))
+                                                  platform=platform,
+                                                  html_total=html_total,
+                                                  pdf_total=pdf_total))
             elif report.report_type.startswith('BR'):
                 report.pubs.append(CounterBook(line,
                                                report.period,

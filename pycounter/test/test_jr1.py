@@ -42,6 +42,18 @@ class ParseExample(unittest.TestCase):
                          (datetime.date(2011, 1, 1),
                           datetime.date(2011, 12, 31)))
 
+    def test_html(self):
+        expected = [0, 0]
+        actual = [pub.html_total for pub in self.report.pubs]
+
+        self.assertEqual(actual, expected)
+
+    def test_pdf(self):
+        expected = [0, 16]
+        actual = [pub.pdf_total for pub in self.report.pubs]
+
+        self.assertEqual(actual, expected)
+
 
 class ParseCounter4(unittest.TestCase):
     def setUp(self):

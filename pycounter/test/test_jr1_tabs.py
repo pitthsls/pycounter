@@ -57,3 +57,15 @@ class ParseExample(unittest.TestCase):
                           datetime.date(2013, 10, 1),
                           ]
                          )
+
+    def test_html(self):
+        expected = [0, 15, 33, 0]
+        actual = [pub.html_total for pub in self.report.pubs]
+
+        self.assertEqual(actual, expected)
+
+    def test_pdf(self):
+        expected = [32, 12, 855, 40]
+        actual = [pub.pdf_total for pub in self.report.pubs]
+
+        self.assertEqual(actual, expected)
