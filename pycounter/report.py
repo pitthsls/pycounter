@@ -26,6 +26,10 @@ CODES = {
     u"Database": u"DB",
     u"Journal": u"JR",
     u"Book": u"BR",
+    u"Title": u"TR",
+    u"Platform": u"PR",
+    u"Multimedia": u"MR",
+    u"Consortium": u"CR",
 }
 
 # from http://www.niso.org/workrooms/sushi/registry/
