@@ -158,7 +158,7 @@ class CounterReport(object):
             if code == self.report_type[0:2]:
                 rep_type = name
 
-        report_name = ("%s Report %s(R%s)" % (
+        report_name = ("%s Report %s (R%s)" % (
             rep_type, self.report_type[-1], self.report_version
         ))
         output_lines.append([report_name,

@@ -40,10 +40,11 @@ class UnicodeReader(six.Iterator):
 # noinspection PyUnusedLocal
 class UnicodeWriter(object):
     def __init__(self, filename, dialect=csv.excel,
-                 encoding="utf-8", **kw):
+                 encoding="utf-8", lineterminator='\n', **kw):
         self.filename = filename
         self.dialect = dialect
         self.encoding = encoding
+        self.lineterminator = lineterminator
         self.kw = kw
 
     def __enter__(self):
@@ -53,6 +54,7 @@ class UnicodeWriter(object):
         else:
             self.f = open(self.filename, 'wb')
         self.writer = csv.writer(self.f, dialect=self.dialect,
+                                 lineterminator=self.lineterminator,
                                  **self.kw)
         return self
 
