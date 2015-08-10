@@ -22,13 +22,8 @@ class TestOutputJR1(unittest.TestCase):
         self.assertEqual(self.file_content[7], self.output_content[7])
 
     def test_totals(self):
-        # FIXME: eventually, should check HTML & PDF too, but not supported yet
-        self.assertEqual(self.file_content[8][0:8],
-                         self.output_content[8][0:8])
-        self.assertEqual(self.file_content[8][10:],
-                         self.output_content[8][10:])
+        self.assertEqual(self.file_content, self.output_content)
 
     def test_data(self):
-        # FIXME: eventually, should check HTML & PDF too, but not supported yet
         for index, line in enumerate(self.file_content[9:], 9):
             self.assertEqual(line, self.output_content[index])

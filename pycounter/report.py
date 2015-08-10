@@ -137,6 +137,16 @@ class CounterReport(object):
     def __iter__(self):
         return iter(self.pubs)
 
+    def write_tsv(self, path):
+        """
+        Output report to a COUNTER 4 TSV file.
+
+        :param path: location to write file
+        """
+        lines = self.as_generic()
+        with csvhelper.UnicodeWriter(path, delimiter='\t') as writer:
+            writer.writerows(lines)
+
     def as_generic(self):
         """
         Output report as list of lists, containing cells that would appear
@@ -187,16 +197,21 @@ class CounterReport(object):
             total_cells.append(u'')
         total_cells.extend([u''] * 4)
         total_usage = 0
+        pdf_usage = 0
+        html_usage = 0
         number_of_months = len(list(rrule.rrule(rrule.MONTHLY,
                                     dtstart=self.period[0],
                                     until=self.period[1])))
         month_data = [0] * number_of_months
         for pub in self.pubs:
+            pdf_usage += pub.pdf_total
+            html_usage += pub.html_total
             for month, data in enumerate(pub):
                 total_usage += data[2]
                 month_data[month] += data[2]
         total_cells.append(six.text_type(total_usage))
-        total_cells.extend([u''] * 2)  # FIXME: PDF, HTML support
+        total_cells.append(six.text_type(html_usage))
+        total_cells.append(six.text_type(pdf_usage))
         total_cells.extend(six.text_type(d) for d in month_data)
 
         return total_cells
