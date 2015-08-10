@@ -342,11 +342,13 @@ class CounterJournal(CounterEresource):
     def __init__(self, line=None, period=None, metric=METRICS[u"JR1"],
                  issn=None, eissn=None, month_data=None,
                  title="", platform="", publisher="", html_total=0,
-                 pdf_total=0):
+                 pdf_total=0, doi="", proprietary_id=""):
         super(CounterJournal, self).__init__(line, period, metric, month_data,
                                              title, platform, publisher)
         self.html_total = html_total
         self.pdf_total = pdf_total
+        self.doi = doi
+        self.proprietary_id = proprietary_id
 
         if line is not None:
             self.issn = line[3].strip()
@@ -371,8 +373,8 @@ class CounterJournal(CounterEresource):
             self.title,
             self.publisher,
             self.platform,
-            u'',  # FIXME: DOI?
-            u'',  # FIXME: Propietary identifier?
+            self.doi,
+            self.proprietary_id,
             self.issn,
             self.eissn,
         ]
@@ -609,14 +611,19 @@ def parse_generic(report_reader):
     for line in report_reader:
         html_total = 0
         pdf_total = 0
+        doi = ""
+        prop_id = ""
         if not line:
             continue
         if report.report_version == 4:
             if report.report_type.startswith('JR1'):
                 oldline = line
                 line = line[0:3] + line[5:7] + line[10:last_col]
+                doi = oldline[3]
+                prop_id = oldline[4]
                 html_total = int(oldline[8])
                 pdf_total = int(oldline[9])
+
             elif report.report_type in ('BR1', 'BR2'):
                 line = line[0:3] + line[5:7] + line[8:last_col]
             elif report.report_type in ('DB1', 'DB2'):
@@ -642,6 +649,8 @@ def parse_generic(report_reader):
                                                   title=title,
                                                   publisher=publisher,
                                                   platform=platform,
+                                                  doi=doi,
+                                                  proprietary_id=prop_id,
                                                   html_total=html_total,
                                                   pdf_total=pdf_total))
             elif report.report_type.startswith('BR'):
