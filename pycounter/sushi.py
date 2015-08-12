@@ -211,9 +211,9 @@ def _raw_to_full(raw_report):
                 if inst.MetricType == "ft_total":
                     usage = str(inst.Count)
                 elif inst.MetricType == "ft_pdf":
-                    pdf_usage += inst.Count
+                    pdf_usage += int(inst.Count)
                 elif inst.MetricType == "ft_html":
-                    html_usage += inst.Count
+                    html_usage += int(inst.Count)
             if usage is not None:
                 month_data.append((item_date, int(usage)))
                 itemline.append(usage)
