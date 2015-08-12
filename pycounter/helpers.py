@@ -1,8 +1,6 @@
 import calendar
 import datetime
 
-__author__ = 'Techuser'
-
 
 def convert_covered(datestring):
     """

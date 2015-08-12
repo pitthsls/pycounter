@@ -1,24 +1,20 @@
 """NISO SUSHI support"""
 from __future__ import absolute_import
-from pycounter.helpers import convert_date_run
-
-import pycounter.report
-import pycounter.exceptions
 import logging
-import requests
 import datetime
+
+import requests
 import dateutil.parser
 from lxml import etree
 from lxml import objectify
 
-logger = logging.getLogger(__name__)
+from pycounter.constants import NS
+import pycounter.constants
+from pycounter.helpers import convert_date_run
+import pycounter.report
+import pycounter.exceptions
 
-NS = {
-    'SOAP-ENV': "http://schemas.xmlsoap.org/soap/envelope/",
-    'sushi': "http://www.niso.org/schemas/sushi",
-    'sushicounter': "http://www.niso.org/schemas/sushi/counter",
-    'counter': "http://www.niso.org/schemas/counter",
-    }
+logger = logging.getLogger(__name__)
 
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
@@ -182,7 +178,7 @@ def _raw_to_full(raw_report):
 
     report = pycounter.report.CounterReport(**report_data)
 
-    report.metric = pycounter.report.METRICS.get(report_data['report_type'])
+    report.metric = pycounter.constants.METRICS.get(report_data['report_type'])
 
     for item in creport.Customer.ReportItems:
         try:
