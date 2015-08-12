@@ -185,8 +185,9 @@ def _raw_to_full(raw_report):
             publisher_name = item.ItemPublisher.text
         except AttributeError:
             publisher_name = ""
-
-        itemline = [item.ItemName.text, publisher_name, item.ItemPlatform.text]
+        title = item.ItemName.text
+        platform = item.ItemPlatform.text
+        itemline = [title, publisher_name, platform]
 
         eissn = issn = ""
         for identifier in item.ItemIdentifier:
@@ -198,33 +199,38 @@ def _raw_to_full(raw_report):
                 eissn = identifier.Value.text
                 if eissn is None:
                     eissn = ""
-        itemline.append(issn)
-        itemline.append(eissn)
         month_data = []
+        html_usage = 0
+        pdf_usage = 0
 
         for perfitem in item.ItemPerformance:
-            logger.debug("Perfitem date: %r",
-                         convert_date_run(perfitem.Period.Begin.text))
-            item_date = convert_date_run(
-                perfitem.Period.Begin.text)
+            item_date = convert_date_run(perfitem.Period.Begin.text)
+            logger.debug("Perfitem date: %r", item_date)
             usage = None
             for inst in perfitem.Instance:
                 if inst.MetricType == "ft_total":
                     usage = str(inst.Count)
-                    break
+                elif inst.MetricType == "ft_pdf":
+                    pdf_usage += inst.Count
+                elif inst.MetricType == "ft_html":
+                    html_usage += inst.Count
             if usage is not None:
-                month_data.append((item_date, usage))
+                month_data.append((item_date, int(usage)))
                 itemline.append(usage)
 
         if report.report_type:
             if report.report_type.startswith('JR'):
                 report.pubs.append(pycounter.report.CounterJournal(
-                    line=itemline,
+                    title=title,
+                    platform=platform,
+                    publisher=publisher_name,
                     period=report.period,
                     metric=report.metric,
                     issn=issn,
                     eissn=eissn,
-                    month_data=month_data
+                    month_data=month_data,
+                    html_total=html_usage,
+                    pdf_total=pdf_usage
                 ))
             elif report.report_type.startswith('BR'):
                 report.pubs.append(

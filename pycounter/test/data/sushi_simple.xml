@@ -63,15 +63,15 @@
                                 <Category>Requests</Category>
                                 <Instance>
                                     <MetricType>ft_html</MetricType>
-                                    <Count>0</Count>
+                                    <Count>6</Count>
                                 </Instance>
                                 <Instance>
                                     <MetricType>ft_pdf</MetricType>
-                                    <Count>0</Count>
+                                    <Count>8</Count>
                                 </Instance>
                                 <Instance>
                                     <MetricType>ft_total</MetricType>
-                                    <Count>0</Count>
+                                    <Count>14</Count>
                                 </Instance>
                             </ItemPerformance>
                         </ReportItems>

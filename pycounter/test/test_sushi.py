@@ -42,9 +42,20 @@ class TestConvertRawSimple(unittest.TestCase):
         self.assertEqual(self.report.report_type, u'JR1')
         self.assertEqual(self.report.report_version, 4)
 
+    def test_customer(self):
+        self.assertEqual(self.report.institutional_identifier,
+                         u"exampleLibrary")
+
     def test_title(self):
         publication = next(iter(self.report))
         self.assertEqual(publication.title, u'Journal of fake data')
+
+    def test_data(self):
+        publication = next(iter(self.report))
+        self.assertEqual(publication.html_total, 6)
+        self.assertEqual(publication.pdf_total, 8)
+        data = [month[2] for month in publication]
+        self.assertEqual(data[0], 14)
 
 
 class TestMissingMonth(unittest.TestCase):
