@@ -5,7 +5,6 @@ from pycounter.helpers import convert_date_run
 import pycounter.report
 import pycounter.exceptions
 import logging
-import six
 import requests
 import datetime
 import dateutil.parser
@@ -181,10 +180,7 @@ def _raw_to_full(raw_report):
     else:
         report_data['date_run'] = datetime.datetime.now()
 
-    report = pycounter.report.CounterReport()
-
-    for key, value in six.iteritems(report_data):
-        setattr(report, key, value)
+    report = pycounter.report.CounterReport(**report_data)
 
     report.metric = pycounter.report.METRICS.get(report_data['report_type'])
 
