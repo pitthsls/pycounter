@@ -203,7 +203,8 @@ class CounterEresource(six.Iterator):
     def __init__(self, line=None, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
         self.period = period
-        if metric != line[3] and metric not in METRICS.values():
+        if line is not None and metric != line[3] and metric not in \
+                METRICS.values():
             warnings.warn("metric %s not known" % metric)
         self.metric = metric
         self._monthdata = []
