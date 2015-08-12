@@ -72,5 +72,4 @@ REPORT_DESCRIPTIONS = {
                   u'and Page-Type (formatted for normal browsers/delivered '
                   u'to mobile devices and for mobile devices/delivered to '
                   u'mobile devices)',
-
 }
