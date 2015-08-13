@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<!--suppress CheckTagEmptyBody -->
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns3:ReportResponse xmlns="http://www.niso.org/schemas/counter"
+                            xmlns:ns2="http://www.niso.org/schemas/sushi"
+                            xmlns:ns3="http://www.niso.org/schemas/sushi/counter"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ns2:Exception>
+                <ns2:Number>3030</ns2:Number>
+                <ns2:Severity>Error</ns2:Severity>
+                <ns2:Message>No Usage Available for Requested Dates</ns2:Message>
+            </ns2:Exception>
+            <!--suppress CheckTagEmptyBody -->
+            <ns2:Requestor>
+                <ns2:ID>exampleRequestor</ns2:ID>
+                <ns2:Name></ns2:Name>
+                <ns2:Email></ns2:Email>
+            </ns2:Requestor>
+            <ns2:CustomerReference>
+                <ns2:ID>exampleReference</ns2:ID>
+                <ns2:Name></ns2:Name>
+            </ns2:CustomerReference>
+            <ns2:ReportDefinition Release="4" Name="JR1">
+                <ns2:Filters>
+                    <ns2:UsageDateRange>
+                        <ns2:Begin>2013-01-01</ns2:Begin>
+                        <ns2:End>2013-01-31</ns2:End>
+                    </ns2:UsageDateRange>
+                </ns2:Filters>
+            </ns2:ReportDefinition>
+            <ns3:Report xsi:nil="true"/>
+         </ns3:ReportResponse>
+    </S:Body>
+</S:Envelope>

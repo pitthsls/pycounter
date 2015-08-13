@@ -20,6 +20,14 @@ def sushi_mock(url, request):
 
 
 @urlmatch(netloc=r'(.*\.)?example\.com$')
+def error_mock(url, request):
+    path = os.path.join(os.path.dirname(__file__),
+                        'data', 'sushi_error.xml')
+    with open(path, 'rb') as datafile:
+        return datafile.read().decode('utf-8')
+
+
+@urlmatch(netloc=r'(.*\.)?example\.com$')
 def bogus_mock(url, request):
     return "Bogus response with no XML"
 
@@ -94,6 +102,17 @@ class TestBogusXML(unittest.TestCase):
             self.assertRaises(pycounter.exceptions.SushiException,
                               sushi.get_report,
                               'http://www.example.com/bogus',
+                              datetime.date(2015, 1, 1),
+                              datetime.date(2015, 1, 31)
+                              )
+
+
+class TestSushiError(unittest.TestCase):
+    def test_error(self):
+        with HTTMock(error_mock):
+            self.assertRaises(pycounter.exceptions.SushiException,
+                              sushi.get_report,
+                              'http://www.example.com/out_of_range',
                               datetime.date(2015, 1, 1),
                               datetime.date(2015, 1, 31)
                               )
