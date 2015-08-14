@@ -1,4 +1,4 @@
-"""constants used by PyCounter"""
+"""constants used by pycounter"""
 
 NS = {
     'SOAP-ENV': "http://schemas.xmlsoap.org/soap/envelope/",
@@ -7,10 +7,13 @@ NS = {
     'counter': "http://www.niso.org/schemas/counter",
     }
 
-METRICS = {u"JR1": u"FT Article Requests",
-           u"JR1 GOA": u"Gold Open Access Article Requests",
-           u"BR1": u"Book Title Requests",
-           u"BR2": u"Book Section Requests"}
+METRICS = {
+    u"JR1": u"FT Article Requests",
+    u"JR1 GOA": u"Gold Open Access Article Requests",
+    u"BR1": u"Book Title Requests",
+    u"BR2": u"Book Section Requests"
+}
+
 CODES = {
     u"Database": u"DB",
     u"Journal": u"JR",
