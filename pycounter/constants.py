@@ -25,7 +25,7 @@ CODES = {
 }
 
 # from http://www.niso.org/workrooms/sushi/registry/
-# Not all of these are actually supported by pycounter!
+# Not all of these are actually supported by pycounter
 REPORT_DESCRIPTIONS = {
     u'BR1': u'Number of Successful Title Requests by Month and Title',
     u'BR2': u'Number of Successful Section Requests by Month and Title',
