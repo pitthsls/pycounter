@@ -9,7 +9,7 @@ import datetime
 
 import pyisbn
 import six
-from dateutil import rrule
+import arrow
 
 from pycounter.constants import METRICS, CODES, REPORT_DESCRIPTIONS
 from pycounter.exceptions import UnknownReportTypeError, PycounterException
@@ -134,9 +134,11 @@ class CounterReport(object):
         total_usage = 0
         pdf_usage = 0
         html_usage = 0
-        number_of_months = len(list(rrule.rrule(rrule.MONTHLY,
-                                    dtstart=self.period[0],
-                                    until=self.period[1])))
+
+        number_of_months = len(
+            arrow.Arrow.range('month',
+                              arrow.Arrow.fromdate(self.period[0]),
+                              arrow.Arrow.fromdate(self.period[1])))
         month_data = [0] * number_of_months
         for pub in self.pubs:
             pdf_usage += pub.pdf_total
@@ -168,8 +170,9 @@ class CounterReport(object):
             u'Reporting Period HTML',
             u'Reporting Period PDF',
         ]
-        for dt in rrule.rrule(rrule.MONTHLY, dtstart=self.period[0],
-                              until=self.period[1]):
+        for dt in arrow.Arrow.range('month',
+                                    arrow.Arrow.fromdate(self.period[0]),
+                                    arrow.Arrow.fromdate(self.period[1])):
             header_cells.append(dt.strftime('%b-%Y'))
 
         return header_cells

@@ -4,7 +4,7 @@ import logging
 import datetime
 
 import requests
-import dateutil.parser
+import arrow
 from lxml import etree
 from lxml import objectify
 
@@ -172,7 +172,7 @@ def _raw_to_full(raw_report):
     reproot = root.find('.//%s' % _ns('counter', 'Report'))
     created_string = reproot.get('Created')
     if created_string is not None:
-        report_data['date_run'] = dateutil.parser.parse(created_string)
+        report_data['date_run'] = arrow.get(created_string)
     else:
         report_data['date_run'] = datetime.datetime.now()
 
