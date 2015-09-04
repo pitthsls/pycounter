@@ -33,5 +33,5 @@ setup(
         ],
     install_requires=['pyisbn', 'openpyxl', 'lxml', 'requests',
                       'six', 'arrow'],
-    tests_require=['httmock'],
+    tests_require=['httmock', 'mock'],
     )

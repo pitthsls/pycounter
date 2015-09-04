@@ -6,6 +6,7 @@ import unittest
 import os
 from httmock import urlmatch, HTTMock
 import datetime
+import mock as mock
 
 from pycounter import sushi
 import pycounter.exceptions
@@ -94,6 +95,18 @@ class TestSushiRequest(unittest.TestCase):
     def test_report(self):
         self.assertEqual(self.report.report_type, u'JR1')
         self.assertEqual(self.report.report_version, 4)
+
+
+class TestSushiDump(unittest.TestCase):
+    @mock.patch('pycounter.sushi.logger')
+    def test_dump(self, mock_logger):
+        with HTTMock(sushi_mock):
+            self.report = sushi.get_report('http://www.example.com/Sushi',
+                                           datetime.date(2015, 1, 1),
+                                           datetime.date(2015, 1, 31),
+                                           sushi_dump=True
+                                           )
+        self.assertTrue(mock_logger.debug.called)
 
 
 class TestBogusXML(unittest.TestCase):
