@@ -29,3 +29,8 @@ after_success:
 
 notifications:
   irc: "chat.freenode.net#pycounter"
+
+matrix:
+  allow_failures:
+    - python: pypy3
+    - python: nightly
