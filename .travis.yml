@@ -8,10 +8,12 @@ python:
   - "3.4"
   - "3.5"
   - "pypy"
+  - "pypy3"
   - "nightly"
 
 install:
   - pip install .
+  - pip install git+https://github.com/PyCQA/pep8.git
   - pip install httmock
   - pip install coveralls
   - pip install flake8
