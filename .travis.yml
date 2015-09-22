@@ -17,8 +17,10 @@ install:
   - pip install httmock
   - pip install coveralls
   - pip install flake8
+  - pip install check-manifest
 
 before_script:
+  - "check-manifest"
   - "flake8 pycounter"
 
 script:

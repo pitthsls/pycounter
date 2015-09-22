@@ -1,0 +1,14 @@
+include *.txt
+include .coveragerc
+include tox.ini
+recursive-include docs *.gitkeep
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include pycounter *.csv
+recursive-include pycounter *.tsv
+recursive-include pycounter *.xlsx
+recursive-include pycounter *.xml
+recursive-include pycounter *.xsd
+include pycounter/test/data/tsvC4JR1
+include pycounter/test/data/xlsxJR1
+include pycounter/test/data/csvC4JR1
