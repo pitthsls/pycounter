@@ -5,6 +5,7 @@ import os
 
 
 class ParseExample(unittest.TestCase):
+    """Tests for parsing C3 BR2"""
     def setUp(self):
         self.report = pycounter.report.parse(
             os.path.join(os.path.dirname(__file__),
@@ -30,6 +31,7 @@ class ParseExample(unittest.TestCase):
 
 
 class ParseCounter4Example(unittest.TestCase):
+    """Tests for parsing C4 BR2"""
     def setUp(self):
         self.report = pycounter.report.parse(
             os.path.join(os.path.dirname(__file__),

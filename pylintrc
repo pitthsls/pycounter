@@ -1,0 +1,18 @@
+[BASIC]
+# Regular expression which should only match functions or classes name which do
+# not require a docstring
+no-docstring-rgx=__.*__|test[A-Z_].*|setUp|tearDown
+
+
+extension-pkg-whitelist=lxml
+
+[SIMILARITIES]
+
+# Minimum lines number of a similarity.
+min-similarity-lines=4
+
+# Ignore comments when computing similarities.
+ignore-comments=yes
+
+# Ignore docstrings when computing similarities.
+ignore-docstrings=yes

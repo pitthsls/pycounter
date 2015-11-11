@@ -6,6 +6,7 @@ import datetime
 
 
 class ParseCounter4Example(unittest.TestCase):
+    """Tests for parsing C4 DB1"""
     def setUp(self):
         self.report = pycounter.report.parse(
             os.path.join(os.path.dirname(__file__),

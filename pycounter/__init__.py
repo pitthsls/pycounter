@@ -1,3 +1,4 @@
+"""pycounter"""
 from __future__ import absolute_import
 
 from pycounter.version import __version__

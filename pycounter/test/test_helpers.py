@@ -5,6 +5,8 @@ from pycounter.helpers import next_month
 
 
 class TestNextMonth(unittest.TestCase):
+    """Test month generator"""
+
     def test_nextmonth(self):
         data = [((2000, 1, 1), (2000, 2, 1)),
                 ((2000, 12, 1), (2001, 1, 1)),

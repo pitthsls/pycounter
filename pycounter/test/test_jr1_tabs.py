@@ -6,6 +6,8 @@ import datetime
 
 
 class ParseExample(unittest.TestCase):
+    """Test tab-separated JR1"""
+
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                 'data/simpleJR1.tsv'))

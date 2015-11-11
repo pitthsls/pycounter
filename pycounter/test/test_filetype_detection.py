@@ -6,6 +6,7 @@ import datetime
 
 
 class ParseCSV(unittest.TestCase):
+    """Test CSV"""
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                 'data/csvC4JR1'))
@@ -35,6 +36,7 @@ class ParseCSV(unittest.TestCase):
 
 
 class ParseTSV(unittest.TestCase):
+    """Test TSV"""
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                 'data/tsvC4JR1'))
@@ -89,6 +91,7 @@ class ParseTSV(unittest.TestCase):
 
 
 class ParseXLSX(unittest.TestCase):
+    """Test XLSX"""
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                    'data/xlsxJR1'))

@@ -1,13 +1,11 @@
 """Tests for pycounter.sushi"""
 
 from __future__ import absolute_import
-
 import unittest
 import os
 from httmock import urlmatch, HTTMock
 import datetime
 import mock as mock
-
 from pycounter import sushi
 import pycounter.exceptions
 
@@ -34,6 +32,8 @@ def bogus_mock(url, request):
 
 
 class TestHelpers(unittest.TestCase):
+    """Test _ns helper"""
+
     def test_ns(self):
         self.assertEqual(
             sushi._ns("sushi", "name"),
@@ -41,6 +41,8 @@ class TestHelpers(unittest.TestCase):
 
 
 class TestConvertRawSimple(unittest.TestCase):
+    """Test converting simple SUSHI response"""
+
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__),
                             'data', 'sushi_simple.xml')
@@ -68,6 +70,8 @@ class TestConvertRawSimple(unittest.TestCase):
 
 
 class TestMissingMonth(unittest.TestCase):
+    """Test SUSHI with months missing"""
+
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__),
                             'data', 'sushi_missing_jan.xml')
@@ -85,6 +89,8 @@ class TestMissingMonth(unittest.TestCase):
 
 
 class TestSushiRequest(unittest.TestCase):
+    """Test making a SUSHI request"""
+
     def setUp(self):
         with HTTMock(sushi_mock):
             self.report = sushi.get_report('http://www.example.com/Sushi',
@@ -98,6 +104,8 @@ class TestSushiRequest(unittest.TestCase):
 
 
 class TestSushiDump(unittest.TestCase):
+    """Test dumping SUSHI response"""
+
     @mock.patch('pycounter.sushi.logger')
     def test_dump(self, mock_logger):
         with HTTMock(sushi_mock):
@@ -110,6 +118,8 @@ class TestSushiDump(unittest.TestCase):
 
 
 class TestBogusXML(unittest.TestCase):
+    """Test dealing with broken XML"""
+
     def test_request(self):
         with HTTMock(bogus_mock):
             self.assertRaises(pycounter.exceptions.SushiException,
@@ -121,6 +131,8 @@ class TestBogusXML(unittest.TestCase):
 
 
 class TestSushiError(unittest.TestCase):
+    """Test error from SUSHI"""
+
     def test_error(self):
         with HTTMock(error_mock):
             self.assertRaises(pycounter.exceptions.SushiException,

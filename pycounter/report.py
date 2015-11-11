@@ -60,6 +60,7 @@ class CounterReport(object):
             self.date_run = datetime.date.today()
         else:
             self.date_run = date_run
+        self.year = None
 
     def __str__(self):
         return (
@@ -170,15 +171,16 @@ class CounterReport(object):
             u'Reporting Period HTML',
             u'Reporting Period PDF',
         ]
-        for dt in arrow.Arrow.range('month',
-                                    arrow.Arrow.fromdate(self.period[0]),
-                                    arrow.Arrow.fromdate(self.period[1])):
-            header_cells.append(dt.strftime('%b-%Y'))
+        for d_obj in arrow.Arrow.range('month',
+                                       arrow.Arrow.fromdate(self.period[0]),
+                                       arrow.Arrow.fromdate(self.period[1])):
+            header_cells.append(d_obj.strftime('%b-%Y'))
 
         return header_cells
 
 
 class CounterEresource(six.Iterator):
+    # pylint: disable=too-few-public-methods
     """
     base class for COUNTER statistics lines
 
@@ -330,6 +332,7 @@ class CounterJournal(CounterEresource):
 
 
 class CounterBook(CounterEresource):
+    # pylint: disable=too-few-public-methods
     """
     statistics for a single electronic book.
 
@@ -376,6 +379,9 @@ class CounterBook(CounterEresource):
 
 
 class CounterDatabase(CounterEresource):
+    # pylint: disable=too-few-public-methods
+    """a COUNTER database report line"""
+
     def __init__(self, line=None, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
         super(CounterDatabase, self).__init__(line, period, metric, month_data,
@@ -413,12 +419,12 @@ def parse(filename, filetype=None):
         elif filename.endswith('.csv'):
             filetype = 'csv'
         else:
-            with open(filename, 'rb') as f:
-                firstbytes = f.read(2)
+            with open(filename, 'rb') as fobj:
+                firstbytes = fobj.read(2)
                 if firstbytes == b"PK":
                     filetype = 'xlsx'
                 else:
-                    content = f.read()
+                    content = fobj.read()
                     if b'\t' in content:
                         filetype = 'tsv'
                     else:

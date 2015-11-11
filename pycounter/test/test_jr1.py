@@ -6,6 +6,7 @@ import datetime
 
 
 class ParseExample(unittest.TestCase):
+    """Tests for parsing C3 JR1"""
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                 'data/simpleJR1.csv'))
@@ -56,6 +57,7 @@ class ParseExample(unittest.TestCase):
 
 
 class ParseCounter4(unittest.TestCase):
+    """Tests for parsing C4 JR1"""
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                 'data/C4JR1.csv'))

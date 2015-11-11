@@ -5,9 +5,11 @@ import os
 
 
 class ParseExample(unittest.TestCase):
+    """Test XLSX JR 1"""
+
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                   'data/JR1.xlsx'))
+                                                'data/JR1.xlsx'))
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u'JR1')

@@ -8,6 +8,7 @@ import logging
 
 
 class TestOutputJR1(unittest.TestCase):
+    """Test output of JR1"""
     def setUp(self):
         filename = os.path.join(os.path.dirname(__file__), 'data/C4JR1.csv')
         rep = report.parse(filename)
@@ -32,6 +33,7 @@ class TestOutputJR1(unittest.TestCase):
 
 
 class TestWritingJR1(unittest.TestCase):
+    """Test write of JR1 to filesystem"""
     def setUp(self):
         self.filename = os.path.join(os.path.dirname(__file__),
                                      'data/simpleJR1.tsv')
