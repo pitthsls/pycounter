@@ -1,6 +1,7 @@
 include *.txt
 include .coveragerc
 include tox.ini
+include pylintrc
 recursive-include docs *.gitkeep
 recursive-include docs *.py
 recursive-include docs *.rst
