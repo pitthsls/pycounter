@@ -391,6 +391,8 @@ class CounterDatabase(CounterEresource):
 def format_stat(stat):
     """Turn string numbers that might have an embedded comma into
     integers
+
+    :param stat: numeric value, possibly with commas, to turn into int
     """
     stat = stat.replace(',', '')
     try:
