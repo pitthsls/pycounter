@@ -35,4 +35,7 @@ setup(
     install_requires=['pyisbn', 'openpyxl<2.3', 'lxml', 'requests',
                       'six', 'arrow'],
     tests_require=['httmock', 'mock'],
+    entry_points={
+        'console_scripts': ['sushiclient = pycounter.sushiclient:main']
+    }
     )
