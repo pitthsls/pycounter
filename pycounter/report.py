@@ -238,12 +238,12 @@ class CounterEresource(six.Iterator):
             for item in self._full_data:
                 yield (item[0], self.metric, item[1])
         else:
-            currmonth = self.period[0]
-            mondat = iter(self._monthdata)
-            while currmonth < self.period[1]:
-                currusage = next(mondat)
-                yield (currmonth, self.metric, currusage)
-                currmonth = next_month(currmonth)
+            current_month = self.period[0]
+            month_data_iter = iter(self._monthdata)
+            while current_month < self.period[1]:
+                current_usage = next(month_data_iter)
+                yield (current_month, self.metric, current_usage)
+                current_month = next_month(current_month)
 
 
 class CounterJournal(CounterEresource):
@@ -391,6 +391,8 @@ class CounterDatabase(CounterEresource):
 def format_stat(stat):
     """Turn string numbers that might have an embedded comma into
     integers
+
+    :param stat: numeric value, possibly with commas, to turn into int
     """
     stat = stat.replace(',', '')
     try:
@@ -419,12 +421,12 @@ def parse(filename, filetype=None):
         elif filename.endswith('.csv'):
             filetype = 'csv'
         else:
-            with open(filename, 'rb') as fobj:
-                firstbytes = fobj.read(2)
-                if firstbytes == b"PK":
+            with open(filename, 'rb') as file_obj:
+                first_bytes = file_obj.read(2)
+                if first_bytes == b"PK":
                     filetype = 'xlsx'
                 else:
-                    content = fobj.read()
+                    content = file_obj.read()
                     if b'\t' in content:
                         filetype = 'tsv'
                     else:
@@ -449,8 +451,8 @@ def parse_xlsx(filename):
 
     """
     from openpyxl import load_workbook
-    with open(filename, 'rb') as xlsxfile:
-        workbook = load_workbook(xlsxfile)
+    with open(filename, 'rb') as xlsx_file:
+        workbook = load_workbook(xlsx_file)
         worksheet = workbook.get_sheet_by_name(workbook.get_sheet_names()[0])
         row_it = worksheet.iter_rows()
         split_row_list = ([cell.value if cell.value is not None else ""
@@ -562,12 +564,12 @@ def parse_generic(report_reader):
             continue
         if report.report_version == 4:
             if report.report_type.startswith('JR1'):
-                oldline = line
+                old_line = line
                 line = line[0:3] + line[5:7] + line[10:last_col]
-                doi = oldline[3]
-                prop_id = oldline[4]
-                html_total = int(oldline[8])
-                pdf_total = int(oldline[9])
+                doi = old_line[3]
+                prop_id = old_line[4]
+                html_total = int(old_line[8])
+                pdf_total = int(old_line[9])
 
             elif report.report_type in ('BR1', 'BR2'):
                 line = line[0:3] + line[5:7] + line[8:last_col]

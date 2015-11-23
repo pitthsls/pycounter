@@ -32,7 +32,10 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         ],
-    install_requires=['pyisbn', 'openpyxl<2.3', 'lxml', 'requests',
+    install_requires=['pyisbn', 'openpyxl<2.3', 'lxml<=3.4.4', 'requests',
                       'six', 'arrow'],
     tests_require=['httmock', 'mock'],
+    entry_points={
+        'console_scripts': ['sushiclient = pycounter.sushiclient:main']
+    }
     )
