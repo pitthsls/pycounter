@@ -20,7 +20,7 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../../pycounter'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
-print(sys.path)
+
 # noinspection PyProtectedMember
 from pycounter.version import __version__
 
