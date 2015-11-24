@@ -28,4 +28,9 @@ Options:
    Start Date (default first day of last month)
 
 .. option:: -e, --end_date
-   Start Date (default last day of last month)
+
+   Ending Date (default last day of last month)
+
+.. option:: -f <format>, --format <format>
+
+   Output format (currently only allows the default, tsv)
