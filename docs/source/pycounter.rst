@@ -15,10 +15,20 @@ Classes
 -------
 
 .. autoclass:: CounterReport
+   :members:
+
 .. autoclass:: CounterEresource
+   :members:
+
 .. autoclass:: CounterJournal
+   :members:
+
 .. autoclass:: CounterBook
+   :members:
+
 .. autoclass:: CounterDatabase
+   :members:
+
 
 Other functions
 ---------------
