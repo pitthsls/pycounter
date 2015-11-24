@@ -34,3 +34,7 @@ Options:
 .. option:: -f <format>, --format <format>
 
    Output format (currently only allows the default, tsv)
+
+.. option:: -o <output_file>, --output_file <output_file>
+
+   Path to write output file to. If file already exists, it will be overwritten.

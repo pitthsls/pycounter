@@ -25,8 +25,11 @@ import click
 @click.option('--format', '-f', 'format_', default='tsv',
               help='Output format (default tsv)',
               type=click.Choice(['tsv']))
+@click.option('--output_file', '-o', default='report.tsv',
+              help='Output file to write (will be overwritten)',
+              type=click.Path(writable=True))
 def main(url, report, release, start_date, end_date, requestor_id,
-         customer_reference, format_):
+         customer_reference, format_, output_file):
     # FIXME: doesn't actually default dates yet...
     click.echo("pycounter SUSHI client for URL %s (%s R%s)"
                % (url, report, release))
@@ -37,7 +40,7 @@ def main(url, report, release, start_date, end_date, requestor_id,
                               customer_reference=customer_reference,
                               start_date=convert_date_run(start_date),
                               end_date=convert_date_run(end_date))
-    report.write_tsv('report.tsv')
+    report.write_tsv(output_file)
 
 
 if __name__ == "__main__":
