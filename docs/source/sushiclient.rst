@@ -5,14 +5,27 @@ pycounter comes with a rudimentary SUSHI command line client.
 
 Invocation
 ----------
+.. program:: sushiclient
 
-sushiclient-script.py [OPTIONS] URL
+sushiclient [OPTIONS] <URL>
 
-  URL: The SUSHI endpoint/WSDL URL to use
+.. option:: <URL>
+
+   The SUSHI endpoint/WSDL URL to use
 
 Options:
-  -r, --report TEXT      report name (default JR1)
-  -c, --release INTEGER  COUNTER release (default 4)
-  -s, --start_date TEXT  Start Date (default first day of last month)
-  -e, --end_date TEXT    Start Date (default last day of last month)
 
+.. option:: -r, --report
+
+   report name (default JR1)
+
+.. option:: -c, --release
+
+   COUNTER release (default 4)
+
+.. option:: -s, --start_date
+
+   Start Date (default first day of last month)
+
+.. option:: -e, --end_date
+   Start Date (default last day of last month)
