@@ -44,4 +44,4 @@ def main(url, report, release, start_date, end_date, requestor_id,
 
 
 if __name__ == "__main__":
-    main()
+    main()  # pylint: disable=no-value-for-parameter

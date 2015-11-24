@@ -20,6 +20,9 @@ pycounter makes working with `COUNTER <http://www.projectcounter.org/>`_
 usage statistics in Python easy, including fetching statistics with NISO
 `SUSHI <http://www.niso.org/workrooms/sushi>`_.
 
+A simple command-line client for fetching JR1 reports from SUSHI servers
+and outputting them as tab-separated COUNTER 4 reports is included.
+
 Developed by the `Health Sciences Library System <http://www.hsls.pitt.edu>`_ 
 of the `University of Pittsburgh <http://www.pitt.edu>`_  to support importing
 usage data into our in-house Electronic Resources Management (ERM) system.
