@@ -24,7 +24,7 @@ import click
               help='Customer reference')
 @click.option('--format', '-f', 'format_', default='tsv',
               help='Output format (default tsv)',
-              type=click.Choice(['tsv',]))
+              type=click.Choice(['tsv']))
 def main(url, report, release, start_date, end_date, requestor_id,
          customer_reference, format_):
     # FIXME: doesn't actually default dates yet...
@@ -38,7 +38,6 @@ def main(url, report, release, start_date, end_date, requestor_id,
                               start_date=convert_date_run(start_date),
                               end_date=convert_date_run(end_date))
     report.write_tsv('report.tsv')
-
 
 
 if __name__ == "__main__":
