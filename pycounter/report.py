@@ -94,9 +94,8 @@ class CounterReport(object):
             if code == self.report_type[0:2]:
                 rep_type = name
 
-        report_name = ("%s Report %s (R%s)" % (
-            rep_type, self.report_type[-1], self.report_version
-        ))
+        report_name = ("%s Report %s (R%s)" %
+                       (rep_type, self.report_type[-1], self.report_version))
         output_lines.append([report_name,
                              REPORT_DESCRIPTIONS[self.report_type]])
         output_lines.append([self.customer])
@@ -218,6 +217,7 @@ class CounterEresource(six.Iterator):
             for item in month_data:
                 self._full_data.append(item)
         if line is not None:
+            warnings.warn('passing line is deprecated', DeprecationWarning)
             self.title = line[0]
             self.publisher = line[1]
             self.platform = line[2]
@@ -292,6 +292,7 @@ class CounterJournal(CounterEresource):
         self.proprietary_id = proprietary_id
 
         if line is not None:
+            warnings.warn('passing line is deprecated', DeprecationWarning)
             self.issn = line[3].strip()
             self.eissn = line[4].strip()
             self.isbn = None
@@ -361,6 +362,7 @@ class CounterBook(CounterEresource):
                                           title, platform, publisher)
         self.eissn = None
         if line is not None:
+            warnings.warn('passing line is deprecated', DeprecationWarning)
             self.isbn = line[3].strip().replace('-', '')
             if len(self.isbn) == 10:
                 self.isbn = pyisbn.convert(self.isbn)

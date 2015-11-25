@@ -7,12 +7,12 @@ pycounter.report module
 .. module:: pycounter.report
 
 Commonly-used function
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. autofunction:: parse
 
 Classes
--------
+^^^^^^^
 
 .. autoclass:: CounterReport
    :members:
@@ -31,7 +31,7 @@ Classes
 
 
 Other functions
----------------
+^^^^^^^^^^^^^^^
 These are mostly for internal use by the module, but are available to be
 called directly if necessary
 
@@ -46,9 +46,9 @@ pycounter.sushi module
 .. module:: pycounter.sushi
 
 Commonly-used function
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 .. autofunction:: get_report
 
 Other functions
----------------
+^^^^^^^^^^^^^^^
 .. autofunction:: get_sushi_stats_raw
