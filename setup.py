@@ -32,7 +32,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         ],
-    install_requires=['pyisbn', 'openpyxl<2.3', 'lxml<=3.4.4', 'requests',
+    install_requires=['openpyxl<2.3', 'lxml<=3.4.4', 'requests',
                       'six', 'arrow', 'click'],
     tests_require=['httmock', 'mock'],
     entry_points={

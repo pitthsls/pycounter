@@ -4,10 +4,8 @@ from __future__ import absolute_import
 
 import logging
 import re
-import warnings
 import datetime
 
-import pyisbn
 import six
 import arrow
 
@@ -185,8 +183,6 @@ class CounterEresource(six.Iterator):
 
     Iterating returns (first_day_of_month, metric, usage) tuples.
 
-    :param line: COUNTER 3 line of data to parse
-
     :param period: two-tuple of datetime.date objects corresponding
         to the beginning and end dates of the covered range
 
@@ -204,27 +200,16 @@ class CounterEresource(six.Iterator):
 
     """
 
-    def __init__(self, line=None, period=None, metric=None, month_data=None,
+    def __init__(self, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
         self.period = period
-        if line is not None and metric != line[3] and metric not in \
-                METRICS.values():
-            warnings.warn("metric %s not known" % metric)
+
         self.metric = metric
         self._monthdata = []
         self._full_data = []
         if month_data is not None:
             for item in month_data:
                 self._full_data.append(item)
-        if line is not None:
-            warnings.warn('passing line is deprecated', DeprecationWarning)
-            self.title = line[0]
-            self.publisher = line[1]
-            self.platform = line[2]
-            self._monthdata = [format_stat(x) for x in line[5:]]
-            while len(self._monthdata) < 12:
-                self._monthdata.append(None)
-            logging.debug("monthdata: %s", self._monthdata)
 
         if title:
             self.title = title
@@ -249,10 +234,6 @@ class CounterEresource(six.Iterator):
 class CounterJournal(CounterEresource):
     """
     statistics for a single electronic journal.
-
-    :param line: a list containing the usage data for this line, in
-        COUNTER 3 layout. (This is an ugly hack that should be fixed
-        very soon)
 
     :param period: two-tuple of datetime.date objects corresponding
         to the beginning and end dates of the covered range
@@ -280,28 +261,27 @@ class CounterJournal(CounterEresource):
 
     """
 
-    def __init__(self, line=None, period=None, metric=METRICS[u"JR1"],
+    def __init__(self, period=None, metric=METRICS[u"JR1"],
                  issn=None, eissn=None, month_data=None,
                  title="", platform="", publisher="", html_total=0,
                  pdf_total=0, doi="", proprietary_id=""):
-        super(CounterJournal, self).__init__(line, period, metric, month_data,
+        super(CounterJournal, self).__init__(period, metric, month_data,
                                              title, platform, publisher)
         self.html_total = html_total
         self.pdf_total = pdf_total
         self.doi = doi
         self.proprietary_id = proprietary_id
 
-        if line is not None:
-            warnings.warn('passing line is deprecated', DeprecationWarning)
-            self.issn = line[3].strip()
-            self.eissn = line[4].strip()
-            self.isbn = None
-
         if issn is not None:
             self.issn = issn
+        else:
+            self.issn = ''
+
 
         if eissn is not None:
             self.eissn = eissn
+        else:
+            self.eissn = ''
 
     def __str__(self):
         return """<CounterJournal %s, publisher %s,
@@ -337,10 +317,6 @@ class CounterBook(CounterEresource):
     """
     statistics for a single electronic book.
 
-    :param line: a list containing the usage data for this line, in
-        COUNTER 3 layout. (This is an ugly hack that should be fixed
-        very soon)
-
     :ivar isbn: eBook's ISBN
 
     :ivar issn: eBook's ISSN (if any)
@@ -356,17 +332,11 @@ class CounterBook(CounterEresource):
 
     """
 
-    def __init__(self, line=None, period=None, metric=None, month_data=None,
+    def __init__(self, period=None, metric=None, month_data=None,
                  title="", platform="", publisher="", isbn=None, issn=None):
-        super(CounterBook, self).__init__(line, period, metric, month_data,
+        super(CounterBook, self).__init__(period, metric, month_data,
                                           title, platform, publisher)
         self.eissn = None
-        if line is not None:
-            warnings.warn('passing line is deprecated', DeprecationWarning)
-            self.isbn = line[3].strip().replace('-', '')
-            if len(self.isbn) == 10:
-                self.isbn = pyisbn.convert(self.isbn)
-            self.issn = line[4].strip()
 
         if isbn is not None:
             self.isbn = isbn
@@ -384,9 +354,9 @@ class CounterDatabase(CounterEresource):
     # pylint: disable=too-few-public-methods
     """a COUNTER database report line"""
 
-    def __init__(self, line=None, period=None, metric=None, month_data=None,
+    def __init__(self, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
-        super(CounterDatabase, self).__init__(line, period, metric, month_data,
+        super(CounterDatabase, self).__init__(period, metric, month_data,
                                               title, platform, publisher)
 
 
@@ -558,6 +528,8 @@ def parse_generic(report_reader):
         six.next(report_reader)
 
     for line in report_reader:
+        issn = None
+        eissn = None
         html_total = 0
         pdf_total = 0
         doi = ""
@@ -572,6 +544,8 @@ def parse_generic(report_reader):
                 prop_id = old_line[4]
                 html_total = int(old_line[8])
                 pdf_total = int(old_line[9])
+                issn = line[3].strip()
+                eissn = line[4].strip()
 
             elif report.report_type in ('BR1', 'BR2'):
                 line = line[0:3] + line[5:7] + line[8:last_col]
@@ -583,36 +557,44 @@ def parse_generic(report_reader):
             if report.report_type.startswith('JR1'):
                 html_total = int(line[-2])
                 pdf_total = int(line[-1])
+                issn = line[3].strip()
+                eissn = line[4].strip()
             line = line[0:last_col]
 
         logging.debug(line)
         title = line[0]
         publisher = line[1]
         platform = line[2]
-
+        month_data = []
+        curr_month = report.period[0]
+        for data in line[5:]:
+            month_data.append((curr_month, format_stat(data)))
+            curr_month = next_month(curr_month)
         if report.report_type:
             if report.report_type.startswith('JR'):
-                report.pubs.append(CounterJournal(line,
-                                                  report.period,
+                report.pubs.append(CounterJournal(report.period,
                                                   report.metric,
+                                                  month_data=month_data,
                                                   title=title,
                                                   publisher=publisher,
                                                   platform=platform,
                                                   doi=doi,
+                                                  issn=issn,
+                                                  eissn=eissn,
                                                   proprietary_id=prop_id,
                                                   html_total=html_total,
                                                   pdf_total=pdf_total))
             elif report.report_type.startswith('BR'):
-                report.pubs.append(CounterBook(line,
-                                               report.period,
+                report.pubs.append(CounterBook(report.period,
                                                report.metric,
+                                               month_data=month_data,
                                                title=title,
                                                publisher=publisher,
                                                platform=platform))
             elif report.report_type.startswith('DB'):
-                report.pubs.append(CounterDatabase(line,
-                                                   report.period,
+                report.pubs.append(CounterDatabase(report.period,
                                                    line[3],
+                                                   month_data=month_data,
                                                    title=title,
                                                    publisher=publisher,
                                                    platform=platform))
