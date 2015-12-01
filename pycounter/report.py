@@ -2,18 +2,18 @@
 
 from __future__ import absolute_import
 
+import datetime
 import logging
 import re
-import datetime
 
-import six
 import arrow
+import six
 
+from pycounter import csvhelper
 from pycounter.constants import METRICS, CODES, REPORT_DESCRIPTIONS
 from pycounter.exceptions import UnknownReportTypeError, PycounterException
-from pycounter import csvhelper
 from pycounter.helpers import convert_covered, convert_date_run, \
-    convert_date_column, last_day, next_month
+    convert_date_column, last_day, next_month, format_stat
 
 
 class CounterReport(object):
@@ -358,19 +358,6 @@ class CounterDatabase(CounterEresource):
                  title="", platform="", publisher=""):
         super(CounterDatabase, self).__init__(period, metric, month_data,
                                               title, platform, publisher)
-
-
-def format_stat(stat):
-    """Turn string numbers that might have an embedded comma into
-    integers
-
-    :param stat: numeric value, possibly with commas, to turn into int
-    """
-    stat = stat.replace(',', '')
-    try:
-        return int(stat)
-    except ValueError:
-        return None
 
 
 def parse(filename, filetype=None):

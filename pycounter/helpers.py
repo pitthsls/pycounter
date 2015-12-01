@@ -74,3 +74,16 @@ def prev_month(dateobj):
     """
     year_delta, old_month = divmod(dateobj.month - 2, 12)
     return datetime.date(dateobj.year + year_delta, old_month + 1, 1)
+
+
+def format_stat(stat):
+    """Turn string numbers that might have an embedded comma into
+    integers
+
+    :param stat: numeric value, possibly with commas, to turn into int
+    """
+    stat = stat.replace(',', '')
+    try:
+        return int(stat)
+    except ValueError:
+        return None
