@@ -5,6 +5,7 @@ no-docstring-rgx=__.*__|test[A-Z_].*|setUp|tearDown
 
 
 extension-pkg-whitelist=lxml
+disable= bad-continuation
 
 [SIMILARITIES]
 
