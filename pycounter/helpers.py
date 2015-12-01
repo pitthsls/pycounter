@@ -60,5 +60,17 @@ def next_month(dateobj):
         next month's first day.
 
     """
-    year_delta, prev_month = divmod(dateobj.month, 12)
-    return datetime.date(dateobj.year + year_delta, prev_month + 1, 1)
+    year_delta, old_month = divmod(dateobj.month, 12)
+    return datetime.date(dateobj.year + year_delta, old_month + 1, 1)
+
+
+def prev_month(dateobj):
+    """Return a datetime.date for the first day of the previous month
+    before the given date
+
+    :param dateobj: the date within the month for which we want the
+        previous month's first day.
+
+    """
+    year_delta, old_month = divmod(dateobj.month - 2, 12)
+    return datetime.date(dateobj.year + year_delta, old_month + 1, 1)
