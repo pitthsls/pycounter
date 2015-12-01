@@ -277,7 +277,6 @@ class CounterJournal(CounterEresource):
         else:
             self.issn = ''
 
-
         if eissn is not None:
             self.eissn = eissn
         else:
