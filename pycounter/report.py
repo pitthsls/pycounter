@@ -10,10 +10,10 @@ import arrow
 import six
 
 from pycounter import csvhelper
-from pycounter.constants import METRICS, CODES, REPORT_DESCRIPTIONS
-from pycounter.exceptions import UnknownReportTypeError, PycounterException
-from pycounter.helpers import convert_covered, convert_date_run, \
-    convert_date_column, last_day, next_month, format_stat
+from pycounter.constants import CODES, METRICS, REPORT_DESCRIPTIONS
+from pycounter.exceptions import PycounterException, UnknownReportTypeError
+from pycounter.helpers import convert_covered, convert_date_column, \
+    convert_date_run, format_stat, last_day, next_month
 
 
 class CounterReport(object):

@@ -1,20 +1,23 @@
 """NISO SUSHI support"""
 from __future__ import absolute_import
-import logging
-import datetime
 
-import requests
+import datetime
+import logging
+
 import arrow
+
 from lxml import etree
 from lxml import objectify
 
-from pycounter.constants import NS
+import requests
+
 import pycounter.constants
+import pycounter.exceptions
 from pycounter.helpers import convert_date_run
 import pycounter.report
-import pycounter.exceptions
 
 logger = logging.getLogger(__name__)
+NS = pycounter.constants.NS
 
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,

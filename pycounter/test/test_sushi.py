@@ -1,11 +1,13 @@
 """Tests for pycounter.sushi"""
-
 from __future__ import absolute_import
-import unittest
-import os
-from httmock import urlmatch, HTTMock
+
 import datetime
-import mock as mock
+import os
+import unittest
+
+from httmock import HTTMock, urlmatch
+import mock
+
 from pycounter import sushi
 import pycounter.exceptions
 

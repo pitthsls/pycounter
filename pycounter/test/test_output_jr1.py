@@ -1,10 +1,12 @@
 from __future__ import absolute_import
-from pycounter import report
-from pycounter import csvhelper
-import unittest
+
+import logging
 import os
 import tempfile
-import logging
+import unittest
+
+from pycounter import csvhelper
+from pycounter import report
 
 
 class TestOutputJR1(unittest.TestCase):

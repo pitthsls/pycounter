@@ -4,10 +4,10 @@ from __future__ import print_function
 import datetime
 import sys
 
-from pycounter import sushi
-from pycounter.helpers import convert_date_run, prev_month, last_day
-
 import click
+
+from pycounter import sushi
+from pycounter.helpers import convert_date_run, last_day, prev_month
 
 
 @click.command()

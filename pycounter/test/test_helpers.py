@@ -1,6 +1,8 @@
 from __future__ import absolute_import
-import unittest
+
 import datetime
+import unittest
+
 from pycounter.helpers import next_month, prev_month
 
 

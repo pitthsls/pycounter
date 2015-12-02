@@ -1,7 +1,9 @@
 from __future__ import absolute_import
-from pycounter import report
-import unittest
+
 import os
+import unittest
+
+from pycounter import report
 
 
 class ParseExample(unittest.TestCase):

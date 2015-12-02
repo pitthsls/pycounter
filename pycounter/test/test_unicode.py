@@ -1,9 +1,11 @@
 from __future__ import absolute_import
-from pycounter import report
-import unittest
+
 import os
+import unittest
 
 from six import text_type
+
+from pycounter import report
 
 
 class UnicodeTests(unittest.TestCase):

@@ -1,8 +1,10 @@
 from __future__ import absolute_import
-import pycounter.report
-import unittest
-import os
+
 import datetime
+import os
+import unittest
+
+import pycounter.report
 
 
 class ParseCounter4Example(unittest.TestCase):
