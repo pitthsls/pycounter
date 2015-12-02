@@ -1,9 +1,13 @@
 from __future__ import with_statement
-from setuptools import setup, find_packages
+
+import os
+
+from setuptools import find_packages, setup
 
 version = {}  # will be set by exec below
 
-with open('pycounter/version.py', 'rb') as fp:
+with open(os.path.join(
+        os.path.dirname(__file__), 'pycounter/version.py'), 'rb') as fp:
     exec(fp.read(), version)
 
 with open('README.rst') as readmefile:
