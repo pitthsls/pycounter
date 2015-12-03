@@ -13,7 +13,8 @@ from pycounter import csvhelper
 from pycounter.constants import CODES, METRICS, REPORT_DESCRIPTIONS
 from pycounter.exceptions import PycounterException, UnknownReportTypeError
 from pycounter.helpers import convert_covered, convert_date_column, \
-    convert_date_run, format_stat, last_day, next_month
+    convert_date_run, format_stat, guess_type_from_content, last_day, \
+    next_month
 
 
 class CounterReport(object):
@@ -380,7 +381,7 @@ def parse(filename, filetype=None):
             filetype = 'csv'
         else:
             with open(filename, 'rb') as file_obj:
-                filetype = _guess_type_from_content(file_obj)
+                filetype = guess_type_from_content(file_obj)
 
     if filetype == 'tsv':
         return parse_separated(filename, '\t')
@@ -564,22 +565,6 @@ def _parse_line(line, report, last_col):
                                month_data=month_data,
                                **common_args)
     raise PycounterException("Should be unreachable")
-
-
-def _guess_type_from_content(file_obj):
-    """Given a filelike object, look for signature of various file types and
-    return which one it is
-    """
-    first_bytes = file_obj.read(2)
-    if first_bytes == b"PK":
-        filetype = 'xlsx'
-    else:
-        content = file_obj.read()
-        if b'\t' in content:
-            filetype = 'tsv'
-        else:
-            filetype = 'csv'
-    return filetype
 
 
 def _get_type_and_version(specifier):

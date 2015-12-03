@@ -87,3 +87,19 @@ def format_stat(stat):
         return int(stat)
     except ValueError:
         return None
+
+
+def guess_type_from_content(file_obj):
+    """Given a filelike object, look for signature of various file types and
+    return which one it is
+    """
+    first_bytes = file_obj.read(2)
+    if first_bytes == b"PK":
+        filetype = 'xlsx'
+    else:
+        content = file_obj.read()
+        if b'\t' in content:
+            filetype = 'tsv'
+        else:
+            filetype = 'csv'
+    return filetype
