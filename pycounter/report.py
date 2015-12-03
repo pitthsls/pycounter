@@ -380,15 +380,9 @@ def parse(filename, filetype=None):
             filetype = 'csv'
         else:
             with open(filename, 'rb') as file_obj:
-                first_bytes = file_obj.read(2)
-                if first_bytes == b"PK":
-                    filetype = 'xlsx'
-                else:
-                    content = file_obj.read()
-                    if b'\t' in content:
-                        filetype = 'tsv'
-                    else:
-                        filetype = 'csv'
+                filetype = _guess_type_from_content(file_obj)
+
+
 
     if filetype == 'tsv':
         return parse_separated(filename, '\t')
@@ -446,17 +440,10 @@ def parse_generic(report_reader):
     """
     report = CounterReport()
 
-    line1 = six.next(report_reader)
+    report.report_type, report.report_version = _get_type_and_version(
+        six.next(report_reader)[0])
 
-    rt_match = re.match(
-        r'.*(Journal|Book|Database) Report (\d(?: GOA)?) ?\(R(\d)\)',
-        line1[0])
-    if rt_match:
-        report.report_type = (CODES[rt_match.group(1)] +
-                              rt_match.group(2))
-        report.report_version = int(rt_match.group(3))
-
-    # noinspection PyTypeChecker
+# noinspection PyTypeChecker
     report.metric = METRICS.get(report.report_type)
 
     report.customer = six.next(report_reader)[0]
@@ -477,18 +464,9 @@ def parse_generic(report_reader):
     report.date_run = convert_date_run(date_run_line[0])
 
     header = six.next(report_reader)
-    first_date_col = 10 if report.report_version == 4 else 5
-    if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
-        first_date_col = 8
-    elif report.report_type == 'DB1' and report.report_version == 4:
-        first_date_col = 6
-    elif report.report_type == 'DB2' and report.report_version == 4:
-        first_date_col = 5
-    year = int(header[first_date_col].split('-')[1])
-    if year < 100:
-        year += 2000
 
-    report.year = year
+    report.year = _year_from_header(header, report)
+
 
     if report.report_version == 4:
         countable_header = header[0:8]
@@ -503,7 +481,7 @@ def parse_generic(report_reader):
                 break
             last_col += 1
 
-        start_date = datetime.date(year, 1, 1)
+        start_date = datetime.date(report.year, 1, 1)
         end_date = last_day(convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
 
@@ -514,77 +492,132 @@ def parse_generic(report_reader):
         six.next(report_reader)
 
     for line in report_reader:
-        issn = None
-        eissn = None
-        html_total = 0
-        pdf_total = 0
-        doi = ""
-        prop_id = ""
         if not line:
             continue
-        if report.report_version == 4:
-            if report.report_type.startswith('JR1'):
-                old_line = line
-                line = line[0:3] + line[5:7] + line[10:last_col]
-                doi = old_line[3]
-                prop_id = old_line[4]
-                html_total = int(old_line[8])
-                pdf_total = int(old_line[9])
-                issn = line[3].strip()
-                eissn = line[4].strip()
-
-            elif report.report_type in ('BR1', 'BR2'):
-                line = line[0:3] + line[5:7] + line[8:last_col]
-            elif report.report_type in ('DB1', 'DB2'):
-                # format coincidentally works for these. This is a kludge
-                # so leaving this explicit...
-                pass
-        else:
-            if report.report_type.startswith('JR1'):
-                html_total = int(line[-2])
-                pdf_total = int(line[-1])
-                issn = line[3].strip()
-                eissn = line[4].strip()
-            line = line[0:last_col]
-
-        logging.debug(line)
-        title = line[0]
-        publisher = line[1]
-        platform = line[2]
-        month_data = []
-        curr_month = report.period[0]
-        for data in line[5:]:
-            month_data.append((curr_month, format_stat(data)))
-            curr_month = next_month(curr_month)
-        if report.report_type:
-            if report.report_type.startswith('JR'):
-                report.pubs.append(CounterJournal(report.period,
-                                                  report.metric,
-                                                  month_data=month_data,
-                                                  title=title,
-                                                  publisher=publisher,
-                                                  platform=platform,
-                                                  doi=doi,
-                                                  issn=issn,
-                                                  eissn=eissn,
-                                                  proprietary_id=prop_id,
-                                                  html_total=html_total,
-                                                  pdf_total=pdf_total))
-            elif report.report_type.startswith('BR'):
-                report.pubs.append(CounterBook(report.period,
-                                               report.metric,
-                                               month_data=month_data,
-                                               title=title,
-                                               publisher=publisher,
-                                               platform=platform))
-            elif report.report_type.startswith('DB'):
-                report.pubs.append(CounterDatabase(report.period,
-                                                   line[3],
-                                                   month_data=month_data,
-                                                   title=title,
-                                                   publisher=publisher,
-                                                   platform=platform))
-            else:
-                raise UnknownReportTypeError(report.report_type)
+        report.pubs.append(_parse_line(line, report, last_col))
 
     return report
+
+
+def _parse_line(line, report, last_col):
+    """Parse a single line from a report and return a CounterResource subclass
+        instance as appropriate
+    """
+    issn = None
+    eissn = None
+    html_total = 0
+    pdf_total = 0
+    doi = ""
+    prop_id = ""
+
+    if report.report_version == 4:
+        if report.report_type.startswith('JR1'):
+            old_line = line
+            line = line[0:3] + line[5:7] + line[10:last_col]
+            doi = old_line[3]
+            prop_id = old_line[4]
+            html_total = int(old_line[8])
+            pdf_total = int(old_line[9])
+            issn = line[3].strip()
+            eissn = line[4].strip()
+
+        elif report.report_type in ('BR1', 'BR2'):
+            line = line[0:3] + line[5:7] + line[8:last_col]
+        elif report.report_type in ('DB1', 'DB2'):
+            # format coincidentally works for these. This is a kludge
+            # so leaving this explicit...
+            pass
+    else:
+        if report.report_type.startswith('JR1'):
+            html_total = int(line[-2])
+            pdf_total = int(line[-1])
+            issn = line[3].strip()
+            eissn = line[4].strip()
+        line = line[0:last_col]
+
+    logging.debug(line)
+    common_args = {
+        'title': line[0],
+        'publisher': line[1],
+        'platform': line[2],
+        'period': report.period
+    }
+    month_data = []
+    curr_month = report.period[0]
+    for data in line[5:]:
+        month_data.append((curr_month, format_stat(data)))
+        curr_month = next_month(curr_month)
+    if report.report_type.startswith('JR'):
+        return CounterJournal(metric=report.metric,
+                              month_data=month_data,
+                              doi=doi,
+                              issn=issn,
+                              eissn=eissn,
+                              proprietary_id=prop_id,
+                              html_total=html_total,
+                              pdf_total=pdf_total,
+                              **common_args
+                              )
+    elif report.report_type.startswith('BR'):
+        return CounterBook(metric=report.metric,
+                           month_data=month_data,
+                           **common_args)
+    elif report.report_type.startswith('DB'):
+        return CounterDatabase(metric=line[3],
+                               month_data=month_data,
+                               **common_args)
+    raise PycounterException("Should be unreachable")
+
+
+def _guess_type_from_content(file_obj):
+    """Given a filelike object, look for signature of various file types and
+    return which one it is
+    """
+    first_bytes = file_obj.read(2)
+    if first_bytes == b"PK":
+        filetype = 'xlsx'
+    else:
+        content = file_obj.read()
+        if b'\t' in content:
+            filetype = 'tsv'
+        else:
+            filetype = 'csv'
+    return filetype
+
+
+def _get_type_and_version(specifier):
+    """Given a COUNTER report specifier, return the type and version as a tuple
+    """
+    rt_match = re.match(
+        r'.*(Journal|Book|Database) Report (\d(?: GOA)?) ?\(R(\d)\)',
+        specifier)
+    if rt_match:
+        report_type = (CODES[rt_match.group(1)] +
+                              rt_match.group(2))
+        report_version = int(rt_match.group(3))
+    else:
+        raise UnknownReportTypeError("No match in line: %s" % specifier)
+    if not any(report_type.startswith(x) for x in ('JR', 'BR', 'DB')):
+        raise UnknownReportTypeError(report_type)
+
+    return report_type, report_version
+
+
+def _year_from_header(header, report):
+    """Get the year for the report from the header
+
+    NOTE: for multi-year reports, this will be the date of the first month,
+    and probably doesn't make sense to talk of a report having a year...
+    """
+    first_date_col = 10 if report.report_version == 4 else 5
+    if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
+        first_date_col = 8
+    elif report.report_type == 'DB1' and report.report_version == 4:
+        first_date_col = 6
+    elif report.report_type == 'DB2' and report.report_version == 4:
+        first_date_col = 5
+    year = int(header[first_date_col].split('-')[1])
+    if year < 100:
+        year += 2000
+
+    return year
