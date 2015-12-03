@@ -382,8 +382,6 @@ def parse(filename, filetype=None):
             with open(filename, 'rb') as file_obj:
                 filetype = _guess_type_from_content(file_obj)
 
-
-
     if filetype == 'tsv':
         return parse_separated(filename, '\t')
     elif filetype == 'xlsx':
@@ -466,7 +464,6 @@ def parse_generic(report_reader):
     header = six.next(report_reader)
 
     report.year = _year_from_header(header, report)
-
 
     if report.report_version == 4:
         countable_header = header[0:8]
@@ -592,8 +589,7 @@ def _get_type_and_version(specifier):
         r'.*(Journal|Book|Database) Report (\d(?: GOA)?) ?\(R(\d)\)',
         specifier)
     if rt_match:
-        report_type = (CODES[rt_match.group(1)] +
-                              rt_match.group(2))
+        report_type = (CODES[rt_match.group(1)] + rt_match.group(2))
         report_version = int(rt_match.group(3))
     else:
         raise UnknownReportTypeError("No match in line: %s" % specifier)
