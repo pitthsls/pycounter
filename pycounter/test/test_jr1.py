@@ -82,6 +82,9 @@ class ParseCounter4(unittest.TestCase):
     def test_date_run(self):
         self.assertEqual(self.report.date_run, datetime.date(2012, 2, 21))
 
+    def test_isbn(self):
+        self.assertIsNone(self.report.pubs[1].isbn)
+
     def test_period(self):
         self.assertEqual(self.report.period,
                          (datetime.date(2011, 1, 1),

@@ -273,6 +273,8 @@ class CounterJournal(CounterEresource):
         self.doi = doi
         self.proprietary_id = proprietary_id
 
+        self.isbn = None
+
         if issn is not None:
             self.issn = issn
         else:
@@ -358,6 +360,7 @@ class CounterDatabase(CounterEresource):
                  title="", platform="", publisher=""):
         super(CounterDatabase, self).__init__(period, metric, month_data,
                                               title, platform, publisher)
+        self.isbn = None
 
 
 def parse(filename, filetype=None):
