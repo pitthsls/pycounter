@@ -161,5 +161,5 @@ class TestSushiClient(unittest.TestCase):
             with runner.isolated_filesystem():
                 result = runner.invoke(sushiclient.main, arglist)
                 with open('report.tsv') as tsv_file:
-                    self.assertIn('Journal Report 1', tsv_file.read())
+                    self.assertTrue('Journal Report 1' in tsv_file.read())
                 self.assertEqual(result.exit_code, 0)
