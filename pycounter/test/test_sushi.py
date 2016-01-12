@@ -5,10 +5,13 @@ import datetime
 import os
 import unittest
 
+from click.testing import CliRunner
+
 from httmock import HTTMock, urlmatch
 import mock
 
 from pycounter import sushi
+from pycounter import sushiclient
 import pycounter.exceptions
 
 
@@ -143,3 +146,20 @@ class TestSushiError(unittest.TestCase):
                               datetime.date(2015, 1, 1),
                               datetime.date(2015, 1, 31)
                               )
+
+
+class TestSushiClient(unittest.TestCase):
+    """Test the client"""
+
+    def test_get(self):
+        arglist = [
+            'http://www.example.com/Sushi',
+        ]
+
+        with HTTMock(sushi_mock):
+            runner = CliRunner()
+            with runner.isolated_filesystem():
+                result = runner.invoke(sushiclient.main, arglist)
+                with open('report.tsv') as tsv_file:
+                    self.assertIn('Journal Report 1', tsv_file.read())
+                self.assertEqual(result.exit_code, 0)
