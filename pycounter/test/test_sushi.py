@@ -74,6 +74,33 @@ class TestConvertRawSimple(unittest.TestCase):
         self.assertEqual(data[0], 14)
 
 
+class TestConvertRawBook(unittest.TestCase):
+    """Test converting simple BR1 SUSHI response"""
+
+    def setUp(self):
+        path = os.path.join(os.path.dirname(__file__),
+                            'data', 'sushi_simple_br1.xml')
+        with open(path, 'rb') as datafile:
+            self.report = sushi._raw_to_full(datafile.read())
+
+    def test_report(self):
+        self.assertEqual(self.report.report_type, u'BR1')
+        self.assertEqual(self.report.report_version, 4)
+
+    def test_customer(self):
+        self.assertEqual(self.report.institutional_identifier,
+                         u"exampleLibrary")
+
+    def test_title(self):
+        publication = next(iter(self.report))
+        self.assertEqual(publication.title, u'Fake data')
+
+    def test_data(self):
+        publication = next(iter(self.report))
+        data = [month[2] for month in publication]
+        self.assertEqual(data[0], 14)
+
+
 class TestMissingMonth(unittest.TestCase):
     """Test SUSHI with months missing"""
 
