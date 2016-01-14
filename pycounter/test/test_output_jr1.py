@@ -40,11 +40,6 @@ class TestWritingJR1(unittest.TestCase):
         self.filename = os.path.join(os.path.dirname(__file__),
                                      'data/simpleJR1.tsv')
         self.rep = report.parse(self.filename)
-        with csvhelper.UnicodeReader(self.filename,
-                                     delimiter=',') as report_reader:
-            self.file_content = list(report_reader)
-
-        self.output_content = self.rep.as_generic()
 
     def test_output_tsv(self):
         tf = tempfile.NamedTemporaryFile(delete=False)

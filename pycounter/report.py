@@ -10,7 +10,8 @@ import arrow
 import six
 
 from pycounter import csvhelper
-from pycounter.constants import CODES, METRICS, REPORT_DESCRIPTIONS
+from pycounter.constants import CODES, HEADER_FIELDS, METRICS
+from pycounter.constants import REPORT_DESCRIPTIONS
 from pycounter.exceptions import PycounterException, UnknownReportTypeError
 from pycounter.helpers import convert_covered, convert_date_column, \
     convert_date_run, format_stat, guess_type_from_content, last_day, \
@@ -156,24 +157,12 @@ class CounterReport(object):
         """
         Generate header for COUNTER table for this report, as list of cells
         """
-        # FIXME: don't hardcode JR1 values.
-        header_cells = [
-            u'Journal',
-            u'Publisher',
-            u'Platform',
-            u'Journal DOI',
-            u'Proprietary Identifier',
-            u'Print ISSN',
-            u'Online ISSN',
-            u'Reporting Period Total',
-            u'Reporting Period HTML',
-            u'Reporting Period PDF',
-        ]
+        header_cells = list(HEADER_FIELDS[self.report_type])
         for d_obj in arrow.Arrow.range('month',
                                        arrow.Arrow.fromdate(self.period[0]),
                                        arrow.Arrow.fromdate(self.period[1])):
             header_cells.append(d_obj.strftime('%b-%Y'))
-
+        logging.debug("header cells: %r", header_cells)
         return header_cells
 
 

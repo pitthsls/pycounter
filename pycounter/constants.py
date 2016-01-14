@@ -76,3 +76,18 @@ REPORT_DESCRIPTIONS = {
                   u'to mobile devices and for mobile devices/delivered to '
                   u'mobile devices)',
 }
+
+HEADER_FIELDS = {
+    "JR1": (
+            u'Journal',
+            u'Publisher',
+            u'Platform',
+            u'Journal DOI',
+            u'Proprietary Identifier',
+            u'Print ISSN',
+            u'Online ISSN',
+            u'Reporting Period Total',
+            u'Reporting Period HTML',
+            u'Reporting Period PDF',
+    ),
+}
