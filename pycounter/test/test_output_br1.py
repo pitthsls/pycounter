@@ -38,7 +38,7 @@ class TestWritingBR1(unittest.TestCase):
     """Test write of BR1 to filesystem"""
     def setUp(self):
         self.filename = os.path.join(os.path.dirname(__file__),
-                                     'data/c4BR1.tsv')
+                                     'data/C4BR1.tsv')
         self.rep = report.parse(self.filename)
 
         self.output_content = self.rep.as_generic()
