@@ -36,20 +36,19 @@
                         </Contact>
                     </Vendor>
                     <Customer>
-                        <Name>Example Library</Name>
                         <ID>exampleLibrary</ID>
                         <ReportItems>
                             <ItemIdentifier>
-                                <Type>Print_ISSN</Type>
-                                <Value>0737-1764</Value>
+                                <Type>Print_ISBN</Type>
+                                <Value>9780011234569</Value>
                             </ItemIdentifier>
                             <ItemIdentifier>
-                                <Type>Online_ISSN</Type>
-                                <Value>1234-5678</Value>
+                                <Type>Online_ISBN</Type>
+                                <Value>9780011234549</Value>
                             </ItemIdentifier>
                             <ItemIdentifier>
                                 <Type>Proprietary</Type>
-                                <Value>JFD</Value>
+                                <Value>FD</Value>
                             </ItemIdentifier>
                             <ItemPlatform>ExamplePlatform</ItemPlatform>
                             <ItemName>Fake data</ItemName>
