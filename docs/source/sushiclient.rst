@@ -25,11 +25,19 @@ Options:
 
 .. option:: -s, --start_date
 
-   Start Date (default first day of last month)
+   Start Date (default first day of last month) in 'YYYY-MM-DD' format
 
 .. option:: -e, --end_date
 
-   Ending Date (default last day of last month)
+   Ending Date (default last day of last month) in 'YYYY-MM-DD' format
+
+.. option:: -i, --requestor_id
+
+   Requestor ID as defined in the SUSHI standard
+
+.. option:: -c, --customer_reference
+
+   Customer reference number as defined in the SUSHI standard
 
 .. option:: -f <format>, --format <format>
 

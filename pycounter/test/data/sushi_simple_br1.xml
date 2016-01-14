@@ -25,8 +25,7 @@
             </ns2:ReportDefinition>
             <ns3:Report>
                 <Report Title="Book Report 1" Name="BR1" Version="4"
-                        ID="exampleuser:BR1"
-                        Created="2015-01-23T14:44:16.801-05:00">
+                        ID="exampleuser:BR1">
                     <Vendor>
                         <Name>Example Vendor</Name>
                         <ID>example</ID>
