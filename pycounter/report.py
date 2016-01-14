@@ -11,7 +11,7 @@ import six
 
 from pycounter import csvhelper
 from pycounter.constants import CODES, HEADER_FIELDS, METRICS
-from pycounter.constants import REPORT_DESCRIPTIONS
+from pycounter.constants import REPORT_DESCRIPTIONS, TOTAL_TEXT
 from pycounter.exceptions import PycounterException, UnknownReportTypeError
 from pycounter.helpers import convert_covered, convert_date_column, \
     convert_date_run, format_stat, guess_type_from_content, last_day, \
@@ -122,7 +122,7 @@ class CounterReport(object):
         """
         # FIXME: don't hardcode JR1 values
         total_cells = [
-            u'Total for all journals',
+            TOTAL_TEXT[self.report_type],
             u'',
         ]
         platforms = set(resource.platform for resource in self.pubs)
@@ -141,14 +141,16 @@ class CounterReport(object):
                               arrow.Arrow.fromdate(self.period[1])))
         month_data = [0] * number_of_months
         for pub in self.pubs:
-            pdf_usage += pub.pdf_total
-            html_usage += pub.html_total
+            if self.report_type == 'JR1':
+                pdf_usage += pub.pdf_total
+                html_usage += pub.html_total
             for month, data in enumerate(pub):
                 total_usage += data[2]
                 month_data[month] += data[2]
         total_cells.append(six.text_type(total_usage))
-        total_cells.append(six.text_type(html_usage))
-        total_cells.append(six.text_type(pdf_usage))
+        if self.report_type == 'JR1':
+            total_cells.append(six.text_type(html_usage))
+            total_cells.append(six.text_type(pdf_usage))
         total_cells.extend(six.text_type(d) for d in month_data)
 
         return total_cells
@@ -162,7 +164,6 @@ class CounterReport(object):
                                        arrow.Arrow.fromdate(self.period[0]),
                                        arrow.Arrow.fromdate(self.period[1])):
             header_cells.append(d_obj.strftime('%b-%Y'))
-        logging.debug("header cells: %r", header_cells)
         return header_cells
 
 
@@ -324,21 +325,50 @@ class CounterBook(CounterEresource):
     """
 
     def __init__(self, period=None, metric=None, month_data=None,
-                 title="", platform="", publisher="", isbn=None, issn=None):
+                 title="", platform="", publisher="", isbn=None, issn=None,
+                 doi="", proprietary_id=""):
         super(CounterBook, self).__init__(period, metric, month_data,
                                           title, platform, publisher)
         self.eissn = None
+        self.doi = doi
+        self.proprietary_id = proprietary_id
 
         if isbn is not None:
             self.isbn = isbn
+        else:
+            self.isbn = u''
 
         if issn is not None:
             self.issn = issn
+        else:
+            self.issn = u''
 
     def __str__(self):
         return """<CounterBook %s (ISBN: %s), publisher %s,
         platform %s>""" % (self.title, self.isbn, self.publisher,
                            self.platform)
+
+    def as_generic(self):
+        """
+        return data for this line as list of COUNTER report cells
+        """
+        data_line = [
+            self.title,
+            self.publisher,
+            self.platform,
+            self.doi,
+            self.proprietary_id,
+            self.isbn,
+            self.issn,
+        ]
+        total_usage = 0
+        month_data = []
+        for data in self:
+            total_usage += data[2]
+            month_data.append(six.text_type(data[2]))
+        data_line.append(six.text_type(total_usage))
+        data_line.extend(month_data)
+        return data_line
 
 
 class CounterDatabase(CounterEresource):
@@ -495,6 +525,7 @@ def _parse_line(line, report, last_col):
     """
     issn = None
     eissn = None
+    isbn = None
     html_total = 0
     pdf_total = 0
     doi = ""
@@ -513,6 +544,9 @@ def _parse_line(line, report, last_col):
 
         elif report.report_type in ('BR1', 'BR2'):
             line = line[0:3] + line[5:7] + line[8:last_col]
+            isbn = line[3].strip()
+            issn = line[4].strip()
+
         elif report.report_type in ('DB1', 'DB2'):
             # format coincidentally works for these. This is a kludge
             # so leaving this explicit...
@@ -551,6 +585,10 @@ def _parse_line(line, report, last_col):
     elif report.report_type.startswith('BR'):
         return CounterBook(metric=report.metric,
                            month_data=month_data,
+                           doi=doi,
+                           issn=issn,
+                           isbn=isbn,
+                           proprietary_id=prop_id,
                            **common_args)
     elif report.report_type.startswith('DB'):
         return CounterDatabase(metric=line[3],

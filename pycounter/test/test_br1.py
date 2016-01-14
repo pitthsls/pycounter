@@ -84,3 +84,7 @@ class ParseCounter4Example(unittest.TestCase):
         self.assertEqual(self.report.period,
                          (datetime.date(2012, 1, 1),
                           datetime.date(2012, 6, 30)))
+
+    def test_isbn(self):
+        publication = self.report.pubs[0]
+        self.assertEqual(publication.isbn, u'9787490833809')

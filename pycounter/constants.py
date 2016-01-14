@@ -90,4 +90,19 @@ HEADER_FIELDS = {
             u'Reporting Period HTML',
             u'Reporting Period PDF',
     ),
+    "BR1": (
+            u'',
+            u'Publisher',
+            u'Platform',
+            u'Book DOI',
+            u'Proprietary Identifier',
+            u'ISBN',
+            u'ISSN',
+            u'Reporting Period Total',
+    ),
+}
+
+TOTAL_TEXT = {
+    'JR1': u'Total for all journals',
+    'BR1': u'Total for all titles',
 }
