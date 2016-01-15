@@ -196,7 +196,6 @@ class CounterEresource(six.Iterator):
         self.period = period
 
         self.metric = metric
-        self._monthdata = []
         self._full_data = []
         if month_data is not None:
             for item in month_data:
@@ -213,13 +212,6 @@ class CounterEresource(six.Iterator):
         if self._full_data:
             for item in self._full_data:
                 yield (item[0], self.metric, item[1])
-        else:
-            current_month = self.period[0]
-            month_data_iter = iter(self._monthdata)
-            while current_month < self.period[1]:
-                current_usage = next(month_data_iter)
-                yield (current_month, self.metric, current_usage)
-                current_month = next_month(current_month)
 
 
 class CounterJournal(CounterEresource):
