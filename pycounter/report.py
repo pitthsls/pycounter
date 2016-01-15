@@ -62,9 +62,9 @@ class CounterReport(object):
             self.date_run = date_run
         self.year = None
 
-    def __str__(self):
+    def __repr__(self):
         return (
-            "CounterReport %s version %s for date range %s to %s" %
+            "<CounterReport %s version %s for date range %s to %s>" %
             (self.report_type,
              self.report_version,
              self.period[0], self.period[1])
@@ -275,7 +275,7 @@ class CounterJournal(CounterEresource):
         else:
             self.eissn = ''
 
-    def __str__(self):
+    def __repr__(self):
         return """<CounterJournal %s, publisher %s,
         platform %s>""" % (self.title, self.publisher, self.platform)
 
@@ -343,7 +343,7 @@ class CounterBook(CounterEresource):
         else:
             self.issn = u''
 
-    def __str__(self):
+    def __repr__(self):
         return """<CounterBook %s (ISBN: %s), publisher %s,
         platform %s>""" % (self.title, self.isbn, self.publisher,
                            self.platform)
