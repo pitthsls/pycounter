@@ -8,7 +8,7 @@ import pycounter.exceptions
 
 class TestParseBad(unittest.TestCase):
     def test_bogus_report_type(self):
-        data = [[u"Bogus Report OR7 (R4)"]]
+        data = [[u"Bogus Report 7 (R4)"]]
         self.assertRaises(pycounter.exceptions.UnknownReportTypeError,
                           report.parse_generic,
                           iter(data)
@@ -17,7 +17,7 @@ class TestParseBad(unittest.TestCase):
     def test_unsupported_report_type(self):
         """Test that we fail for report types that are real but unsupported"""
         # FIXME: eventually should be supported; remove this test when all are
-        data = [[u"Platform Report PR1 (R4)"]]
+        data = [[u"Platform Report 1 (R4)"]]
         self.assertRaises(pycounter.exceptions.UnknownReportTypeError,
                           report.parse_generic,
                           iter(data)
