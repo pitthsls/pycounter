@@ -14,6 +14,15 @@ class TestParseBad(unittest.TestCase):
                           iter(data)
                           )
 
+    def test_unsupported_report_type(self):
+        """Test that we fail for report types that are real but unsupported"""
+        # FIXME: eventually should be supported; remove this test when all are
+        data = [[u"Platform Report PR1 (R4)"]]
+        self.assertRaises(pycounter.exceptions.UnknownReportTypeError,
+                          report.parse_generic,
+                          iter(data)
+                          )
+
 
 class TestBogusFiletype(unittest.TestCase):
     def test_bogus_file_type(self):
