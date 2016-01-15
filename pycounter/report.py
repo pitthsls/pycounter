@@ -123,8 +123,12 @@ class CounterReport(object):
         # FIXME: don't hardcode JR1 values
         total_cells = [
             TOTAL_TEXT[self.report_type],
-            u'',
         ]
+        publishers = set(resource.publisher for resource in self.pubs)
+        if len(publishers) == 1:
+            total_cells.append(publishers.pop())
+        else:
+            total_cells.append(u'')
         platforms = set(resource.platform for resource in self.pubs)
         if len(platforms) == 1:
             total_cells.append(platforms.pop())
