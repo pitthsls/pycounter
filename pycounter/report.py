@@ -592,8 +592,9 @@ def _parse_line(line, report, last_col):
 def _get_type_and_version(specifier):
     """Given a COUNTER report specifier, return the type and version as a tuple
     """
+    report_types_clause = '|'.join(CODES)
     rt_match = re.match(
-        r'.*(Journal|Book|Database) Report (\d(?: GOA)?) ?\(R(\d)\)',
+        r'.*(%s) Report (\d(?: GOA)?) ?\(R(\d)\)' % report_types_clause,
         specifier)
     if rt_match:
         report_type = (CODES[rt_match.group(1)] + rt_match.group(2))
