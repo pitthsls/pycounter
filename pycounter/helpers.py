@@ -91,7 +91,11 @@ def format_stat(stat):
 
 def guess_type_from_content(file_obj):
     """Given a filelike object, look for signature of various file types and
-    return which one it is
+    return which one it is.
+
+    Defaults to assuming it's CSV, if it doesn't appear to be XLSX or TSV.
+
+    :param file_obj: file-like object of which to determine type.
     """
     first_bytes = file_obj.read(2)
     if first_bytes == b"PK":

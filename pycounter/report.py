@@ -594,7 +594,7 @@ def _parse_line(line, report, last_col):
         return CounterDatabase(metric=line[3],
                                month_data=month_data,
                                **common_args)
-    raise PycounterException("Should be unreachable")
+    raise PycounterException("Should be unreachable")  # pragma: no cover
 
 
 def _get_type_and_version(specifier):
