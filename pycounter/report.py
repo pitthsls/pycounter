@@ -109,7 +109,7 @@ class CounterReport(object):
         output_lines.append([u'Date run:'])
         output_lines.append([self.date_run.strftime('%Y-%m-%d')])
         output_lines.append(self._table_header())
-        if self.report_type in {'JR1', 'BR1', 'DB2'}:
+        if self.report_type in ('JR1', 'BR1', 'DB2'):
             output_lines.extend(self._totals_lines())
 
         for pub in self.pubs:
@@ -143,7 +143,7 @@ class CounterReport(object):
             total_cells.append(platforms.pop())
         else:
             total_cells.append(u'')
-        if self.report_type in {'JR1', 'BR1'}:
+        if self.report_type in ('JR1', 'BR1'):
             total_cells.extend([u''] * 4)
         elif self.report_type == 'DB2':
             total_cells.append(metric)
