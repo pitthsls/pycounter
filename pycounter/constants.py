@@ -37,9 +37,9 @@ REPORT_DESCRIPTIONS = {
     u'CR2': u'Total Searches by Month and Database',
     u'CR3': u'Number of Successful Multimedia Full Content Unit Requests '
             u'by Month and Collection',
-    u'DB1': u'Total Searches, Result Clicks, and Record Views by Month and '
+    u'DB1': u'Total Searches, Result Clicks and Record Views by Month and '
             u'Database',
-    u'DB2': u'Access Denied by Month, Database, and Category',
+    u'DB2': u'Access Denied by Month, Database and Category',
     u'JR1': u'Number of Successful Full-Text Article Requests by Month and '
             u'Journal',
     u'JR1GOA': u'Number of Successful Gold Open Access Full-Text Article '
@@ -79,30 +79,45 @@ REPORT_DESCRIPTIONS = {
 
 HEADER_FIELDS = {
     "JR1": (
-            u'Journal',
-            u'Publisher',
-            u'Platform',
-            u'Journal DOI',
-            u'Proprietary Identifier',
-            u'Print ISSN',
-            u'Online ISSN',
-            u'Reporting Period Total',
-            u'Reporting Period HTML',
-            u'Reporting Period PDF',
+        u'Journal',
+        u'Publisher',
+        u'Platform',
+        u'Journal DOI',
+        u'Proprietary Identifier',
+        u'Print ISSN',
+        u'Online ISSN',
+        u'Reporting Period Total',
+        u'Reporting Period HTML',
+        u'Reporting Period PDF',
     ),
     "BR1": (
-            u'',
-            u'Publisher',
-            u'Platform',
-            u'Book DOI',
-            u'Proprietary Identifier',
-            u'ISBN',
-            u'ISSN',
-            u'Reporting Period Total',
+        u'',
+        u'Publisher',
+        u'Platform',
+        u'Book DOI',
+        u'Proprietary Identifier',
+        u'ISBN',
+        u'ISSN',
+        u'Reporting Period Total',
+    ),
+    "DB1": (
+        u'Database',
+        u'Publisher',
+        u'Platform',
+        u'User Activity',
+        u'Reporting Period Total',
+    ),
+    "DB2": (
+        u'Database',
+        u'Publisher',
+        u'Platform',
+        u'Access denied category',
+        u'Reporting Period Total',
     ),
 }
 
 TOTAL_TEXT = {
     'JR1': u'Total for all journals',
     'BR1': u'Total for all titles',
+    'DB2': u'Total for all databases',
 }

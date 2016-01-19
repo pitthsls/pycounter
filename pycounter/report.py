@@ -109,18 +109,27 @@ class CounterReport(object):
         output_lines.append([u'Date run:'])
         output_lines.append([self.date_run.strftime('%Y-%m-%d')])
         output_lines.append(self._table_header())
-        output_lines.append(self._totals_line())
+        if self.report_type in {'JR1', 'BR1', 'DB2'}:
+            output_lines.extend(self._totals_lines())
 
         for pub in self.pubs:
             output_lines.append(pub.as_generic())
 
         return output_lines
 
-    def _totals_line(self):
+    def _totals_lines(self):
         """
-        Generate Totals line for COUNTER report, as list of cells
+        Generate Totals lines for COUNTER report, as list of lists of cells
         """
-        # FIXME: don't hardcode JR1 values
+        total_lines = []
+        metrics = set(resource.metric for resource in self.pubs)
+
+        for metric in sorted(metrics):
+            total_lines.append(self._totals_line(metric))
+
+        return total_lines
+
+    def _totals_line(self, metric):
         total_cells = [
             TOTAL_TEXT[self.report_type],
         ]
@@ -134,7 +143,10 @@ class CounterReport(object):
             total_cells.append(platforms.pop())
         else:
             total_cells.append(u'')
-        total_cells.extend([u''] * 4)
+        if self.report_type in {'JR1', 'BR1'}:
+            total_cells.extend([u''] * 4)
+        elif self.report_type == 'DB2':
+            total_cells.append(metric)
         total_usage = 0
         pdf_usage = 0
         html_usage = 0
@@ -145,6 +157,8 @@ class CounterReport(object):
                               arrow.Arrow.fromdate(self.period[1])))
         month_data = [0] * number_of_months
         for pub in self.pubs:
+            if pub.metric != metric:
+                continue
             if self.report_type == 'JR1':
                 pdf_usage += pub.pdf_total
                 html_usage += pub.html_total
@@ -156,7 +170,6 @@ class CounterReport(object):
             total_cells.append(six.text_type(html_usage))
             total_cells.append(six.text_type(pdf_usage))
         total_cells.extend(six.text_type(d) for d in month_data)
-
         return total_cells
 
     def _table_header(self):
@@ -376,6 +389,25 @@ class CounterDatabase(CounterEresource):
         super(CounterDatabase, self).__init__(period, metric, month_data,
                                               title, platform, publisher)
         self.isbn = None
+
+    def as_generic(self):
+        """
+        return data for this line as list of COUNTER report cells
+        """
+        data_line = [
+            self.title,
+            self.publisher,
+            self.platform,
+            self.metric,
+        ]
+        total_usage = 0
+        month_data = []
+        for data in self:
+            total_usage += data[2]
+            month_data.append(six.text_type(data[2]))
+        data_line.append(six.text_type(total_usage))
+        data_line.extend(month_data)
+        return data_line
 
 
 def parse(filename, filetype=None):

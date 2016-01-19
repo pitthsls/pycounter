@@ -237,14 +237,14 @@ def _raw_to_full(raw_report):
                 ))
             elif report.report_type.startswith('BR'):
                 report.pubs.append(
-                        pycounter.report.CounterBook(
-                                title=title,
-                                platform=platform,
-                                publisher=publisher_name,
-                                period=report.period,
-                                metric=report.metric,
-                                issn=issn,
-                                month_data=month_data,
-                        ))
+                    pycounter.report.CounterBook(
+                        title=title,
+                        platform=platform,
+                        publisher=publisher_name,
+                        period=report.period,
+                        metric=report.metric,
+                        issn=issn,
+                        month_data=month_data,
+                    ))
 
     return report

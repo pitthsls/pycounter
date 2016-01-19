@@ -1,12 +1,12 @@
-Database Report 2 (R4)	"Access Denied by Month, Database, and Category"									
-University of Maximegalon										
-BlahBlah										
-Period covered by Report:										
-2012-01-01 to 2012-06-30										
-Date run:										
+Database Report 2 (R4)	"Access Denied by Month, Database and Category"
+University of Maximegalon
+BlahBlah
+Period covered by Report:
+2012-01-01 to 2012-06-30
+Date run:
 2012-07-09
-Database	Publisher	Platform	Access Denied Category	Reporting Period Total	Jan-12	Feb-12	Mar-12	Apr-12	May-12	Jun-12
-Total for all databases			Access denied: concurrent/simultaneous user license limit exceeded	5	0	5	0	0	0	0
-Total for all databases			Access denied: content item not licensed	1	0	0	0	1	0	0
+Database	Publisher	Platform	Access denied category	Reporting Period Total	Jan-2012	Feb-2012	Mar-2012	Apr-2012	May-2012	Jun-2012
+Total for all databases	Megadodo Publications	HHGTTG Online	Access denied: concurrent/simultaneous user license limit exceeded	5	0	5	0	0	0	0
+Total for all databases	Megadodo Publications	HHGTTG Online	Access denied: content item not licensed	1	0	0	0	1	0	0
 Marvinopedia	Megadodo Publications	HHGTTG Online	Access denied: concurrent/simultaneous user license limit exceeded	5	0	5	0	0	0	0
 Marvinopedia	Megadodo Publications	HHGTTG Online	Access denied: content item not licensed	1	0	0	0	1	0	0
