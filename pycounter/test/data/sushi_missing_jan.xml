@@ -41,11 +41,11 @@
                         <ReportItems>
                             <ItemIdentifier>
                                 <Type>Print_ISSN</Type>
-                                <Value>0737-1764</Value>
+                                <Value></Value>
                             </ItemIdentifier>
                             <ItemIdentifier>
                                 <Type>Online_ISSN</Type>
-                                <Value>1234-5678</Value>
+                                <Value></Value>
                             </ItemIdentifier>
                             <ItemIdentifier>
                                 <Type>Proprietary</Type>
