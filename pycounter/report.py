@@ -98,8 +98,13 @@ class CounterReport(object):
                        (rep_type, self.report_type[-1], self.report_version))
         output_lines.append([report_name,
                              REPORT_DESCRIPTIONS[self.report_type]])
-        output_lines.append([self.customer])
-        output_lines.append([self.institutional_identifier])
+        if self.report_type == 'BR2':
+            output_lines.append([self.customer, u'Section Type:'])
+            # FIXME: maybe not chapters?
+            output_lines.append([self.institutional_identifier, u'Chapter'])
+        else:
+            output_lines.append([self.customer])
+            output_lines.append([self.institutional_identifier])
         output_lines.append([u'Period covered by Report:'])
         period = "%s to %s" % (
             self.period[0].strftime('%Y-%m-%d'),
@@ -109,7 +114,7 @@ class CounterReport(object):
         output_lines.append([u'Date run:'])
         output_lines.append([self.date_run.strftime('%Y-%m-%d')])
         output_lines.append(self._table_header())
-        if self.report_type in ('JR1', 'BR1', 'DB2'):
+        if self.report_type in ('JR1', 'BR1', 'BR2', 'DB2'):
             output_lines.extend(self._totals_lines())
 
         for pub in self.pubs:
@@ -143,7 +148,7 @@ class CounterReport(object):
             total_cells.append(platforms.pop())
         else:
             total_cells.append(u'')
-        if self.report_type in ('JR1', 'BR1'):
+        if self.report_type in ('JR1', 'BR1', 'BR2'):
             total_cells.extend([u''] * 4)
         elif self.report_type == 'DB2':
             total_cells.append(metric)

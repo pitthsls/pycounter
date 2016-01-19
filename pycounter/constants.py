@@ -100,6 +100,16 @@ HEADER_FIELDS = {
         u'ISSN',
         u'Reporting Period Total',
     ),
+    "BR2": (
+        u'',
+        u'Publisher',
+        u'Platform',
+        u'Book DOI',
+        u'Proprietary Identifier',
+        u'ISBN',
+        u'ISSN',
+        u'Reporting Period Total',
+    ),
     "DB1": (
         u'Database',
         u'Publisher',
@@ -119,5 +129,6 @@ HEADER_FIELDS = {
 TOTAL_TEXT = {
     'JR1': u'Total for all journals',
     'BR1': u'Total for all titles',
+    'BR2': u'Total for all titles',
     'DB2': u'Total for all databases',
 }
