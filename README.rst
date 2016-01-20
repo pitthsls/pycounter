@@ -86,7 +86,7 @@ Fetching SUSHI data::
     Sqornshellous Swamptalk
     Acta Mattressica
 
-Output of report as TSV (currently only supports JR1)::
+Output of report as TSV::
 
     >>> report.write_tsv("/tmp/counterreport.tsv")
 
