@@ -234,4 +234,4 @@ class TestMissingItemIdentifier(unittest.TestCase):
 
     def test_issn(self):
         publication = next(iter(self.report))
-        self.assertTrue(publication.issn is None)
+        self.assertEqual(publication.issn, "")

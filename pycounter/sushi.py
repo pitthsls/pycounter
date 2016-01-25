@@ -193,15 +193,20 @@ def _raw_to_full(raw_report):
         itemline = [title, publisher_name, platform]
 
         eissn = issn = ""
-        for identifier in item.ItemIdentifier:
-            if identifier.Type == "Print_ISSN":
-                issn = identifier.Value.text
-                if issn is None:
-                    issn = ""
-            elif identifier.Type == "Online_ISSN":
-                eissn = identifier.Value.text
-                if eissn is None:
-                    eissn = ""
+
+        try:
+            for identifier in item.ItemIdentifier:
+                if identifier.Type == "Print_ISSN":
+                    issn = identifier.Value.text
+                    if issn is None:
+                        issn = ""
+                elif identifier.Type == "Online_ISSN":
+                    eissn = identifier.Value.text
+                    if eissn is None:
+                        eissn = ""
+        except AttributeError:
+            pass
+
         month_data = []
         html_usage = 0
         pdf_usage = 0
