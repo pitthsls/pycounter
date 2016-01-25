@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<!--suppress CheckTagEmptyBody -->
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns3:ReportResponse xmlns="http://www.niso.org/schemas/counter"
+                            xmlns:ns2="http://www.niso.org/schemas/sushi"
+                            xmlns:ns3="http://www.niso.org/schemas/sushi/counter">
+            <!--suppress CheckTagEmptyBody -->
+            <ns2:Requestor>
+                <ns2:ID>exampleRequestor</ns2:ID>
+                <ns2:Name></ns2:Name>
+                <ns2:Email></ns2:Email>
+            </ns2:Requestor>
+            <ns2:CustomerReference>
+                <ns2:ID>exampleReference</ns2:ID>
+                <ns2:Name></ns2:Name>
+            </ns2:CustomerReference>
+            <ns2:ReportDefinition Release="4" Name="JR1">
+                <ns2:Filters>
+                    <ns2:UsageDateRange>
+                        <ns2:Begin>2013-01-01</ns2:Begin>
+                        <ns2:End>2013-01-31</ns2:End>
+                    </ns2:UsageDateRange>
+                </ns2:Filters>
+            </ns2:ReportDefinition>
+            <ns3:Report>
+                <Report Title="Journal Report 1" Name="JR1" Version="4"
+                        ID="exampleuser:JR1"
+                        Created="2015-01-23T14:44:16.801-05:00">
+                    <Vendor>
+                        <Name>Example Vendor</Name>
+                        <ID>example</ID>
+                        <Contact>
+                            <Contact>Vendor Contact</Contact>
+                            <E-mail>vendor@example.com</E-mail>
+                        </Contact>
+                    </Vendor>
+                    <Customer>
+                        <Name>Example Library</Name>
+                        <ID>exampleLibrary</ID>
+                        <ReportItems>
+                            <ItemPlatform>ExamplePlatform</ItemPlatform>
+                            <ItemPublisher>Example Publisher</ItemPublisher>
+                            <ItemName>Journal of fake data</ItemName>
+                            <ItemDataType>Journal</ItemDataType>
+                            <ItemPerformance>
+                                <Period>
+                                    <Begin>2013-01-01</Begin>
+                                    <End>2013-01-31</End>
+                                </Period>
+                                <Category>Requests</Category>
+                                <Instance>
+                                    <MetricType>ft_html</MetricType>
+                                    <Count>6</Count>
+                                </Instance>
+                                <Instance>
+                                    <MetricType>ft_pdf</MetricType>
+                                    <Count>8</Count>
+                                </Instance>
+                                <Instance>
+                                    <MetricType>ft_total</MetricType>
+                                    <Count>14</Count>
+                                </Instance>
+                            </ItemPerformance>
+                        </ReportItems>
+                    </Customer>
+                </Report>
+            </ns3:Report>
+        </ns3:ReportResponse>
+    </S:Body>
+</S:Envelope>

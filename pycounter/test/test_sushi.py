@@ -36,6 +36,14 @@ def bogus_mock(url, request):
     return "Bogus response with no XML"
 
 
+@urlmatch(netloc=r'(.*\.)?example\.com$')
+def missing_ii_mock(url, request):
+    path = os.path.join(os.path.dirname(__file__),
+                        'data', 'sushi_missing_ii.xml')
+    with open(path, 'rb') as datafile:
+        return datafile.read().decode('utf-8')
+
+
 class TestHelpers(unittest.TestCase):
     """Test _ns helper"""
 
@@ -213,3 +221,17 @@ class TestSushiClient(unittest.TestCase):
             with runner.isolated_filesystem():
                 result = runner.invoke(sushiclient.main, arglist)
                 self.assertEqual(result.exit_code, 0)
+
+
+class TestMissingItemIdentifier(unittest.TestCase):
+    """Test converting simple SUSHI response"""
+
+    def setUp(self):
+        path = os.path.join(os.path.dirname(__file__),
+                            'data', 'sushi_missing_ii.xml')
+        with open(path, 'rb') as datafile:
+            self.report = sushi._raw_to_full(datafile.read())
+
+    def test_issn(self):
+        publication = next(iter(self.report))
+        self.assertTrue(publication.issn is None)
