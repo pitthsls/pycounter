@@ -192,7 +192,7 @@ def _raw_to_full(raw_report):
         platform = item.ItemPlatform.text
         itemline = [title, publisher_name, platform]
 
-        eissn = issn = ""
+        eissn = issn = isbn = ""
 
         try:
             for identifier in item.ItemIdentifier:
@@ -204,6 +204,12 @@ def _raw_to_full(raw_report):
                     eissn = identifier.Value.text
                     if eissn is None:
                         eissn = ""
+                elif identifier.Type == "Online_ISBN":
+                    logging.debug("FOUND ISBN")
+                    isbn = identifier.Value.text
+                    if isbn is None:
+                        isbn = ""
+
         except AttributeError:
             pass
 
@@ -249,6 +255,7 @@ def _raw_to_full(raw_report):
                         period=report.period,
                         metric=report.metric,
                         issn=issn,
+                        isbn=isbn,
                         month_data=month_data,
                     ))
 
