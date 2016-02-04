@@ -227,8 +227,7 @@ class CounterEresource(six.Iterator):
             self.title = title
         if platform:
             self.platform = platform
-        if publisher:
-            self.publisher = publisher
+        self.publisher = publisher
 
     def __iter__(self):
         if self._full_data:
