@@ -36,14 +36,6 @@ def bogus_mock(url, request):
     return "Bogus response with no XML"
 
 
-@urlmatch(netloc=r'(.*\.)?example\.com$')
-def missing_ii_mock(url, request):
-    path = os.path.join(os.path.dirname(__file__),
-                        'data', 'sushi_missing_ii.xml')
-    with open(path, 'rb') as datafile:
-        return datafile.read().decode('utf-8')
-
-
 class TestHelpers(unittest.TestCase):
     """Test _ns helper"""
 
