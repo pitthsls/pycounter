@@ -86,7 +86,7 @@
                                 <Value>FD2</Value>
                             </ItemIdentifier>
                             <ItemPlatform>ExamplePlatform</ItemPlatform>
-                            <ItemName>Fake data with blnak ISBN</ItemName>
+                            <ItemName>Fake data with blank ISBN</ItemName>
                             <ItemDataType>Book</ItemDataType>
                             <ItemPerformance>
                                 <Period>
