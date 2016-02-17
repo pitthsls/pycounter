@@ -36,7 +36,7 @@ class UnicodeReader(six.Iterator):
         row = next(self.reader)
         if six.PY3:
             return row
-        return [s.decode("utf-8") for s in row]
+        return [s.decode(self.encoding) for s in row]
 
     def __iter__(self):
         return self
