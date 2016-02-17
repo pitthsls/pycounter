@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import csv
+import warnings
 
 import six
 
@@ -27,9 +28,13 @@ class UnicodeReader(six.Iterator):
             try:
                 self.fileobj.read()
             except UnicodeDecodeError:
+                warnings.warn("Decoding with '%s' codec failed; falling "
+                              "back to '%s'" % (self.encoding,
+                                                self.fallback_encoding))
                 self.fileobj = open(self.filename, 'rt',
                                     encoding=self.fallback_encoding,
                                     newline='')
+                self.encoding = self.fallback_encoding
             finally:
                 self.fileobj.seek(0)
         else:
@@ -37,6 +42,9 @@ class UnicodeReader(six.Iterator):
             try:
                 self.fileobj.read().decode(self.encoding)
             except UnicodeDecodeError:
+                warnings.warn("Decoding with '%s' codec failed; falling "
+                              "back to '%s'" % (self.encoding,
+                                                self.fallback_encoding))
                 self.encoding = self.fallback_encoding
             finally:
                 self.fileobj.seek(0)
