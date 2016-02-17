@@ -414,7 +414,8 @@ class CounterDatabase(CounterEresource):
         return data_line
 
 
-def parse(filename, filetype=None, encoding='utf-8'):
+def parse(filename, filetype=None, encoding='utf-8',
+          fallback_encoding='latin-1'):
     """Parse a COUNTER file, first attempting to determine type
 
     Returns a :class:`CounterReport <CounterReport>` object.
@@ -426,6 +427,10 @@ def parse(filename, filetype=None, encoding='utf-8'):
         the file's contents.
     :param encoding: encoding to use to decode the file. Defaults to 'utf-8',
         ignored for XLSX files (which specify their encoding in their XML)
+    :param fallback_encoding: alternative encoding to use to try to decode
+        the file if the promary encoding fails. This defaults to 'latin-1',
+        which will accept any bytes (possibly producing junk results...)
+        Ignored for XLSX files.
 
     """
     if filetype is None:
@@ -440,11 +445,11 @@ def parse(filename, filetype=None, encoding='utf-8'):
                 filetype = guess_type_from_content(file_obj)
 
     if filetype == 'tsv':
-        return parse_separated(filename, '\t', encoding)
+        return parse_separated(filename, '\t', encoding, fallback_encoding)
     elif filetype == 'xlsx':
         return parse_xlsx(filename)
     elif filetype == 'csv':
-        return parse_separated(filename, ',', encoding)
+        return parse_separated(filename, ',', encoding, fallback_encoding)
     else:
         raise PycounterException("Unknown file type %s" % filetype)
 
@@ -468,7 +473,8 @@ def parse_xlsx(filename):
     return parse_generic(split_row_list)
 
 
-def parse_separated(filename, delimiter, encoding='utf-8'):
+def parse_separated(filename, delimiter, encoding='utf-8',
+                    fallback_encoding='latin-1'):
     """Open COUNTER CSV/TSV report with given filename and delimiter
     and parse into a CounterReport object
 
@@ -483,6 +489,7 @@ def parse_separated(filename, delimiter, encoding='utf-8'):
 
     """
     with csvhelper.UnicodeReader(filename, delimiter=delimiter,
+                                 fallback_encoding=fallback_encoding,
                                  encoding=encoding) as report_reader:
         return parse_generic(report_reader)
 

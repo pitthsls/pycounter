@@ -11,20 +11,35 @@ class UnicodeReader(six.Iterator):
     # pylint: disable=too-few-public-methods
     """CVS reader that can handle unicode"""
     def __init__(self, filename, dialect=csv.excel,
-                 encoding="utf-8", **kwargs):
+                 encoding="utf-8", fallback_encoding="latin-1", **kwargs):
         self.filename = filename
         self.dialect = dialect
         self.encoding = encoding
         self.kwargs = kwargs
         self.fileobj = None
         self.reader = None
+        self.fallback_encoding = fallback_encoding
 
     def __enter__(self):
         if six.PY3:
             self.fileobj = open(self.filename, 'rt',
                                 encoding=self.encoding, newline='')
+            try:
+                self.fileobj.read()
+            except UnicodeDecodeError:
+                self.fileobj = open(self.filename, 'rt',
+                                    encoding=self.fallback_encoding,
+                                    newline='')
+            finally:
+                self.fileobj.seek(0)
         else:
             self.fileobj = open(self.filename, 'rb')
+            try:
+                self.fileobj.read().decode(self.encoding)
+            except UnicodeDecodeError:
+                self.encoding = self.fallback_encoding
+            finally:
+                self.fileobj.seek(0)
         self.reader = csv.reader(self.fileobj, dialect=self.dialect,
                                  **self.kwargs)
         return self
