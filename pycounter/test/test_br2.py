@@ -67,8 +67,7 @@ class ParseLatin1(unittest.TestCase):
     def setUp(self):
         self.report = pycounter.report.parse(
             os.path.join(os.path.dirname(__file__),
-                         'data/simpleBR2_latin_1.csv'),
-            )
+                         'data/simpleBR2_latin_1.csv'))
 
     def test_title(self):
         publication = self.report.pubs[1]
