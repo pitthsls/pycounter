@@ -414,7 +414,7 @@ class CounterDatabase(CounterEresource):
         return data_line
 
 
-def parse(filename, filetype=None):
+def parse(filename, filetype=None, encoding='utf-8'):
     """Parse a COUNTER file, first attempting to determine type
 
     Returns a :class:`CounterReport <CounterReport>` object.
@@ -424,6 +424,8 @@ def parse(filename, filetype=None):
         If set to None (the default), an attempt will be made to
         detect the correct type, first from the file extension, then from
         the file's contents.
+    :param encoding: encoding to use to decode the file. Defaults to 'utf-8',
+        ignored for XLSX files (which specify their encoding in their XML)
 
     """
     if filetype is None:
@@ -438,11 +440,11 @@ def parse(filename, filetype=None):
                 filetype = guess_type_from_content(file_obj)
 
     if filetype == 'tsv':
-        return parse_separated(filename, '\t')
+        return parse_separated(filename, '\t', encoding)
     elif filetype == 'xlsx':
         return parse_xlsx(filename)
     elif filetype == 'csv':
-        return parse_separated(filename, ',')
+        return parse_separated(filename, ',', encoding)
     else:
         raise PycounterException("Unknown file type %s" % filetype)
 
@@ -466,7 +468,7 @@ def parse_xlsx(filename):
     return parse_generic(split_row_list)
 
 
-def parse_separated(filename, delimiter):
+def parse_separated(filename, delimiter, encoding='utf-8'):
     """Open COUNTER CSV/TSV report with given filename and delimiter
     and parse into a CounterReport object
 
@@ -477,9 +479,11 @@ def parse_separated(filename, delimiter):
     :param delimiter: character (such as ',' or '\\\\t') used as the
         delimiter for this file
 
+    :param encoding: file's encoding. Default: utf-8
+
     """
-    with csvhelper.UnicodeReader(filename,
-                                 delimiter=delimiter) as report_reader:
+    with csvhelper.UnicodeReader(filename, delimiter=delimiter,
+                                 encoding=encoding) as report_reader:
         return parse_generic(report_reader)
 
 

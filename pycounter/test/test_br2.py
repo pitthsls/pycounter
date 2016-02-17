@@ -1,3 +1,4 @@
+# coding: utf-8
 from __future__ import absolute_import
 
 import os
@@ -59,3 +60,16 @@ class ParseCounter4Example(unittest.TestCase):
 
     def test_metric(self):
         self.assertEqual(self.report.metric, u"Book Section Requests")
+
+
+class ParseLatin1(unittest.TestCase):
+    """Tests for parsing BR2 in latin-1 encoding"""
+    def setUp(self):
+        self.report = pycounter.report.parse(
+            os.path.join(os.path.dirname(__file__),
+                         'data/simpleBR2_latin_1.csv'),
+            encoding='latin-1')
+
+    def test_title(self):
+        publication = self.report.pubs[1]
+        self.assertEqual(publication.title, u'Öfake Book')
