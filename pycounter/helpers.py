@@ -22,10 +22,25 @@ def convert_date_run(datestring):
     """
     Convert a date of the format 'YYYY-MM-DD' to a datetime.date object
 
+    (Will also accept MM/DD/YYYY format, ISO 8601 timestamps, or existing
+    datetime objects; these shouldn't be in COUNTER reports, but they
+    do show up in real world data...)
+
     :param datestring: the string to convert to a date.
 
     """
-    return datetime.datetime.strptime(datestring, "%Y-%m-%d").date()
+    if isinstance(datestring, datetime.date):
+        return datestring
+
+    try:
+        return datetime.datetime.strptime(datestring, "%Y-%m-%d").date()
+    except ValueError:
+        try:
+            return datetime.datetime.strptime(datestring, "%m/%d/%Y").date()
+        except ValueError:
+            # ISO 8601 without timezone
+            return datetime.datetime.strptime(datestring,
+                                              "%Y-%m-%dT%H:%M:%S").date()
 
 
 def convert_date_column(datestring):
@@ -80,8 +95,13 @@ def format_stat(stat):
     """Turn string numbers that might have an embedded comma into
     integers
 
+    Also accepts existing ints, which may be pre-converted from Excel.
+
     :param stat: numeric value, possibly with commas, to turn into int
     """
+    if isinstance(stat, int):
+        return stat
+
     stat = stat.replace(',', '')
     try:
         return int(stat)
