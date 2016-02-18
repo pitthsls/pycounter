@@ -173,3 +173,36 @@ class ParseGOA(unittest.TestCase):
         self.assertEqual(self.report.period,
                          (datetime.date(2011, 1, 1),
                           datetime.date(2011, 12, 31)))
+
+
+class ParseCounter4Bad(unittest.TestCase):
+    """Tests for parsing C4 JR1 with questionable formatting..."""
+    def setUp(self):
+        self.report = report.parse(os.path.join(os.path.dirname(__file__),
+                                                'data/C4JR1_bad.csv'))
+
+    def test_counter4_csv_data(self):
+
+        publication = self.report.pubs[0]
+        self.assertEqual([x[2] for x in publication],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        publication = self.report.pubs[1]
+        self.assertEqual([x[2] for x in publication],
+                         [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 1000])
+
+    def test_metric(self):
+        self.assertEqual(self.report.metric, u"FT Article Requests")
+
+    def test_customer(self):
+        self.assertEqual(self.report.customer, u"University of Maximegalon")
+
+    def test_date_run(self):
+        self.assertEqual(self.report.date_run, datetime.date(2012, 2, 21))
+
+    def test_isbn(self):
+        self.assertTrue(self.report.pubs[1].isbn is None)
+
+    def test_period(self):
+        self.assertEqual(self.report.period,
+                         (datetime.date(2011, 1, 1),
+                          datetime.date(2011, 12, 31)))
