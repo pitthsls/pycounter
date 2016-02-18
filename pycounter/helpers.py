@@ -65,8 +65,8 @@ def last_day(orig_date):
         last day.
 
     """
-    daynum = calendar.monthrange(orig_date.year, orig_date.month)[1]
-    return datetime.date(orig_date.year, orig_date.month, daynum)
+    day_number = calendar.monthrange(orig_date.year, orig_date.month)[1]
+    return datetime.date(orig_date.year, orig_date.month, day_number)
 
 
 def next_month(dateobj):

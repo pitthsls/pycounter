@@ -93,12 +93,18 @@ class UnicodeWriter(object):
         self.fileobj.close()
 
     def writerow(self, row):
-        """write a row to the output"""
+        """write a row to the output
+
+        :param row: list of cells to write to the file
+        """
         if not six.PY3:
             row = [s.encode(self.encoding) for s in row]
         self.writer.writerow(row)
 
     def writerows(self, rows):
-        """write many rows to the output"""
+        """write many rows to the output
+
+        :param rows: list of lists of cells to write
+        """
         for row in rows:
             self.writerow(row)

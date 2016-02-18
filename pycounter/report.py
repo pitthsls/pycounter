@@ -428,7 +428,7 @@ def parse(filename, filetype=None, encoding='utf-8',
     :param encoding: encoding to use to decode the file. Defaults to 'utf-8',
         ignored for XLSX files (which specify their encoding in their XML)
     :param fallback_encoding: alternative encoding to use to try to decode
-        the file if the promary encoding fails. This defaults to 'latin-1',
+        the file if the primary encoding fails. This defaults to 'latin-1',
         which will accept any bytes (possibly producing junk results...)
         Ignored for XLSX files.
 
@@ -486,6 +486,9 @@ def parse_separated(filename, delimiter, encoding='utf-8',
         delimiter for this file
 
     :param encoding: file's encoding. Default: utf-8
+
+    :param fallback_encoding: alternative encoding to try to decode if
+        default fails. Throws a warning if used.
 
     """
     with csvhelper.UnicodeReader(filename, delimiter=delimiter,

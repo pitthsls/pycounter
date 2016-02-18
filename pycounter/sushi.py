@@ -53,17 +53,17 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     rid = etree.SubElement(req, "{%(sushi)s}ID" % NS)
     rid.text = requestor_id
     req.append(etree.Element("{%(sushi)s}Name" % NS))
-    remail = etree.SubElement(req, "{%(sushi)s}Email" % NS)
-    remail.text = requestor_email
+    req_email_element = etree.SubElement(req, "{%(sushi)s}Email" % NS)
+    req_email_element.text = requestor_email
 
-    custref = etree.SubElement(rr, "{%(sushi)s}CustomerReference" % NS)
-    cid = etree.SubElement(custref, "{%(sushi)s}ID" % NS)
+    cust_ref_elem = etree.SubElement(rr, "{%(sushi)s}CustomerReference" % NS)
+    cid = etree.SubElement(cust_ref_elem, "{%(sushi)s}ID" % NS)
     cid.text = customer_reference
-    custref.append(etree.Element("{%(sushi)s}Name" % NS))
+    cust_ref_elem.append(etree.Element("{%(sushi)s}Name" % NS))
 
-    repdef = etree.SubElement(rr, "{%(sushi)s}ReportDefinition" % NS,
-                              Name=report, Release=str(release))
-    filters = etree.SubElement(repdef, "{%(sushi)s}Filters" % NS)
+    report_def_elem = etree.SubElement(rr, "{%(sushi)s}ReportDefinition" % NS,
+                                       Name=report, Release=str(release))
+    filters = etree.SubElement(report_def_elem, "{%(sushi)s}Filters" % NS)
     udr = etree.SubElement(filters, "{%(sushi)s}UsageDateRange" % NS)
     beg = etree.SubElement(udr, "{%(sushi)s}Begin" % NS)
     beg.text = start_date.strftime("%Y-%m-%d")
@@ -94,25 +94,7 @@ def get_report(*args, **kwargs):
 
     returns a :class:`pycounter.report.CounterReport` object.
 
-    :param wsdl_url: URL to SOAP WSDL for this provider
-
-    :param start_date: start date for report (must be first day of a month)
-
-    :param end_date: end date for report (must be last day of a month)
-
-    :param requestor_id: requestor ID as defined by SUSHI protocol
-
-    :param requestor_email: requestor email address, if required by provider
-
-    :param customer_reference: customer reference number as defined by SUSHI
-        protocol
-
-    :param report: report type, values defined by SUSHI protocol
-
-    :param release: report release number (should generally be `4`.)
-
-    :param sushi_dump: produces dump of XML to DEBUG logger
-
+    parameters: see get_sushi_stats_raw
     """
     raw_report = get_sushi_stats_raw(*args, **kwargs)
     return _raw_to_full(raw_report)
@@ -135,32 +117,32 @@ def _raw_to_full(raw_report):
     except etree.XMLSyntaxError as e:
         logger.error("XML syntax error: %s", raw_report)
         raise pycounter.exceptions.SushiException(e)
-    oroot = objectify.fromstring(raw_report)
+    o_root = objectify.fromstring(raw_report)
     rep = None
     try:
-        rep = oroot.Body[_ns('sushicounter', "ReportResponse")]
-        creport = rep.Report[_ns('counter', 'Report')]
+        rep = o_root.Body[_ns('sushicounter', "ReportResponse")]
+        c_report = rep.Report[_ns('counter', 'Report')]
     except AttributeError:
         try:
-            creport = rep.Report[_ns('counter', 'Reports')].Report
+            c_report = rep.Report[_ns('counter', 'Reports')].Report
         except AttributeError:
             logger.error("report not found in XML: %s", raw_report)
             raise pycounter.exceptions.SushiException
-    logger.debug("COUNTER report: %s", etree.tostring(creport))
-    startdate = datetime.datetime.strptime(
+    logger.debug("COUNTER report: %s", etree.tostring(c_report))
+    start_date = datetime.datetime.strptime(
         root.find('.//%s' % _ns('sushi', 'Begin')).text,
         "%Y-%m-%d").date()
 
-    enddate = datetime.datetime.strptime(
+    end_date = datetime.datetime.strptime(
         root.find('.//%s' % _ns('sushi', 'End')).text,
         "%Y-%m-%d").date()
 
-    report_data = {'period': (startdate, enddate)}
+    report_data = {'period': (start_date, end_date)}
 
-    rdef = root.find('.//%s' % _ns('sushi', 'ReportDefinition'))
-    report_data['report_version'] = int(rdef.get('Release'))
+    rep_def = root.find('.//%s' % _ns('sushi', 'ReportDefinition'))
+    report_data['report_version'] = int(rep_def.get('Release'))
 
-    report_data['report_type'] = rdef.get('Name')
+    report_data['report_type'] = rep_def.get('Name')
 
     customer = root.find('.//%s' % _ns('counter', 'Customer'))
     try:
@@ -172,8 +154,8 @@ def _raw_to_full(raw_report):
     inst_id = customer.find('.//%s' % _ns('counter', 'ID')).text
     report_data['institutional_identifier'] = inst_id
 
-    reproot = root.find('.//%s' % _ns('counter', 'Report'))
-    created_string = reproot.get('Created')
+    rep_root = root.find('.//%s' % _ns('counter', 'Report'))
+    created_string = rep_root.get('Created')
     if created_string is not None:
         report_data['date_run'] = arrow.get(created_string)
     else:
@@ -183,14 +165,13 @@ def _raw_to_full(raw_report):
 
     report.metric = pycounter.constants.METRICS.get(report_data['report_type'])
 
-    for item in creport.Customer.ReportItems:
+    for item in c_report.Customer.ReportItems:
         try:
             publisher_name = item.ItemPublisher.text
         except AttributeError:
             publisher_name = ""
         title = item.ItemName.text
         platform = item.ItemPlatform.text
-        itemline = [title, publisher_name, platform]
 
         eissn = issn = isbn = ""
 
@@ -217,11 +198,11 @@ def _raw_to_full(raw_report):
         html_usage = 0
         pdf_usage = 0
 
-        for perfitem in item.ItemPerformance:
-            item_date = convert_date_run(perfitem.Period.Begin.text)
-            logger.debug("Perfitem date: %r", item_date)
+        for perform_item in item.ItemPerformance:
+            item_date = convert_date_run(perform_item.Period.Begin.text)
+            logger.debug("perform_item date: %r", item_date)
             usage = None
-            for inst in perfitem.Instance:
+            for inst in perform_item.Instance:
                 if inst.MetricType == "ft_total":
                     usage = str(inst.Count)
                 elif inst.MetricType == "ft_pdf":
@@ -230,7 +211,6 @@ def _raw_to_full(raw_report):
                     html_usage += int(inst.Count)
             if usage is not None:
                 month_data.append((item_date, int(usage)))
-                itemline.append(usage)
 
         if report.report_type:
             if report.report_type.startswith('JR'):
