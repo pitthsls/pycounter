@@ -27,8 +27,8 @@ script:
   coverage run setup.py test
 
 after_success:
-  coveralls
-  coverage report -m
+  - coveralls
+  - coverage report -m
 
 notifications:
   irc: "chat.freenode.net#pycounter"
