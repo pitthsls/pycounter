@@ -2,6 +2,8 @@
 import calendar
 import datetime
 
+import six
+
 
 def convert_covered(datestring):
     """
@@ -99,7 +101,7 @@ def format_stat(stat):
 
     :param stat: numeric value, possibly with commas, to turn into int
     """
-    if isinstance(stat, int):
+    if isinstance(stat, six.integer_types):
         return stat
 
     stat = stat.replace(',', '')
