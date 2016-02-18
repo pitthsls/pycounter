@@ -10,7 +10,7 @@ import six
 # noinspection PyUnusedLocal
 class UnicodeReader(six.Iterator):
     # pylint: disable=too-few-public-methods
-    """CVS reader that can handle unicode"""
+    """CSV reader that can handle unicode"""
     def __init__(self, filename, dialect=csv.excel,
                  encoding="utf-8", fallback_encoding="latin-1", **kwargs):
         self.filename = filename
