@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import datetime
 import logging
 import os
 import tempfile
@@ -80,3 +81,38 @@ class TestOutputJR1Multi(unittest.TestCase):
     def test_data(self):
         for index, line in enumerate(self.file_content[9:], 9):
             self.assertEqual(line, self.output_content[index])
+
+
+class TestOrderingOutput(unittest.TestCase):
+    """Test that titles are in alphabetical order when output"""
+    def setUp(self):
+        self.report = report.CounterReport(
+            report_type='JR1',
+            report_version=4,
+            customer=u'Foo',
+            institutional_identifier=u'Bar',
+            period=(datetime.date(2016, 1, 1), datetime.date(2016, 1, 31))
+        )
+        self.report.pubs.append(
+            report.CounterJournal(
+                period=(datetime.date(2016, 1, 1), datetime.date(2016, 1, 31)),
+                month_data=[(datetime.date(2016, 1, 1), 260)],
+                title=u'Fake Journal',
+                publisher=u'No one',
+                platform=u'Your imagination'
+            )
+        )
+        self.report.pubs.append(
+            report.CounterJournal(
+                period=(datetime.date(2016, 1, 1), datetime.date(2016, 1, 31)),
+                month_data=[(datetime.date(2016, 1, 1), 62)],
+                title=u'Another Fake Journal',
+                publisher=u'No one',
+                platform=u'Your imagination'
+            )
+        )
+        self.output_content = self.report.as_generic()
+
+    def test_ordering(self):
+        self.assertEqual(self.output_content[9][0], u'Another Fake Journal')
+        self.assertEqual(self.output_content[10][0], u'Fake Journal')

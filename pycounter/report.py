@@ -117,7 +117,7 @@ class CounterReport(object):
         if self.report_type in ('JR1', 'BR1', 'BR2', 'DB2'):
             output_lines.extend(self._totals_lines())
 
-        for pub in self.pubs:
+        for pub in sorted(self.pubs, key=lambda x: x.title):
             output_lines.append(pub.as_generic())
 
         return output_lines
