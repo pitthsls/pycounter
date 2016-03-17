@@ -223,10 +223,8 @@ class CounterEresource(six.Iterator):
             for item in month_data:
                 self._full_data.append(item)
 
-        if title:
-            self.title = title
-        if platform:
-            self.platform = platform
+        self.title = title
+        self.platform = platform
         self.publisher = publisher
 
     def __iter__(self):
