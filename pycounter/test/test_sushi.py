@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import datetime
+import logging
 import os
 import unittest
 
@@ -157,6 +158,7 @@ class TestBogusXML(unittest.TestCase):
     """Test dealing with broken XML"""
 
     def test_request(self):
+        logging.disable(logging.CRITICAL)
         with HTTMock(bogus_mock):
             self.assertRaises(pycounter.exceptions.SushiException,
                               sushi.get_report,

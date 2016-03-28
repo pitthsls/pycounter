@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import os
 import unittest
+import warnings
 
 import pycounter.report
 
@@ -65,9 +66,11 @@ class ParseCounter4Example(unittest.TestCase):
 class ParseLatin1(unittest.TestCase):
     """Tests for parsing BR2 in latin-1 encoding"""
     def setUp(self):
-        self.report = pycounter.report.parse(
-            os.path.join(os.path.dirname(__file__),
-                         'data/simpleBR2_latin_1.csv'))
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self.report = pycounter.report.parse(
+                os.path.join(os.path.dirname(__file__),
+                             'data/simpleBR2_latin_1.csv'))
 
     def test_title(self):
         publication = self.report.pubs[1]
