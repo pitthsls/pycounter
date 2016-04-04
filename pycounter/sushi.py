@@ -47,7 +47,11 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     """
     root = etree.Element("{%(SOAP-ENV)s}Envelope" % NS, nsmap=NS)
     body = etree.SubElement(root, "{%(SOAP-ENV)s}Body" % NS)
-    rr = etree.SubElement(body, "{%(sushicounter)s}ReportRequest" % NS)
+    timestamp = arrow.utcnow().isoformat()
+    rr = etree.SubElement(body, "{%(sushicounter)s}ReportRequest" % NS,
+                          {
+                              'created': timestamp,
+                          })
 
     req = etree.SubElement(rr, "{%(sushi)s}Requestor" % NS)
     rid = etree.SubElement(req, "{%(sushi)s}ID" % NS)
