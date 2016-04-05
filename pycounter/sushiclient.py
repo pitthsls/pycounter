@@ -26,6 +26,10 @@ logging.basicConfig()
                    'last day of start month')
 @click.option('--requestor_id', '-i',
               help='Requestor ID')
+@click.option('--requestor_email',
+              help='Email address of requestor')
+@click.option('--requestor_name',
+              help='Internationally recognized organization name')
 @click.option('--customer_reference', '-c',
               help='Customer reference')
 @click.option('--format', '-f', 'format_', default='tsv',
@@ -35,6 +39,7 @@ logging.basicConfig()
               help='Output file to write (will be overwritten)',
               type=click.Path(writable=True))
 def main(url, report, release, start_date, end_date, requestor_id,
+         requestor_email, requestor_name,
          customer_reference, format_, output_file):
     click.echo("pycounter SUSHI client for URL %s (%s R%s)"
                % (url, report, release))
@@ -54,6 +59,8 @@ def main(url, report, release, start_date, end_date, requestor_id,
                               report=report,
                               release=release,
                               requestor_id=requestor_id,
+                              requestor_name=requestor_name,
+                              requestor_email=requestor_email,
                               customer_reference=customer_reference,
                               start_date=converted_start_date,
                               end_date=converted_end_date)

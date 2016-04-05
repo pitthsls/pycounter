@@ -22,7 +22,8 @@ NS = pycounter.constants.NS
 
 
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
-                        requestor_email=None, customer_reference=None,
+                        requestor_email=None, requestor_name=None,
+                        customer_reference=None,
                         report="JR1", release=4, sushi_dump=False):
     """Get SUSHI stats for a given site in raw XML format.
 
@@ -35,6 +36,8 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     :param requestor_id: requestor ID as defined by SUSHI protocol
 
     :param requestor_email: requestor email address, if required by provider
+
+    :param requestor_name: Internationally recognized organization name
 
     :param customer_reference: customer reference number as defined by SUSHI
         protocol
@@ -58,7 +61,8 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     req = etree.SubElement(rr, "{%(sushi)s}Requestor" % NS)
     rid = etree.SubElement(req, "{%(sushi)s}ID" % NS)
     rid.text = requestor_id
-    req.append(etree.Element("{%(sushi)s}Name" % NS))
+    req_name_element = etree.SubElement(req, "{%(sushi)s}Name" % NS)
+    req_name_element.text = requestor_name
     req_email_element = etree.SubElement(req, "{%(sushi)s}Email" % NS)
     req_email_element.text = requestor_email
 
