@@ -32,6 +32,8 @@ logging.basicConfig()
               help='Internationally recognized organization name')
 @click.option('--customer_reference', '-c',
               help='Customer reference')
+@click.option('--customer_name',
+              help='Internationally recognized organization name')
 @click.option('--format', '-f', 'format_', default='tsv',
               help='Output format (default tsv)',
               type=click.Choice(['tsv']))
@@ -39,7 +41,7 @@ logging.basicConfig()
               help='Output file to write (will be overwritten)',
               type=click.Path(writable=True))
 def main(url, report, release, start_date, end_date, requestor_id,
-         requestor_email, requestor_name,
+         requestor_email, requestor_name, customer_name,
          customer_reference, format_, output_file):
     click.echo("pycounter SUSHI client for URL %s (%s R%s)"
                % (url, report, release))
@@ -62,6 +64,7 @@ def main(url, report, release, start_date, end_date, requestor_id,
                               requestor_name=requestor_name,
                               requestor_email=requestor_email,
                               customer_reference=customer_reference,
+                              customer_name=customer_name,
                               start_date=converted_start_date,
                               end_date=converted_end_date)
     report.write_tsv(output_file)
