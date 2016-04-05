@@ -22,8 +22,7 @@ requirements = [
     'click',
 ]
 
-if (platform.python_implementation() == "PyPy" and
-        platform.python_version_tuple()[0] == '2'):
+if platform.python_implementation() == "PyPy":
     requirements.append('lxml<=3.4.4')
 else:
     requirements.append('lxml')
