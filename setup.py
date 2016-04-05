@@ -1,6 +1,7 @@
 from __future__ import with_statement
 
 import os
+import platform
 
 from setuptools import find_packages, setup
 
@@ -12,6 +13,19 @@ with open(os.path.join(
 
 with open('README.rst') as readmefile:
     readme = readmefile.read()
+
+requirements = [
+    'openpyxl',
+    'requests',
+    'six',
+    'arrow',
+    'click',
+]
+
+if platform.python_implementation() == "PyPy":
+    requirements.append('lxml<=3.4.4')
+else:
+    requirements.append('lxml')
 
 setup(
     name='pycounter',
@@ -36,8 +50,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         ],
-    install_requires=['openpyxl', 'lxml<=3.4.4', 'requests',
-                      'six', 'arrow', 'click'],
+    install_requires=requirements,
     tests_require=['httmock', 'mock'],
     entry_points={
         'console_scripts': ['sushiclient = pycounter.sushiclient:main']
