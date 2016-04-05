@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import datetime
 import logging
+import uuid
 
 import arrow
 
@@ -51,6 +52,7 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     rr = etree.SubElement(body, "{%(sushicounter)s}ReportRequest" % NS,
                           {
                               'created': timestamp,
+                              'id': str(uuid.uuid4())
                           })
 
     req = etree.SubElement(rr, "{%(sushi)s}Requestor" % NS)

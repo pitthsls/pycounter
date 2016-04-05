@@ -2,12 +2,15 @@
 from __future__ import print_function
 
 import datetime
+import logging
 import sys
 
 import click
 
 from pycounter import sushi
 from pycounter.helpers import convert_date_run, last_day, prev_month
+
+logging.basicConfig()
 
 
 @click.command()
