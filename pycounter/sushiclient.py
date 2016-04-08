@@ -17,7 +17,7 @@ logging.basicConfig()
 @click.argument('url')
 @click.option('--report', '-r', default='JR1',
               help='report name (default JR1)')
-@click.option('--release', '-c', default=4,
+@click.option('--release', '-l', default=4,
               help='COUNTER release (default 4)')
 @click.option('--start_date', '-s',
               help='Start Date YYYY-MM-DD (default first day of last month)')

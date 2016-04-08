@@ -57,7 +57,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pycounter'
-copyright = u'2014-2015, University of Pittsburgh'
+copyright = u'2014-2016, University of Pittsburgh'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

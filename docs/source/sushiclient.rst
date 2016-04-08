@@ -9,7 +9,7 @@ Invocation
 
 sushiclient [OPTIONS] <URL>
 
-.. option:: <URL>
+.. option:: URL
 
    The SUSHI endpoint/WSDL URL to use
 
@@ -19,7 +19,7 @@ Options:
 
    report name (default JR1)
 
-.. option:: -c, --release
+.. option:: -l, --release
 
    COUNTER release (default 4)
 
@@ -35,9 +35,21 @@ Options:
 
    Requestor ID as defined in the SUSHI standard
 
+.. option:: --requestor_email
+
+   Email address of requestor
+
+.. option:: --requestor_name
+
+   Internationally recognized organization name
+
 .. option:: -c, --customer_reference
 
    Customer reference number as defined in the SUSHI standard
+
+.. option:: --customer_name
+
+    Internationally recognized organization name
 
 .. option:: -f <format>, --format <format>
 
