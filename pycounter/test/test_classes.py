@@ -1,3 +1,5 @@
+"""Tests regarding instantiating classes"""
+
 import unittest
 
 from pycounter import report

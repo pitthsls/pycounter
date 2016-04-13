@@ -1,3 +1,5 @@
+"""Test detecting file types correctly"""
+
 from __future__ import absolute_import
 
 import datetime

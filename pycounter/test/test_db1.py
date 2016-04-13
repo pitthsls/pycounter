@@ -1,3 +1,5 @@
+"""Test COUNTER DB1 database report"""
+
 from __future__ import absolute_import
 
 import datetime

@@ -1,3 +1,5 @@
+"""Test output of BR1 report"""
+
 from __future__ import absolute_import
 
 import logging

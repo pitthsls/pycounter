@@ -1,3 +1,5 @@
+"""Test COUNTER JR1 journal report (TSV)"""
+
 from __future__ import absolute_import
 
 import datetime
