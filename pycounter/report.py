@@ -232,6 +232,21 @@ class CounterEresource(six.Iterator):
             for item in self._full_data:
                 yield (item[0], self.metric, item[1])
 
+    def _fill_months(self):
+        """
+        Check that each month in period is represented and fill with zero if not
+        """
+        try:
+            for d_obj in arrow.Arrow.range('month',
+                                       arrow.Arrow.fromdate(self.period[0]),
+                                       arrow.Arrow.fromdate(self.period[1])):
+                if d_obj.date() not in {x[0] for x in self._full_data}:
+                    self._full_data.append((d_obj.date(), 0))
+        except IndexError:
+            pass
+        else:
+            self._full_data.sort()
+
 
 class CounterJournal(CounterEresource):
     """
@@ -406,7 +421,8 @@ class CounterDatabase(CounterEresource):
         """
         return data for this line as list of COUNTER report cells
         """
-        
+
+        self._fill_months()
         #map SUSHI code to full title if SUSHI, leave metric alone otherwise 
         metric = CounterDatabase.metric_full_titles.get(self.metric,
                                                         self.metric)
