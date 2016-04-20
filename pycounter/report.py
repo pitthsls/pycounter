@@ -386,29 +386,46 @@ class CounterDatabase(CounterEresource):
     # pylint: disable=too-few-public-methods
     """a COUNTER database report line"""
 
+    metric_full_titles = {'search_reg':   'Regular Searches',
+                          'search_fed':   'Searches-federated and automated',
+                          'result_click': 'Result Clicks',
+                          'record_view':  'Record Views',
+                          'turnaway':     'Access denied: concurrent/'
+                                          'simultaneous user license exceeded',
+                          'no_license':   'Access denied: content item not '
+                                          'licensed'}
+
     def __init__(self, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
         super(CounterDatabase, self).__init__(period, metric, month_data,
                                               title, platform, publisher)
         self.isbn = None
 
+
     def as_generic(self):
         """
         return data for this line as list of COUNTER report cells
         """
+        
+        #map SUSHI code to full title if SUSHI, leave metric alone otherwise 
+        metric = CounterDatabase.metric_full_titles.get(self.metric,
+                                                        self.metric)
         data_line = [
             self.title,
             self.publisher,
             self.platform,
-            self.metric,
+            metric,
         ]
         total_usage = 0
         month_data = []
+
         for data in self:
             total_usage += data[2]
             month_data.append(six.text_type(data[2]))
+
         data_line.append(six.text_type(total_usage))
         data_line.extend(month_data)
+
         return data_line
 
 
