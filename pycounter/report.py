@@ -5,6 +5,7 @@ from __future__ import absolute_import
 import datetime
 import logging
 import re
+import collections
 
 import arrow
 import six
@@ -116,6 +117,8 @@ class CounterReport(object):
         output_lines.append(self._table_header())
         if self.report_type in ('JR1', 'BR1', 'BR2', 'DB2'):
             output_lines.extend(self._totals_lines())
+        elif self.report_type.startswith('DB'):
+            self._ensure_all_metrics()
 
         for pub in sorted(self.pubs, key=lambda x: x.title):
             output_lines.append(pub.as_generic())
@@ -187,6 +190,44 @@ class CounterReport(object):
                                        arrow.Arrow.fromdate(self.period[1])):
             header_cells.append(d_obj.strftime('%b-%Y'))
         return header_cells
+
+    def _ensure_all_metrics(self):
+        """
+        Build up a dict of sets of known metrics for each database. If any
+        metric is missing add a 0 use :class:`CounterDatabase<CounterDatabase>`
+        Assumes platform and publisher are consistent across records
+        """
+        db_report_metrics = {'DB1': ['search_reg', 'search_fed', 
+                                     'result_click', 'record_view'],
+                             'DB2': ['turnaway', 'no_license']}
+
+        try:
+            fields = db_report_metrics[self.report_type]
+        except LookupError:
+            raise UnknownReportTypeError(self.report_type)
+
+        dbs = collections.defaultdict(set)
+        #SUSHI uses codes, COUNTER uses names, so if 'metric' isn't a code
+        #i.e. in fields, jump out early (expected behavior, not exception)
+        for database in self.pubs:
+            if database.metric not in fields: 
+                return
+            else:
+                dbs[database.title].add(database.metric)
+
+        for database, metrics in six.iteritems(dbs):
+            for metric in set(fields).difference(metrics):
+                self.pubs.append(
+                    CounterDatabase(
+                        title=database,
+                        platform=self.pubs[0].platform,
+                        publisher=self.pubs[0].publisher,
+                        period=self.period,
+                        metric=metric,
+                        month_data=[(self.period[0], 0),]
+                    ))
+        #Sorts on metric order, which is preserved later when sorting by title
+        self.pubs.sort(key=lambda x: fields.index(x.metric))
 
 
 class CounterEresource(six.Iterator):
