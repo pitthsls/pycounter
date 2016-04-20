@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import datetime
 import logging
 import uuid
+import collections
 
 import arrow
 
@@ -11,6 +12,7 @@ from lxml import etree
 from lxml import objectify
 
 import requests
+import six
 
 import pycounter.constants
 import pycounter.exceptions
@@ -211,6 +213,8 @@ def _raw_to_full(raw_report):
         html_usage = 0
         pdf_usage = 0
 
+        metrics_for_db = collections.defaultdict(list)
+
         for perform_item in item.ItemPerformance:
             item_date = convert_date_run(perform_item.Period.Begin.text)
             logger.debug("perform_item date: %r", item_date)
@@ -222,6 +226,9 @@ def _raw_to_full(raw_report):
                     pdf_usage += int(inst.Count)
                 elif inst.MetricType == "ft_html":
                     html_usage += int(inst.Count)
+                elif report.report_type.startswith('DB'):
+                    metrics_for_db[inst.MetricType].append((item_date,
+                                                            int(inst.Count)))
             if usage is not None:
                 month_data.append((item_date, int(usage)))
 
@@ -251,5 +258,16 @@ def _raw_to_full(raw_report):
                         isbn=isbn,
                         month_data=month_data,
                     ))
+            elif report.report_type.startswith('DB'):
+                for metric, month_data in six.iteritems(metrics_for_db):
+                    report.pubs.append(
+                        pycounter.report.CounterDatabase(
+                            title=title,
+                            platform=platform,
+                            publisher=publisher_name,
+                            period=report.period,
+                            metric=metric,
+                            month_data=month_data
+                        ))
 
     return report
