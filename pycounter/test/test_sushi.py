@@ -105,6 +105,88 @@ class TestConvertRawBook(unittest.TestCase):
         data = [month[2] for month in publication]
         self.assertEqual(data[0], 14)
 
+class TestConvertRawDatabase(unittest.TestCase):
+    """Test converting simple DB1 SUSHI response"""
+
+    def setUp(self):
+        path = os.path.join(os.path.dirname(__file__),
+                            'data', 'sushi_simple_db1.xml')
+        with open(path, 'rb') as datafile:
+            self.report = sushi._raw_to_full(datafile.read())
+        self.databases = list(self.report)
+
+    def test_report(self):
+        self.assertEqual(self.report.report_type, u'DB1')
+        self.assertEqual(self.report.report_version, 4)
+
+    def test_customer(self):
+        self.assertEqual(self.report.institutional_identifier,
+                         u"exampleLibrary")
+
+    def test_platform(self):
+        database = self.databases[0]
+        self.assertEqual(database.platform, u'ExamplePlatform')
+
+    def test_publisher(self):
+        database = self.databases[0]
+        self.assertEqual(database.publisher, u'ExamplePublisher')
+
+    def test_title(self):
+        database = self.databases[0]
+        self.assertEqual(database.title, u'ExampleDatabase')
+
+    def test_search_reg(self):
+        database = self.databases[0]
+        data = [month[2] for month in database]
+        self.assertEqual(database.metric, u'search_reg')
+        self.assertEqual(data[0], 5)
+
+    def test_search_fed(self):
+        database = self.databases[1]
+        data = [month[2] for month in database]
+        self.assertEqual(database.metric, u'search_fed')
+        self.assertEqual(data[0], 13)
+
+    def test_result_click(self):
+        database = self.databases[2]
+        data = [month[2] for month in database]
+        self.assertEqual(database.metric, u'result_click')
+        self.assertEqual(data[0], 16)
+
+    def test_record_view(self):
+        database = self.databases[3]
+        data = [month[2] for month in database]
+        self.assertEqual(database.metric, u'record_view')
+        self.assertEqual(data[0], 7)
+
+class TestRawDatabaseWithMissingData(unittest.TestCase):
+    """
+    Test database request with January missing for 'search_fed'
+    and no 'record_view' records
+    """
+
+    def setUp(self):
+        path = os.path.join(os.path.dirname(__file__),
+                            'data', 'sushi_db1_missing_record_view.xml')
+        with open(path, 'rb') as datafile:
+            self.report = sushi._raw_to_full(datafile.read())
+        #missing data only injected when making generic to write
+        self.report.as_generic()
+        self.databases = list(self.report)
+
+
+    def test_january(self):
+        database = self.databases[1]
+        data = [month[2] for month in database]
+        self.assertEqual(database.metric, u'search_fed')
+        self.assertEqual(data[0], 0)
+
+    def test_record_view(self):
+        database = self.databases[3]
+        data = [month[2] for month in database]
+        self.assertEqual(database.metric, u'record_view')
+        self.assertEqual(data[0], 0)
+
 
 class TestMissingMonth(unittest.TestCase):
     """Test SUSHI with months missing"""
