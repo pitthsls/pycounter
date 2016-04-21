@@ -105,6 +105,7 @@ class TestConvertRawBook(unittest.TestCase):
         data = [month[2] for month in publication]
         self.assertEqual(data[0], 14)
 
+
 class TestConvertRawDatabase(unittest.TestCase):
     """Test converting simple DB1 SUSHI response"""
 
@@ -159,6 +160,7 @@ class TestConvertRawDatabase(unittest.TestCase):
         self.assertEqual(database.metric, u'record_view')
         self.assertEqual(data[0], 7)
 
+
 class TestRawDatabaseWithMissingData(unittest.TestCase):
     """
     Test database request with January missing for 'search_fed'
@@ -170,10 +172,9 @@ class TestRawDatabaseWithMissingData(unittest.TestCase):
                             'data', 'sushi_db1_missing_record_view.xml')
         with open(path, 'rb') as datafile:
             self.report = sushi._raw_to_full(datafile.read())
-        #missing data only injected when making generic to write
+        # missing data only injected when making generic to write
         self.report.as_generic()
         self.databases = list(self.report)
-
 
     def test_january(self):
         database = self.databases[1]

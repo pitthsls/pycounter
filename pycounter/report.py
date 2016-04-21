@@ -2,10 +2,10 @@
 
 from __future__ import absolute_import
 
+import collections
 import datetime
 import logging
 import re
-import collections
 
 import arrow
 import six
@@ -197,7 +197,7 @@ class CounterReport(object):
         metric is missing add a 0 use :class:`CounterDatabase<CounterDatabase>`
         Assumes platform and publisher are consistent across records
         """
-        db_report_metrics = {'DB1': ['search_reg', 'search_fed', 
+        db_report_metrics = {'DB1': ['search_reg', 'search_fed',
                                      'result_click', 'record_view'],
                              'DB2': ['turnaway', 'no_license']}
 
@@ -207,10 +207,10 @@ class CounterReport(object):
             raise UnknownReportTypeError(self.report_type)
 
         dbs = collections.defaultdict(set)
-        #SUSHI uses codes, COUNTER uses names, so if 'metric' isn't a code
-        #i.e. in fields, jump out early (expected behavior, not exception)
+        # SUSHI uses codes, COUNTER uses names, so if 'metric' isn't a code
+        # i.e. in fields, jump out early (expected behavior, not exception)
         for database in self.pubs:
-            if database.metric not in required_metrics: 
+            if database.metric not in required_metrics:
                 return
             else:
                 dbs[database.title].add(database.metric)
@@ -224,9 +224,9 @@ class CounterReport(object):
                         publisher=self.pubs[0].publisher,
                         period=self.period,
                         metric=metric,
-                        month_data=[(self.period[0], 0),]
+                        month_data=[(self.period[0], 0), ]
                     ))
-        #Sorts on metric order, which is preserved later when sorting by title
+        # Sorts on metric order, which is preserved later when sorting by title
         self.pubs.sort(key=lambda x: required_metrics.index(x.metric))
 
 
@@ -275,12 +275,13 @@ class CounterEresource(six.Iterator):
 
     def _fill_months(self):
         """
-        Check that each month in period is represented and fill with zero if not
+        Check that each month in period represented and fill with zero if not
         """
+        start, end = self.period[0], self.period[1]
         try:
             for d_obj in arrow.Arrow.range('month',
-                                       arrow.Arrow.fromdate(self.period[0]),
-                                       arrow.Arrow.fromdate(self.period[1])):
+                                           arrow.Arrow.fromdate(start),
+                                           arrow.Arrow.fromdate(end)):
                 if d_obj.date() not in {x[0] for x in self._full_data}:
                     self._full_data.append((d_obj.date(), 0))
         except IndexError:
@@ -442,14 +443,14 @@ class CounterDatabase(CounterEresource):
     # pylint: disable=too-few-public-methods
     """a COUNTER database report line"""
 
-    metric_full_titles = {'search_reg':   'Regular Searches',
-                          'search_fed':   'Searches-federated and automated',
+    metric_full_titles = {'search_reg': 'Regular Searches',
+                          'search_fed': 'Searches-federated and automated',
                           'result_click': 'Result Clicks',
-                          'record_view':  'Record Views',
-                          'turnaway':     'Access denied: concurrent/'
-                                          'simultaneous user license exceeded',
-                          'no_license':   'Access denied: content item not '
-                                          'licensed'}
+                          'record_view': 'Record Views',
+                          'turnaway': 'Access denied: concurrent/'
+                                      'simultaneous user license exceeded',
+                          'no_license': 'Access denied: content item not '
+                                        'licensed'}
 
     def __init__(self, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
@@ -457,14 +458,13 @@ class CounterDatabase(CounterEresource):
                                               title, platform, publisher)
         self.isbn = None
 
-
     def as_generic(self):
         """
         return data for this line as list of COUNTER report cells
         """
 
         self._fill_months()
-        #map SUSHI code to full title if SUSHI, leave metric alone otherwise 
+        # map SUSHI code to full title if SUSHI, leave metric alone otherwise
         metric = CounterDatabase.metric_full_titles.get(self.metric,
                                                         self.metric)
         data_line = [

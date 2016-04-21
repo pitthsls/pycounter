@@ -1,10 +1,11 @@
 """NISO SUSHI support"""
 from __future__ import absolute_import
 
+import collections
 import datetime
 import logging
 import uuid
-import collections
+
 
 import arrow
 
