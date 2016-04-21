@@ -118,7 +118,7 @@ class CounterReport(object):
         if self.report_type in ('JR1', 'BR1', 'BR2', 'DB2'):
             output_lines.extend(self._totals_lines())
         elif self.report_type.startswith('DB'):
-            self._ensure_all_metrics()
+            self._ensure_required_metrics()
 
         for pub in sorted(self.pubs, key=lambda x: x.title):
             output_lines.append(pub.as_generic())
@@ -191,7 +191,7 @@ class CounterReport(object):
             header_cells.append(d_obj.strftime('%b-%Y'))
         return header_cells
 
-    def _ensure_all_metrics(self):
+    def _ensure_required_metrics(self):
         """
         Build up a dict of sets of known metrics for each database. If any
         metric is missing add a 0 use :class:`CounterDatabase<CounterDatabase>`
@@ -202,7 +202,7 @@ class CounterReport(object):
                              'DB2': ['turnaway', 'no_license']}
 
         try:
-            fields = db_report_metrics[self.report_type]
+            required_metrics = db_report_metrics[self.report_type]
         except LookupError:
             raise UnknownReportTypeError(self.report_type)
 
@@ -210,13 +210,13 @@ class CounterReport(object):
         #SUSHI uses codes, COUNTER uses names, so if 'metric' isn't a code
         #i.e. in fields, jump out early (expected behavior, not exception)
         for database in self.pubs:
-            if database.metric not in fields: 
+            if database.metric not in required_metrics: 
                 return
             else:
                 dbs[database.title].add(database.metric)
 
         for database, metrics in six.iteritems(dbs):
-            for metric in set(fields).difference(metrics):
+            for metric in (m for m in required_metrics if m not in metrics):
                 self.pubs.append(
                     CounterDatabase(
                         title=database,
@@ -227,7 +227,7 @@ class CounterReport(object):
                         month_data=[(self.period[0], 0),]
                     ))
         #Sorts on metric order, which is preserved later when sorting by title
-        self.pubs.sort(key=lambda x: fields.index(x.metric))
+        self.pubs.sort(key=lambda x: required_metrics.index(x.metric))
 
 
 class CounterEresource(six.Iterator):
