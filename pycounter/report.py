@@ -282,7 +282,7 @@ class CounterEresource(six.Iterator):
             for d_obj in arrow.Arrow.range('month',
                                            arrow.Arrow.fromdate(start),
                                            arrow.Arrow.fromdate(end)):
-                if d_obj.date() not in {x[0] for x in self._full_data}:
+                if d_obj.date() not in (x[0] for x in self._full_data):
                     self._full_data.append((d_obj.date(), 0))
         except IndexError:
             pass
