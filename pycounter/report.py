@@ -74,11 +74,18 @@ class CounterReport(object):
     def __iter__(self):
         return iter(self.pubs)
 
-    def write_to_file(self, path, format):
-        if format == 'tsv':
+    def write_to_file(self, path, format_):
+        """
+        Output report to a file
+
+        :param path: location to write file
+        :param format_: file format. Currently supports 'tsv'
+        :return:
+        """
+        if format_ == 'tsv':
             self.write_tsv(path)
         else:
-            raise PycounterException("unknown file type %s" % format)
+            raise PycounterException("unknown file type %s" % format_)
 
     def write_tsv(self, path):
         """
