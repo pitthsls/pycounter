@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<!--suppress CheckTagEmptyBody -->
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns3:ReportResponse xmlns="http://www.niso.org/schemas/counter"
+                            xmlns:ns2="http://www.niso.org/schemas/sushi"
+                            xmlns:ns3="http://www.niso.org/schemas/sushi/counter">
+            <!--suppress CheckTagEmptyBody -->
+            <ns2:Requestor>
+                <ns2:ID>exampleRequestor</ns2:ID>
+                <ns2:Name></ns2:Name>
+                <ns2:Email></ns2:Email>
+            </ns2:Requestor>
+            <ns2:CustomerReference>
+                <ns2:ID>exampleReference</ns2:ID>
+                <ns2:Name></ns2:Name>
+            </ns2:CustomerReference>
+            <ns2:ReportDefinition Release="4" Name="DB1">
+                <ns2:Filters>
+                    <ns2:UsageDateRange>
+                        <ns2:Begin>2013-01-01</ns2:Begin>
+                        <ns2:End>2013-02-28</ns2:End>
+                    </ns2:UsageDateRange>
+                </ns2:Filters>
+            </ns2:ReportDefinition>
+            <ns3:Report>
+                <Report Title="Database Report 1" Name="DB1" Version="4"
+                        ID="exampleuser:DB1">
+                    <Vendor>
+                        <Name>Example Vendor</Name>
+                        <ID>example</ID>
+                        <Contact>
+                            <Contact>Vendor Contact</Contact>
+                            <E-mail>vendor@example.com</E-mail>
+                        </Contact>
+                    </Vendor>
+                    <Customer>
+                        <ID>exampleLibrary</ID>
+                        <ReportItems>
+                            <ItemPlatform>ExamplePlatform</ItemPlatform>
+                            <ItemPublisher>ExamplePublisher</ItemPublisher>
+                            <ItemName>ExampleDatabase</ItemName>
+                            <ItemDataType>Database</ItemDataType>
+                            <ItemPerformance>
+                                <Period>
+                                    <Begin>2013-01-01</Begin>
+                                    <End>2013-01-31</End>
+                                </Period>
+                                <Category>Requests</Category>
+                                <Instance>
+                                    <MetricType>result_click</MetricType>
+                                    <Count>11</Count>
+                                </Instance>
+                            </ItemPerformance>
+                            <ItemPerformance>
+                                <Period>
+                                    <Begin>2013-02-01</Begin>
+                                    <End>2013-02-28</End>
+                                </Period>
+                                <Category>Requests</Category>
+                                <Instance>
+                                    <MetricType>result_click</MetricType>
+                                    <Count>22</Count>
+                                </Instance>
+                            </ItemPerformance>
+                            <ItemPerformance>
+                                <Period>
+                                    <Begin>2013-01-01</Begin>
+                                    <End>2013-01-31</End>
+                                </Period>
+                                <Category>Searches</Category>
+                                <Instance>
+                                    <MetricType>search_reg</MetricType>
+                                    <Count>44</Count>
+                                </Instance>
+                            </ItemPerformance>
+                            <ItemPerformance>
+                                <Period>
+                                    <Begin>2013-02-01</Begin>
+                                    <End>2013-02-29</End>
+                                </Period>
+                                <Category>Searches</Category>
+                                <Instance>
+                                    <MetricType>search_reg</MetricType>
+                                    <Count>63</Count>
+                                </Instance>
+                                <Instance>
+                                    <MetricType>search_fed</MetricType>
+                                    <Count>42</Count>
+                                </Instance>
+                            </ItemPerformance>
+                        </ReportItems>
+                    </Customer>
+                </Report>
+            </ns3:Report>
+        </ns3:ReportResponse>
+    </S:Body>
+</S:Envelope>
