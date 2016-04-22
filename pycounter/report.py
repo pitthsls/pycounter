@@ -74,6 +74,12 @@ class CounterReport(object):
     def __iter__(self):
         return iter(self.pubs)
 
+    def write_to_file(self, path, format):
+        if format=='tsv':
+            self.write_tsv(path)
+        else:
+            raise PycounterException("unknown file type %s" % format)
+
     def write_tsv(self, path):
         """
         Output report to a COUNTER 4 TSV file.

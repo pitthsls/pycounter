@@ -17,3 +17,6 @@ ignore-comments=yes
 
 # Ignore docstrings when computing similarities.
 ignore-docstrings=yes
+
+[VARIABLES]
+dummy-variables-rgx=_|dummy|unused|.*_unused

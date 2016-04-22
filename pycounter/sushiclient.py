@@ -37,7 +37,7 @@ logging.basicConfig()
 @click.option('--format', '-f', 'format_', default='tsv',
               help='Output format (default tsv)',
               type=click.Choice(['tsv']))
-@click.option('--output_file', '-o', default='report.tsv',
+@click.option('--output_file', '-o', default='report.%s',
               help='Output file to write (will be overwritten)',
               type=click.Path(writable=True))
 def main(url, report, release, start_date, end_date, requestor_id,
@@ -67,7 +67,8 @@ def main(url, report, release, start_date, end_date, requestor_id,
                               customer_name=customer_name,
                               start_date=converted_start_date,
                               end_date=converted_end_date)
-    report.write_tsv(output_file)
+    output_file = output_file % format_
+    report.write_to_file(output_file, format_)
 
 
 if __name__ == "__main__":

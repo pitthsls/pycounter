@@ -17,7 +17,7 @@ import pycounter.exceptions
 
 
 @urlmatch(netloc=r'(.*\.)?example\.com$')
-def sushi_mock(url, request):
+def sushi_mock(url_unused, request_unused):
     path = os.path.join(os.path.dirname(__file__),
                         'data', 'sushi_simple.xml')
     with open(path, 'rb') as datafile:
@@ -25,7 +25,7 @@ def sushi_mock(url, request):
 
 
 @urlmatch(netloc=r'(.*\.)?example\.com$')
-def error_mock(url, request):
+def error_mock(url_unused, request_unused):
     path = os.path.join(os.path.dirname(__file__),
                         'data', 'sushi_error.xml')
     with open(path, 'rb') as datafile:
@@ -33,7 +33,7 @@ def error_mock(url, request):
 
 
 @urlmatch(netloc=r'(.*\.)?example\.com$')
-def bogus_mock(url, request):
+def bogus_mock(url_unused, request_unused):
     return "Bogus response with no XML"
 
 
