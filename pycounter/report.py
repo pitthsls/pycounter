@@ -210,10 +210,6 @@ class CounterReport(object):
         metric is missing add a 0 use :class:`CounterDatabase<CounterDatabase>`
         Assumes platform and publisher are consistent across records
         """
-        db_report_metrics = {'DB1': ['search_reg', 'search_fed',
-                                     'result_click', 'record_view'],
-                             'DB2': ['turnaway', 'no_license']}
-
         try:
             required_metrics = db_report_metrics[self.report_type]
         except LookupError:
@@ -456,15 +452,6 @@ class CounterDatabase(CounterEresource):
     # pylint: disable=too-few-public-methods
     """a COUNTER database report line"""
 
-    metric_full_titles = {'search_reg': 'Regular Searches',
-                          'search_fed': 'Searches-federated and automated',
-                          'result_click': 'Result Clicks',
-                          'record_view': 'Record Views',
-                          'turnaway': 'Access denied: concurrent/'
-                                      'simultaneous user license exceeded',
-                          'no_license': 'Access denied: content item not '
-                                        'licensed'}
-
     def __init__(self, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
         super(CounterDatabase, self).__init__(period, metric, month_data,
@@ -475,16 +462,13 @@ class CounterDatabase(CounterEresource):
         """
         return data for this line as list of COUNTER report cells
         """
-
         self._fill_months()
-        # map SUSHI code to full title if SUSHI, leave metric alone otherwise
-        metric = CounterDatabase.metric_full_titles.get(self.metric,
-                                                        self.metric)
+
         data_line = [
             self.title,
             self.publisher,
             self.platform,
-            metric,
+            self.metric,
         ]
         total_usage = 0
         month_data = []
