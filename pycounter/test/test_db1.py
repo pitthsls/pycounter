@@ -37,7 +37,7 @@ class ParseCounter4Example(unittest.TestCase):
 
     def test_report_metric(self):
         for metric in self.report.metric:
-            self.assertIn(metric, METRICS[self.report.report_type])
+            self.assertTrue(metric in METRICS[self.report.report_type])
 
     def test_row_metric(self):
         publication = self.report.pubs[0]
