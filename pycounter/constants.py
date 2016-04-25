@@ -11,7 +11,22 @@ METRICS = {
     u"JR1": u"FT Article Requests",
     u"JR1 GOA": u"Gold Open Access Article Requests",
     u"BR1": u"Book Title Requests",
-    u"BR2": u"Book Section Requests"
+    u"BR2": u"Book Section Requests",
+    u"DB1": [u"Regular Searches",
+             u"Searches-federated and automated",
+             u"Result Clicks",
+             u"Record Views"],
+    u"DB2": [u"Access denied: concurrent/simultaneous user license exceeded",
+             u"Access denied: content item not licensed"]
+}
+
+DB_METRIC_MAP = {
+    "search_reg": METRICS["DB1"][0],
+    "search_fed": METRICS["DB1"][1],
+    "result_click": METRICS["DB1"][2],
+    "record_view": METRICS["DB1"][3],
+    "turnaway": METRICS["DB2"][0],
+    "no_license": METRICS["DB2"][1]
 }
 
 CODES = {
