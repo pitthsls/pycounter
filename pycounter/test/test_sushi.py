@@ -139,25 +139,25 @@ class TestConvertRawDatabase(unittest.TestCase):
     def test_search_reg(self):
         database = self.databases[0]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u'search_reg')
+        self.assertEqual(database.metric, u'Regular Searches')
         self.assertEqual(data[0], 5)
 
     def test_search_fed(self):
         database = self.databases[1]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u'search_fed')
+        self.assertEqual(database.metric, u'Searches-federated and automated')
         self.assertEqual(data[0], 13)
 
     def test_result_click(self):
         database = self.databases[2]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u'result_click')
+        self.assertEqual(database.metric, u'Result Clicks')
         self.assertEqual(data[0], 16)
 
     def test_record_view(self):
         database = self.databases[3]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u'record_view')
+        self.assertEqual(database.metric, u'Record Views')
         self.assertEqual(data[0], 7)
 
 
@@ -179,13 +179,13 @@ class TestRawDatabaseWithMissingData(unittest.TestCase):
     def test_january(self):
         database = self.databases[1]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u'search_fed')
+        self.assertEqual(database.metric, u'Searches-federated and automated')
         self.assertEqual(data[0], 0)
 
     def test_record_view(self):
         database = self.databases[3]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u'record_view')
+        self.assertEqual(database.metric, u'Record Views')
         self.assertEqual(data[0], 0)
 
 

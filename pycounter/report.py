@@ -132,6 +132,11 @@ class CounterReport(object):
             output_lines.extend(self._totals_lines())
         elif self.report_type.startswith('DB'):
             self._ensure_required_metrics()
+            try:
+                self.pubs.sort(
+                    key=lambda x: METRICS[self.report_type].index(x.metric))
+            except ValueError:
+                pass
 
         for pub in sorted(self.pubs, key=lambda x: x.title):
             output_lines.append(pub.as_generic())
@@ -210,23 +215,14 @@ class CounterReport(object):
         metric is missing add a 0 use :class:`CounterDatabase<CounterDatabase>`
         Assumes platform and publisher are consistent across records
         """
-        db_report_metrics = {'DB1': ['search_reg', 'search_fed',
-                                     'result_click', 'record_view'],
-                             'DB2': ['turnaway', 'no_license']}
-
         try:
-            required_metrics = db_report_metrics[self.report_type]
+            required_metrics = METRICS[self.report_type]
         except LookupError:
             raise UnknownReportTypeError(self.report_type)
 
         dbs = collections.defaultdict(set)
-        # SUSHI uses codes, COUNTER uses names, so if 'metric' isn't a code
-        # i.e. in fields, jump out early (expected behavior, not exception)
         for database in self.pubs:
-            if database.metric not in required_metrics:
-                return
-            else:
-                dbs[database.title].add(database.metric)
+            dbs[database.title].add(database.metric)
 
         for database, metrics in six.iteritems(dbs):
             for metric in (m for m in required_metrics if m not in metrics):
@@ -239,8 +235,6 @@ class CounterReport(object):
                         metric=metric,
                         month_data=[(self.period[0], 0), ]
                     ))
-        # Sorts on metric order, which is preserved later when sorting by title
-        self.pubs.sort(key=lambda x: required_metrics.index(x.metric))
 
 
 class CounterEresource(six.Iterator):
@@ -456,15 +450,6 @@ class CounterDatabase(CounterEresource):
     # pylint: disable=too-few-public-methods
     """a COUNTER database report line"""
 
-    metric_full_titles = {'search_reg': 'Regular Searches',
-                          'search_fed': 'Searches-federated and automated',
-                          'result_click': 'Result Clicks',
-                          'record_view': 'Record Views',
-                          'turnaway': 'Access denied: concurrent/'
-                                      'simultaneous user license exceeded',
-                          'no_license': 'Access denied: content item not '
-                                        'licensed'}
-
     def __init__(self, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
         super(CounterDatabase, self).__init__(period, metric, month_data,
@@ -475,16 +460,13 @@ class CounterDatabase(CounterEresource):
         """
         return data for this line as list of COUNTER report cells
         """
-
         self._fill_months()
-        # map SUSHI code to full title if SUSHI, leave metric alone otherwise
-        metric = CounterDatabase.metric_full_titles.get(self.metric,
-                                                        self.metric)
+
         data_line = [
             self.title,
             self.publisher,
             self.platform,
-            metric,
+            self.metric,
         ]
         total_usage = 0
         month_data = []

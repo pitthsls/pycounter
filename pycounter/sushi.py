@@ -260,7 +260,8 @@ def _raw_to_full(raw_report):
                         month_data=month_data,
                     ))
             elif report.report_type.startswith('DB'):
-                for metric, month_data in six.iteritems(metrics_for_db):
+                for metric_code, month_data in six.iteritems(metrics_for_db):
+                    metric = pycounter.constants.DB_METRIC_MAP[metric_code]
                     report.pubs.append(
                         pycounter.report.CounterDatabase(
                             title=title,

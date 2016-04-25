@@ -6,6 +6,7 @@ import datetime
 import os
 import unittest
 
+from pycounter.constants import METRICS
 import pycounter.report
 
 
@@ -35,7 +36,8 @@ class ParseCounter4Example(unittest.TestCase):
             [0, 20, 0, 0, 5, 0])
 
     def test_report_metric(self):
-        self.assertEqual(self.report.metric, None)
+        for metric in self.report.metric:
+            self.assertTrue(metric in METRICS[self.report.report_type])
 
     def test_row_metric(self):
         publication = self.report.pubs[0]
