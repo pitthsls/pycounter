@@ -132,6 +132,11 @@ class CounterReport(object):
             output_lines.extend(self._totals_lines())
         elif self.report_type.startswith('DB'):
             self._ensure_required_metrics()
+            try:
+                self.pubs.sort(
+                    key=lambda x: METRICS[self.report_type].index(x.metric))
+            except ValueError:
+                pass
 
         for pub in sorted(self.pubs, key=lambda x: x.title):
             output_lines.append(pub.as_generic())
@@ -211,18 +216,13 @@ class CounterReport(object):
         Assumes platform and publisher are consistent across records
         """
         try:
-            required_metrics = db_report_metrics[self.report_type]
+            required_metrics = METRICS[self.report_type]
         except LookupError:
             raise UnknownReportTypeError(self.report_type)
 
         dbs = collections.defaultdict(set)
-        # SUSHI uses codes, COUNTER uses names, so if 'metric' isn't a code
-        # i.e. in fields, jump out early (expected behavior, not exception)
         for database in self.pubs:
-            if database.metric not in required_metrics:
-                return
-            else:
-                dbs[database.title].add(database.metric)
+            dbs[database.title].add(database.metric)
 
         for database, metrics in six.iteritems(dbs):
             for metric in (m for m in required_metrics if m not in metrics):
@@ -235,8 +235,6 @@ class CounterReport(object):
                         metric=metric,
                         month_data=[(self.period[0], 0), ]
                     ))
-        # Sorts on metric order, which is preserved later when sorting by title
-        self.pubs.sort(key=lambda x: required_metrics.index(x.metric))
 
 
 class CounterEresource(six.Iterator):
