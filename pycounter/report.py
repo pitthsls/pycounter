@@ -45,11 +45,16 @@ class CounterReport(object):
 
     :param date_run: date the COUNTER report was generated
 
+    :param section_type: predominant section type used for this report.
+        (applies to report BR2; should probably be None for any other report
+        type)
+
     """
 
     def __init__(self, report_type=None, report_version=4, metric=None,
                  customer=None, institutional_identifier=None,
-                 period=(None, None), date_run=None):
+                 period=(None, None), date_run=None,
+                 section_type=None):
         self.pubs = []
         self.report_type = report_type
         self.report_version = report_version
@@ -62,6 +67,7 @@ class CounterReport(object):
         else:
             self.date_run = date_run
         self.year = None
+        self.section_type = section_type
 
     def __repr__(self):
         return (
@@ -114,8 +120,8 @@ class CounterReport(object):
                              REPORT_DESCRIPTIONS[self.report_type]])
         if self.report_type == 'BR2':
             output_lines.append([self.customer, u'Section Type:'])
-            # FIXME: maybe not chapters?
-            output_lines.append([self.institutional_identifier, u'Chapter'])
+            output_lines.append([self.institutional_identifier,
+                                 self.section_type])
         else:
             output_lines.append([self.customer])
             output_lines.append([self.institutional_identifier])
@@ -586,6 +592,8 @@ def parse_generic(report_reader):
         inst_id_line = six.next(report_reader)
         if inst_id_line:
             report.institutional_identifier = inst_id_line[0]
+            if report.report_type == 'BR2':
+                report.section_type = inst_id_line[1]
 
         six.next(report_reader)
 
