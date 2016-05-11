@@ -98,7 +98,7 @@ class UnicodeWriter(object):
         :param row: list of cells to write to the file
         """
         if not six.PY3:
-            row = [s.encode(self.encoding) for s in row]
+            row = [(s or '').encode(self.encoding) for s in row]
         self.writer.writerow(row)
 
     def writerows(self, rows):
