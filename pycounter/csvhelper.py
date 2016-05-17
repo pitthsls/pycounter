@@ -76,6 +76,7 @@ class UnicodeWriter(object):
         self.lineterminator = lineterminator
         self.kwargs = kwargs
         self.writer = None
+        self.fileobj = None
         if type(self.filename) is not str:
             self.fileobj = filename
 
