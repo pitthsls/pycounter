@@ -59,8 +59,8 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
     timestamp = arrow.utcnow().isoformat()
     rr = etree.SubElement(body, "{%(sushicounter)s}ReportRequest" % NS,
                           {
-                              'created': timestamp,
-                              'id': str(uuid.uuid4())
+                              'Created': timestamp,
+                              'ID': str(uuid.uuid4())
                           })
 
     req = etree.SubElement(rr, "{%(sushi)s}Requestor" % NS)
