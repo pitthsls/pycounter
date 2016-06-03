@@ -10,7 +10,21 @@ import six
 # noinspection PyUnusedLocal
 class UnicodeReader(six.Iterator):
     # pylint: disable=too-few-public-methods
-    """CSV reader that can handle unicode"""
+    """CSV reader that can handle unicode
+
+    Must be used as a context manager:
+
+    with UnicodeReader('myfile.csv') as reader:
+        pass # do things with reader
+
+    :param filename: path to file to open
+    :param dialect: a csv.Dialect instance or dialect name
+    :param encoding: text encoding of file
+    :param fallback_encoding: encoding to fall back to if default
+             encoding fails; gives warning if it's used.
+
+    All other parameters will be passed through to csv.reader()
+    """
     def __init__(self, filename, dialect=csv.excel,
                  encoding="utf-8", fallback_encoding="latin-1", **kwargs):
         self.filename = filename
@@ -67,7 +81,19 @@ class UnicodeReader(six.Iterator):
 
 # noinspection PyUnusedLocal
 class UnicodeWriter(object):
-    """CSV writer that can handle unicode"""
+    """CSV writer that can handle unicode
+
+    Must be used as a context manager:
+
+    with UnicodeWriter('myfile.csv') as writer:
+        pass # do things with writer
+
+    :param filename: path to file to open
+    :param dialect: a csv.Dialect instance or dialect name
+    :param encoding: text encoding of file
+
+    All other parameters will be passed through to csv.writer()
+    """
     def __init__(self, filename, dialect=csv.excel,
                  encoding="utf-8", lineterminator='\n', **kwargs):
         self.filename = filename
