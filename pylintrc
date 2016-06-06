@@ -5,7 +5,7 @@ no-docstring-rgx=__.*__|test[A-Z_].*|setUp|tearDown
 
 
 extension-pkg-whitelist=lxml
-disable= bad-continuation
+disable= bad-continuation, too-few-public-methods, too-many-arguments
 
 [SIMILARITIES]
 
@@ -17,6 +17,9 @@ ignore-comments=yes
 
 # Ignore docstrings when computing similarities.
 ignore-docstrings=yes
+
+# Ignore imports when computing similarities.
+ignore-imports=yes
 
 [VARIABLES]
 dummy-variables-rgx=_|dummy|unused|.*_unused

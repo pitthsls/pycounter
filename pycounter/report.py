@@ -244,7 +244,6 @@ class CounterReport(object):
 
 
 class CounterEresource(six.Iterator):
-    # pylint: disable=too-few-public-methods
     """
     base class for COUNTER statistics lines
 
@@ -386,7 +385,6 @@ class CounterJournal(CounterEresource):
 
 
 class CounterBook(CounterEresource):
-    # pylint: disable=too-few-public-methods
     """
     statistics for a single electronic book.
 
@@ -453,7 +451,6 @@ class CounterBook(CounterEresource):
 
 
 class CounterDatabase(CounterEresource):
-    # pylint: disable=too-few-public-methods
     """a COUNTER database report line"""
 
     def __init__(self, period=None, metric=None, month_data=None,

@@ -9,7 +9,6 @@ import six
 
 # noinspection PyUnusedLocal
 class UnicodeReader(six.Iterator):
-    # pylint: disable=too-few-public-methods
     """CSV reader that can handle unicode
 
     Must be used as a context manager:
