@@ -1,4 +1,4 @@
-"""constants used by pycounter"""
+"""Constants used by pycounter."""
 
 NS = {
     'SOAP-ENV': "http://schemas.xmlsoap.org/soap/envelope/",

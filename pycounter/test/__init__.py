@@ -1,1 +1,1 @@
-"""pycounter test suite"""
+"""pycounter test suite."""

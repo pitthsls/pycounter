@@ -1,4 +1,4 @@
-"""command line client to fetch statistics via SUSHI"""
+"""command line client to fetch statistics via SUSHI."""
 from __future__ import absolute_import
 from __future__ import print_function
 
@@ -44,6 +44,7 @@ logging.basicConfig()
 def main(url, report, release, start_date, end_date, requestor_id,
          requestor_email, requestor_name, customer_name,
          customer_reference, format_, output_file):
+    """Main function for the SUSHI client."""
     click.echo("pycounter SUSHI client for URL %s (%s R%s)"
                % (url, report, release))
     if end_date is not None and start_date is None:

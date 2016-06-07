@@ -1,4 +1,4 @@
-"""NISO SUSHI support"""
+"""NISO SUSHI support."""
 from __future__ import absolute_import
 
 import collections
@@ -106,7 +106,7 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
 
 
 def get_report(*args, **kwargs):
-    """Get a usage report from a SUSHI server
+    """Get a usage report from a SUSHI server.
 
     returns a :class:`pycounter.report.CounterReport` object.
 
@@ -126,7 +126,10 @@ def _ns(namespace, name):
 
 
 def _raw_to_full(raw_report):
-    """Convert a raw report to a :class:`pycounter.report.CounterReport` object
+    """Convert a raw report to CounterReport.
+
+    :param raw_report: raw XML report
+    :return: a :class:`pycounter.report.CounterReport`
     """
     try:
         root = etree.fromstring(raw_report)

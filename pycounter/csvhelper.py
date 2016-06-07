@@ -1,4 +1,4 @@
-"""Read CSV as unicode from both python 2 and 3 transparently"""
+"""Read CSV as unicode from both python 2 and 3 transparently."""
 from __future__ import absolute_import
 
 import csv
@@ -9,7 +9,7 @@ import six
 
 # noinspection PyUnusedLocal
 class UnicodeReader(six.Iterator):
-    """CSV reader that can handle unicode
+    """CSV reader that can handle unicode.
 
     Must be used as a context manager:
 
@@ -24,6 +24,7 @@ class UnicodeReader(six.Iterator):
 
     All other parameters will be passed through to csv.reader()
     """
+
     def __init__(self, filename, dialect=csv.excel,
                  encoding="utf-8", fallback_encoding="latin-1", **kwargs):
         self.filename = filename
@@ -80,7 +81,7 @@ class UnicodeReader(six.Iterator):
 
 # noinspection PyUnusedLocal
 class UnicodeWriter(object):
-    """CSV writer that can handle unicode
+    """CSV writer that can handle unicode.
 
     Must be used as a context manager:
 
@@ -93,6 +94,7 @@ class UnicodeWriter(object):
 
     All other parameters will be passed through to csv.writer()
     """
+
     def __init__(self, filename, dialect=csv.excel,
                  encoding="utf-8", lineterminator='\n', **kwargs):
         self.filename = filename
@@ -118,7 +120,7 @@ class UnicodeWriter(object):
         self.fileobj.close()
 
     def writerow(self, row):
-        """write a row to the output
+        """Write a row to the output.
 
         :param row: list of cells to write to the file
         """
@@ -127,7 +129,7 @@ class UnicodeWriter(object):
         self.writer.writerow(row)
 
     def writerows(self, rows):
-        """write many rows to the output
+        """Write many rows to the output.
 
         :param rows: list of lists of cells to write
         """

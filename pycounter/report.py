@@ -1,4 +1,4 @@
-"""COUNTER journal and book reports and associated functions"""
+"""COUNTER journal and book reports and associated functions."""
 
 from __future__ import absolute_import
 
@@ -82,7 +82,7 @@ class CounterReport(object):
 
     def write_to_file(self, path, format_):
         """
-        Output report to a file
+        Output report to a file.
 
         :param path: location to write file
         :param format_: file format. Currently supports 'tsv'
@@ -105,7 +105,9 @@ class CounterReport(object):
 
     def as_generic(self):
         """
-        Output report as list of lists, containing cells that would appear
+        Output report as list of lists.
+
+        Nested list will contain cells that would appear
         in COUNTER report (suitable for writing as CSV, TSV, etc.)
         """
         output_lines = []
@@ -150,9 +152,7 @@ class CounterReport(object):
         return output_lines
 
     def _totals_lines(self):
-        """
-        Generate Totals lines for COUNTER report, as list of lists of cells
-        """
+        """Generate Totals for COUNTER report, as list of lists of cells."""
         total_lines = []
         metrics = set(resource.metric for resource in self.pubs)
 
@@ -205,9 +205,7 @@ class CounterReport(object):
         return total_cells
 
     def _table_header(self):
-        """
-        Generate header for COUNTER table for this report, as list of cells
-        """
+        """Generate header for COUNTER table for report, as list of cells."""
         header_cells = list(HEADER_FIELDS[self.report_type])
         for d_obj in arrow.Arrow.range('month',
                                        arrow.Arrow.fromdate(self.period[0]),
@@ -217,9 +215,11 @@ class CounterReport(object):
 
     def _ensure_required_metrics(self):
         """
-        Build up a dict of sets of known metrics for each database. If any
-        metric is missing add a 0 use :class:`CounterDatabase<CounterDatabase>`
-        Assumes platform and publisher are consistent across records
+        Build up a dict of sets of known metrics for each database.
+
+        If any metric is missing add a 0 use
+        :class:`CounterDatabase<CounterDatabase>`.
+        Assumes platform and publisher are consistent across records.
         """
         try:
             required_metrics = METRICS[self.report_type]
@@ -245,7 +245,7 @@ class CounterReport(object):
 
 class CounterEresource(six.Iterator):
     """
-    base class for COUNTER statistics lines
+    Base class for COUNTER statistics lines.
 
     Iterating returns (first_day_of_month, metric, usage) tuples.
 
@@ -286,9 +286,7 @@ class CounterEresource(six.Iterator):
                 yield (item[0], self.metric, item[1])
 
     def _fill_months(self):
-        """
-        Check that each month in period represented and fill with zero if not
-        """
+        """Ensure each month in period represented and zero fill if not."""
         start, end = self.period[0], self.period[1]
         try:
             for d_obj in arrow.Arrow.range('month',
@@ -304,7 +302,7 @@ class CounterEresource(six.Iterator):
 
 class CounterJournal(CounterEresource):
     """
-    statistics for a single electronic journal.
+    Statistics for a single electronic journal.
 
     :param period: two-tuple of datetime.date objects corresponding
         to the beginning and end dates of the covered range
@@ -360,9 +358,7 @@ class CounterJournal(CounterEresource):
         platform %s>""" % (self.title, self.publisher, self.platform)
 
     def as_generic(self):
-        """
-        return data for this line as list of COUNTER report cells
-        """
+        """Get data for this line as list of COUNTER report cells."""
         data_line = [
             self.title,
             self.publisher,
@@ -428,9 +424,7 @@ class CounterBook(CounterEresource):
                            self.platform)
 
     def as_generic(self):
-        """
-        return data for this line as list of COUNTER report cells
-        """
+        """Get data for this line as list of COUNTER report cells."""
         data_line = [
             self.title,
             self.publisher,
@@ -451,7 +445,7 @@ class CounterBook(CounterEresource):
 
 
 class CounterDatabase(CounterEresource):
-    """a COUNTER database report line"""
+    """a COUNTER database report line."""
 
     def __init__(self, period=None, metric=None, month_data=None,
                  title="", platform="", publisher=""):
@@ -460,9 +454,7 @@ class CounterDatabase(CounterEresource):
         self.isbn = None
 
     def as_generic(self):
-        """
-        return data for this line as list of COUNTER report cells
-        """
+        """Return data for this line as list of COUNTER report cells."""
         self._fill_months()
 
         data_line = [
@@ -486,7 +478,7 @@ class CounterDatabase(CounterEresource):
 
 def parse(filename, filetype=None, encoding='utf-8',
           fallback_encoding='latin-1'):
-    """Parse a COUNTER file, first attempting to determine type
+    """Parse a COUNTER file, first attempting to determine type.
 
     Returns a :class:`CounterReport <CounterReport>` object.
 
@@ -545,14 +537,13 @@ def parse_xlsx(filename):
 
 def parse_separated(filename, delimiter, encoding='utf-8',
                     fallback_encoding='latin-1'):
-    """Open COUNTER CSV/TSV report with given filename and delimiter
-    and parse into a CounterReport object
+    r"""Open COUNTER CSV/TSV report and parse into a CounterReport.
 
     Invoked automatically by :py:func:`parse`.
 
     :param filename: path to delimited COUNTER report file.
 
-    :param delimiter: character (such as ',' or '\\\\t') used as the
+    :param delimiter: character (such as ',' or '\\t') used as the
         delimiter for this file
 
     :param encoding: file's encoding. Default: utf-8
@@ -560,6 +551,7 @@ def parse_separated(filename, delimiter, encoding='utf-8',
     :param fallback_encoding: alternative encoding to try to decode if
         default fails. Throws a warning if used.
 
+    :return: CounterReport object
     """
     with csvhelper.UnicodeReader(filename, delimiter=delimiter,
                                  fallback_encoding=fallback_encoding,
@@ -568,11 +560,11 @@ def parse_separated(filename, delimiter, encoding='utf-8',
 
 
 def parse_generic(report_reader):
-    """Takes an iterator of COUNTER report rows and
-    returns a CounterReport object
+    """Parse COUNTER report rows into a CounterReport.
 
     :param report_reader: a iterable object that yields lists COUNTER
         data formatted as tabular lists
+    :return: CounterReport object
 
     """
     report = CounterReport()
@@ -638,8 +630,12 @@ def parse_generic(report_reader):
 
 
 def _parse_line(line, report, last_col):
-    """Parse a single line from a report and return a CounterResource subclass
-        instance as appropriate
+    """Parse a single line from a report.
+
+    :param line: sequence of cells in a report line
+    :param report: a CounterReport the line came from
+    :param last_col: last column number containing data
+    :return: an appropriate CounterResource subclass instance
     """
     issn = None
     eissn = None
@@ -716,7 +712,10 @@ def _parse_line(line, report, last_col):
 
 
 def _get_type_and_version(specifier):
-    """Given a COUNTER report specifier, return the type and version as a tuple
+    """Given a COUNTER report specifier, find the type and version.
+
+    :param specifier: COUNTER report specifier
+    :return: type, version tuple
     """
     report_types_clause = '|'.join(CODES)
     rt_match = re.match(
@@ -734,7 +733,7 @@ def _get_type_and_version(specifier):
 
 
 def _year_from_header(header, report):
-    """Get the year for the report from the header
+    """Get the year for the report from the header.
 
     NOTE: for multi-year reports, this will be the date of the first month,
     and probably doesn't make sense to talk of a report having a year...
