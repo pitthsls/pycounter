@@ -12,6 +12,7 @@ python:
 
 install:
   - pip install .
+  - pip install tox-travis
   - pip install pytest
   - pip install httmock
   - pip install coveralls
@@ -24,7 +25,7 @@ before_script:
   - "flake8 pycounter"
 
 script:
-  coverage run --branch -m py.test pycounter/test
+  - tox
 
 after_success:
   - coveralls
