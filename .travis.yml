@@ -10,6 +10,8 @@ python:
   - "pypy"
   - "nightly"
 
+cache: pip
+
 install:
   - pip install .
   - pip install tox-travis
