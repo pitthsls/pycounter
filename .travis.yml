@@ -10,10 +10,14 @@ python:
   - "pypy"
   - "nightly"
 
+cache: pip
+
 install:
   - pip install .
+  - pip install tox-travis
   - pip install pytest
   - pip install httmock
+  - pip install coverage
   - pip install coveralls
   - pip install flake8
   - pip install flake8-import-order
@@ -24,7 +28,7 @@ before_script:
   - "flake8 pycounter"
 
 script:
-  coverage run --branch -m py.test pycounter/test
+  - tox
 
 after_success:
   - coveralls
