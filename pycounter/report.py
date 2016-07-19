@@ -527,7 +527,7 @@ def parse_xlsx(filename):
     from openpyxl import load_workbook
     with open(filename, 'rb') as xlsx_file:
         workbook = load_workbook(xlsx_file)
-        worksheet = workbook.get_sheet_by_name(workbook.get_sheet_names()[0])
+        worksheet = workbook[workbook.sheetnames[0]]
         row_it = worksheet.iter_rows()
         split_row_list = ([cell.value if cell.value is not None else ""
                            for cell in row] for row in row_it)
