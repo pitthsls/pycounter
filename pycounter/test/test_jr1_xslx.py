@@ -68,3 +68,8 @@ class ParseBadExample(unittest.TestCase):
             [x[2] for x in publication],
             [5414, 5459, 4936, 5172, 4064, 3904, 4054,
              4090, 5010, 6680, 5961, 3742])
+        publication = self.report.pubs[8]
+        self.assertEqual(
+            [x[2] for x in publication],
+            [592, 574, 502, 616,
+            349, 476, 460, 383, 434, 496, 522, 304])

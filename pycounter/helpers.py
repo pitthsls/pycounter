@@ -112,6 +112,7 @@ def format_stat(stat):
         return stat
 
     stat = stat.replace(',', '')
+    stat = stat.lstrip('=')
     try:
         return int(stat)
     except ValueError:

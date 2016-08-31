@@ -12,3 +12,5 @@ venv/
 .tox/
 dist/
 build/
+.idea/
+.cache/

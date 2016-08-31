@@ -651,8 +651,8 @@ def _parse_line(line, report, last_col):
             line = line[0:3] + line[5:7] + line[10:last_col]
             doi = old_line[3]
             prop_id = old_line[4]
-            html_total = int(old_line[8])
-            pdf_total = int(old_line[9])
+            html_total = format_stat(old_line[8])
+            pdf_total = format_stat(old_line[9])
             issn = line[3].strip()
             eissn = line[4].strip()
 
@@ -667,8 +667,8 @@ def _parse_line(line, report, last_col):
             pass
     else:
         if report.report_type.startswith('JR1'):
-            html_total = int(line[-2])
-            pdf_total = int(line[-1])
+            html_total = format_stat(line[-2])
+            pdf_total = format_stat(line[-1])
             issn = line[3].strip()
             eissn = line[4].strip()
         line = line[0:last_col]
