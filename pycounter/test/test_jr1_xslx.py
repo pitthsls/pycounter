@@ -72,4 +72,4 @@ class ParseBadExample(unittest.TestCase):
         self.assertEqual(
             [x[2] for x in publication],
             [592, 574, 502, 616,
-            349, 476, 460, 383, 434, 496, 522, 304])
+             349, 476, 460, 383, 434, 496, 522, 304])
