@@ -91,7 +91,7 @@ def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
 
     headers = {"SOAPAction": '"SushiService:GetReportIn"',
                "Content-Type": "text/xml; charset=UTF-8",
-               "Content-Length": len(payload)}
+               "Content-Length": str(len(payload))}
 
     response = requests.post(url=wsdl_url,
                              headers=headers,
