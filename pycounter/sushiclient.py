@@ -41,9 +41,10 @@ logging.basicConfig()
 @click.option('--output_file', '-o', default='report.%s',
               help='Output file to write (will be overwritten)',
               type=click.Path(writable=True))
+@click.option('--dump', '-d', is_flag=True)
 def main(url, report, release, start_date, end_date, requestor_id,
          requestor_email, requestor_name, customer_name,
-         customer_reference, format_, output_file):
+         customer_reference, format_, output_file, dump):
     """Main function for the SUSHI client."""
     click.echo("pycounter SUSHI client for URL %s (%s R%s)"
                % (url, report, release))
@@ -68,7 +69,8 @@ def main(url, report, release, start_date, end_date, requestor_id,
                               customer_reference=customer_reference,
                               customer_name=customer_name,
                               start_date=converted_start_date,
-                              end_date=converted_end_date)
+                              end_date=converted_end_date,
+                              sushi_dump=dump)
     output_file = output_file % format_
     report.write_to_file(output_file, format_)
 
