@@ -3,35 +3,19 @@
 from __future__ import absolute_import
 
 import os
-import unittest
+
+import pytest
 
 from six import text_type
 
 from pycounter import report
 
 
-class UnicodeTests(unittest.TestCase):
+@pytest.mark.parametrize('attribute', ['title', 'publisher', 'platform'])
+@pytest.mark.parametrize('filename',
+                         ['JR1.xlsx', 'simpleJR1.tsv', 'simpleJR1.csv'])
+def test_unicode_fields(filename, attribute):
     """All parsers should return text fields as unicode"""
-
-    def test_xslx_unicode(self):
-        rep = report.parse(os.path.join(os.path.dirname(__file__),
-                                        'data/JR1.xlsx'))
-        self.assertTrue(isinstance(rep.pubs[0].title, text_type))
-        self.assertTrue(isinstance(rep.pubs[0].publisher, text_type))
-        self.assertTrue(isinstance(rep.pubs[0].platform, text_type))
-
-    def test_tsv_unicode(self):
-        rep = report.parse(os.path.join(os.path.dirname(__file__),
-                                        'data/simpleJR1.tsv'))
-
-        self.assertTrue(isinstance(rep.pubs[0].title, text_type))
-        self.assertTrue(isinstance(rep.pubs[0].publisher, text_type))
-        self.assertTrue(isinstance(rep.pubs[0].platform, text_type))
-
-    def test_csv_unicode(self):
-        rep = report.parse(os.path.join(os.path.dirname(__file__),
-                                        'data/simpleJR1.csv'))
-
-        self.assertTrue(isinstance(rep.pubs[0].title, text_type))
-        self.assertTrue(isinstance(rep.pubs[0].publisher, text_type))
-        self.assertTrue(isinstance(rep.pubs[0].platform, text_type))
+    rep = report.parse(os.path.join(os.path.dirname(__file__),
+                                    'data', filename))
+    assert isinstance(getattr(rep.pubs[0], attribute), text_type)

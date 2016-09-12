@@ -51,7 +51,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         ],
     install_requires=requirements,
-    tests_require=['httmock', 'mock'],
+    tests_require=['httmock', 'mock', 'pytest'],
     entry_points={
         'console_scripts': ['sushiclient = pycounter.sushiclient:main']
     }
