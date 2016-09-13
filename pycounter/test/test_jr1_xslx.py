@@ -5,7 +5,37 @@ from __future__ import absolute_import
 import os
 import unittest
 
+import pytest
+
 from pycounter import report
+
+
+@pytest.fixture(params=['JR1.xlsx', 'JR1_bad.xlsx'])
+def jr1_report(request):
+    return report.parse(os.path.join(os.path.dirname(__file__), 'data',
+                                     request.param))
+
+
+def test_report_type(jr1_report):
+    assert jr1_report.report_type == u'JR1'
+
+
+def test_report_version(jr1_report):
+    assert jr1_report.report_version == 4
+
+
+def test_year(jr1_report):
+    assert jr1_report.year == 2013
+
+
+def test_publisher(jr1_report):
+    for publication in jr1_report:
+        assert publication.publisher == u'American Medical Association'
+
+
+def test_platform(jr1_report):
+    for publication in jr1_report:
+        assert publication.platform == u'Silverchair'
 
 
 class ParseExample(unittest.TestCase):
@@ -14,19 +44,6 @@ class ParseExample(unittest.TestCase):
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                 'data/JR1.xlsx'))
-
-    def test_reportname(self):
-        self.assertEqual(self.report.report_type, u'JR1')
-        self.assertEqual(self.report.report_version, 4)
-
-    def test_year(self):
-        self.assertEqual(self.report.year, 2013)
-
-    def test_platform(self):
-        for publication in self.report:
-            self.assertEqual(publication.publisher,
-                             u"American Medical Association")
-            self.assertEqual(publication.platform, u"Silverchair")
 
     def test_stats(self):
         publication = self.report.pubs[0]
@@ -45,19 +62,6 @@ class ParseBadExample(unittest.TestCase):
     def setUp(self):
         self.report = report.parse(os.path.join(os.path.dirname(__file__),
                                                 'data/JR1_bad.xlsx'))
-
-    def test_reportname(self):
-        self.assertEqual(self.report.report_type, u'JR1')
-        self.assertEqual(self.report.report_version, 4)
-
-    def test_year(self):
-        self.assertEqual(self.report.year, 2013)
-
-    def test_platform(self):
-        for publication in self.report:
-            self.assertEqual(publication.publisher,
-                             u"American Medical Association")
-            self.assertEqual(publication.platform, u"Silverchair")
 
     def test_stats(self):
         publication = self.report.pubs[0]
