@@ -2,42 +2,11 @@
 
 from __future__ import absolute_import
 
-import datetime
 import os
 import unittest
 
 from pycounter import report
 from pycounter.test import common_data
-
-
-class ParseCSV(unittest.TestCase):
-    """Test CSV"""
-    def setUp(self):
-        self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                'data/csvC4JR1'))
-
-    def test_counter4_csv_data(self):
-
-        publication = self.report.pubs[0]
-        self.assertEqual([x[2] for x in publication],
-                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-        publication = self.report.pubs[1]
-        self.assertEqual([x[2] for x in publication],
-                         [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 0])
-
-    def test_metric(self):
-        self.assertEqual(self.report.metric, u"FT Article Requests")
-
-    def test_customer(self):
-        self.assertEqual(self.report.customer, u"University of Maximegalon")
-
-    def test_date_run(self):
-        self.assertEqual(self.report.date_run, datetime.date(2012, 2, 21))
-
-    def test_period(self):
-        self.assertEqual(self.report.period,
-                         (datetime.date(2011, 1, 1),
-                          datetime.date(2011, 12, 31)))
 
 
 class ParseTSV(common_data.TSVJR1):
