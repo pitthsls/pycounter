@@ -13,3 +13,4 @@ recursive-include pycounter *.xsd
 include pycounter/test/data/tsvC4JR1
 include pycounter/test/data/xlsxJR1
 include pycounter/test/data/csvC4JR1
+include CHANGELOG.md
