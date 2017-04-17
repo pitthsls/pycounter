@@ -104,20 +104,24 @@ class UnicodeWriter(object):
         self.kwargs = kwargs
         self.writer = None
         self.fileobj = None
+        if type(self.filename) is not str:
+            self.fileobj = filename
 
     def __enter__(self):
-        if six.PY3:
-            self.fileobj = open(self.filename, 'wt',
-                                encoding=self.encoding, newline='')
-        else:
-            self.fileobj = open(self.filename, 'wb')
+        if self.fileobj is None:
+            if six.PY3:
+                self.fileobj = open(self.filename, 'wt',
+                                    encoding=self.encoding, newline='')
+            else:
+                self.fileobj = open(self.filename, 'wb')
         self.writer = csv.writer(self.fileobj, dialect=self.dialect,
                                  lineterminator=self.lineterminator,
                                  **self.kwargs)
         return self
 
     def __exit__(self, type_, value, traceback):
-        self.fileobj.close()
+        if type(self.filename) is str:
+            self.fileobj.close()
 
     def writerow(self, row):
         """Write a row to the output.
