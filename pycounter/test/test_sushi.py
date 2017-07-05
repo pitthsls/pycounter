@@ -93,8 +93,12 @@ class TestConvertRawBook(unittest.TestCase):
                          u"exampleLibrary")
 
     def test_isbn(self):
-        publication = next(iter(self.report))
+        i_report = iter(self.report)
+        publication = next(i_report)
         self.assertEqual(publication.isbn, u"9780011234549")
+        next(i_report)
+        pub3 = next(i_report)
+        self.assertEqual(pub3.isbn, u"9780011234540")
 
     def test_title(self):
         publication = next(iter(self.report))

@@ -1,6 +1,16 @@
 # Changelog
 
-## %%version%% (unreleased)
+## 0.16 (unreleased)
+
+### CounterBook
+
+* CounterBook.isbn is now a property; it will evaluate to the generic ISBN 
+given in a tabular report (or the constructor, manually), if any, or to an 
+Online_ISBN or Print_ISBN given in an XML report, if they exist, in that 
+order. CounterBook.online_isbn and CounterBook_print_isbn added. [Geoffrey 
+Spear]
+
+## 0.15.3
 
 ### Other
 
