@@ -216,7 +216,6 @@ def _raw_to_full(raw_report):
                 elif identifier.Type == "Print_ISBN":
                     print_isbn = identifier.Value.text
 
-
         except AttributeError:
             pass
 
