@@ -401,17 +401,16 @@ class CounterBook(CounterEresource):
 
     def __init__(self, period=None, metric=None, month_data=None,
                  title="", platform="", publisher="", isbn=None, issn=None,
-                 doi="", proprietary_id=""):
+                 doi="", proprietary_id="", print_isbn=None, online_isbn=None):
         super(CounterBook, self).__init__(period, metric, month_data,
                                           title, platform, publisher)
         self.eissn = None
         self.doi = doi
         self.proprietary_id = proprietary_id
 
-        if isbn is not None:
-            self.isbn = isbn
-        else:
-            self.isbn = u''
+        self._isbn = isbn
+        self.print_isbn = print_isbn
+        self.online_isbn = online_isbn
 
         if issn is not None:
             self.issn = issn
@@ -422,6 +421,20 @@ class CounterBook(CounterEresource):
         return """<CounterBook %s (ISBN: %s), publisher %s,
         platform %s>""" % (self.title, self.isbn, self.publisher,
                            self.platform)
+
+    @property
+    def isbn(self):
+        """Return a suitable ISSN for the ebook.
+
+        The tabular COUNTER reports only report an "ISBN", while the SUSHI
+        (XML) reports include both a Print_ISBN and Online_ISBN.
+
+         This property will return a generic ISBN given in the constructor,
+         if any. If the CounterBook was created with no "isbn" but with
+         online_ISBN and/or print_ISBN, the online one, if any, will be
+         returned, otherwise the print.
+        """
+        return self._isbn or self.online_isbn or self.print_isbn or u''
 
     def as_generic(self):
         """Get data for this line as list of COUNTER report cells."""

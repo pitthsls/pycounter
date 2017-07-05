@@ -108,6 +108,38 @@
                                 </Instance>
                             </ItemPerformance>
                         </ReportItems>
+                        <ReportItems>
+                            <ItemIdentifier>
+                                <Type>Print_ISBN</Type>
+                                <Value>9780011234540</Value>
+                            </ItemIdentifier>
+                            <ItemIdentifier>
+                                <Type>Proprietary</Type>
+                                <Value>FD2</Value>
+                            </ItemIdentifier>
+                            <ItemPlatform>ExamplePlatform</ItemPlatform>
+                            <ItemName>Fake data with print ISBN Only</ItemName>
+                            <ItemDataType>Book</ItemDataType>
+                            <ItemPerformance>
+                                <Period>
+                                    <Begin>2013-01-01</Begin>
+                                    <End>2013-01-31</End>
+                                </Period>
+                                <Category>Requests</Category>
+                                <Instance>
+                                    <MetricType>ft_html</MetricType>
+                                    <Count>3</Count>
+                                </Instance>
+                                <Instance>
+                                    <MetricType>ft_pdf</MetricType>
+                                    <Count>0</Count>
+                                </Instance>
+                                <Instance>
+                                    <MetricType>ft_total</MetricType>
+                                    <Count>3</Count>
+                                </Instance>
+                            </ItemPerformance>
+                        </ReportItems>
                     </Customer>
                 </Report>
             </ns3:Report>
