@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 version = {}  # will be set by exec below
 
 with open(os.path.join(
-        os.path.dirname(__file__), 'pycounter/version.py'), 'rb') as fp:
+        os.path.dirname(__file__), 'pycounter/version.py'), 'r') as fp:
     exec(fp.read(), version)
 
 with open('README.rst') as readmefile:
@@ -49,6 +49,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         ],
     install_requires=requirements,
     tests_require=['httmock', 'mock', 'pytest'],
