@@ -200,6 +200,7 @@ def _raw_to_full(raw_report):
         eissn = issn = ""
         print_isbn = None
         online_isbn = None
+        doi = ""
 
         try:
             for identifier in item.ItemIdentifier:
@@ -215,6 +216,8 @@ def _raw_to_full(raw_report):
                     online_isbn = identifier.Value.text
                 elif identifier.Type == "Print_ISBN":
                     print_isbn = identifier.Value.text
+                elif identifier.Type == "DOI":
+                    doi = identifier.Value.text
 
         except AttributeError:
             pass
@@ -252,6 +255,7 @@ def _raw_to_full(raw_report):
                     metric=report.metric,
                     issn=issn,
                     eissn=eissn,
+                    doi=doi,
                     month_data=month_data,
                     html_total=html_usage,
                     pdf_total=pdf_usage
@@ -265,6 +269,7 @@ def _raw_to_full(raw_report):
                         period=report.period,
                         metric=report.metric,
                         issn=issn,
+                        doi=doi,
                         print_isbn=print_isbn,
                         online_isbn=online_isbn,
                         month_data=month_data,

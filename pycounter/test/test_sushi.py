@@ -71,6 +71,7 @@ class TestConvertRawSimple(unittest.TestCase):
         publication = next(iter(self.report))
         self.assertEqual(publication.html_total, 6)
         self.assertEqual(publication.pdf_total, 8)
+        self.assertEqual(publication.doi, u'10.5555/12345678')
         data = [month[2] for month in publication]
         self.assertEqual(data[0], 14)
 

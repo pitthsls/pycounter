@@ -51,6 +51,10 @@
                                 <Type>Proprietary</Type>
                                 <Value>JFD</Value>
                             </ItemIdentifier>
+                            <ItemIdentifier>
+                                <Type>DOI</Type>
+                                <Value>10.5555/12345678</Value>
+                            </ItemIdentifier>
                             <ItemPlatform>ExamplePlatform</ItemPlatform>
                             <ItemPublisher>Example Publisher</ItemPublisher>
                             <ItemName>Journal of fake data</ItemName>
