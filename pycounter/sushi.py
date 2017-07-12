@@ -201,6 +201,7 @@ def _raw_to_full(raw_report):
         print_isbn = None
         online_isbn = None
         doi = ""
+        prop_id = ""
 
         try:
             for identifier in item.ItemIdentifier:
@@ -218,6 +219,8 @@ def _raw_to_full(raw_report):
                     print_isbn = identifier.Value.text
                 elif identifier.Type == "DOI":
                     doi = identifier.Value.text
+                elif identifier.Type == "Proprietary":
+                    prop_id = identifier.Value.text
 
         except AttributeError:
             pass
@@ -256,6 +259,7 @@ def _raw_to_full(raw_report):
                     issn=issn,
                     eissn=eissn,
                     doi=doi,
+                    proprietary_id=prop_id,
                     month_data=month_data,
                     html_total=html_usage,
                     pdf_total=pdf_usage
@@ -270,6 +274,7 @@ def _raw_to_full(raw_report):
                         metric=report.metric,
                         issn=issn,
                         doi=doi,
+                        proprietary_id=prop_id,
                         print_isbn=print_isbn,
                         online_isbn=online_isbn,
                         month_data=month_data,

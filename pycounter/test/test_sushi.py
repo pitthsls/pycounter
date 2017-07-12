@@ -72,6 +72,7 @@ class TestConvertRawSimple(unittest.TestCase):
         self.assertEqual(publication.html_total, 6)
         self.assertEqual(publication.pdf_total, 8)
         self.assertEqual(publication.doi, u'10.5555/12345678')
+        self.assertEqual(publication.proprietary_id, u'JFD')
         data = [month[2] for month in publication]
         self.assertEqual(data[0], 14)
 
@@ -109,6 +110,10 @@ class TestConvertRawBook(unittest.TestCase):
         publication = next(iter(self.report))
         data = [month[2] for month in publication]
         self.assertEqual(data[0], 14)
+
+    def test_proprietary(self):
+        publication = next(iter(self.report))
+        self.assertEqual(publication.proprietary_id, u'FD')
 
 
 class TestConvertRawDatabase(unittest.TestCase):
