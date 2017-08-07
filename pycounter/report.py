@@ -359,6 +359,7 @@ class CounterJournal(CounterEresource):
 
     def as_generic(self):
         """Get data for this line as list of COUNTER report cells."""
+        self._fill_months()  # Ensure fill all months with zero at least
         data_line = [
             self.title,
             self.publisher,
@@ -438,6 +439,7 @@ class CounterBook(CounterEresource):
 
     def as_generic(self):
         """Get data for this line as list of COUNTER report cells."""
+        self._fill_months()  # Ensure fill all months with zero at least
         data_line = [
             self.title,
             self.publisher,
