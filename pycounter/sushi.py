@@ -235,15 +235,16 @@ def _raw_to_full(raw_report):
             item_date = convert_date_run(perform_item.Period.Begin.text)
             logger.debug("perform_item date: %r", item_date)
             usage = None
-            for inst in perform_item.Instance:
-                if inst.MetricType == "ft_total":
-                    usage = str(inst.Count)
-                elif inst.MetricType == "ft_pdf":
-                    pdf_usage += int(inst.Count)
-                elif inst.MetricType == "ft_html":
-                    html_usage += int(inst.Count)
-                elif report.report_type.startswith('DB'):
-                    metrics_for_db[inst.MetricType].append((item_date,
+            if hasattr(perform_item, 'Instance'):
+                for inst in perform_item.Instance:
+                    if inst.MetricType == "ft_total":
+                        usage = str(inst.Count)
+                    elif inst.MetricType == "ft_pdf":
+                        pdf_usage += int(inst.Count)
+                    elif inst.MetricType == "ft_html":
+                        html_usage += int(inst.Count)
+                    elif report.report_type.startswith('DB'):
+                        metrics_for_db[inst.MetricType].append((item_date,
                                                             int(inst.Count)))
             if usage is not None:
                 month_data.append((item_date, int(usage)))
