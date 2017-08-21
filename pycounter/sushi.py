@@ -244,8 +244,8 @@ def _raw_to_full(raw_report):
                     elif inst.MetricType == "ft_html":
                         html_usage += int(inst.Count)
                     elif report.report_type.startswith('DB'):
-                        metrics_for_db[inst.MetricType].append((item_date,
-                                                            int(inst.Count)))
+                        metrics_for_db[inst.MetricType].append(
+                            (item_date, int(inst.Count)))
             if usage is not None:
                 month_data.append((item_date, int(usage)))
 
