@@ -14,7 +14,7 @@ python:
 cache: pip
 
 install:
-  - pip install 'cryptography<1.9'
+  - pip install requests==2.18.3
   - pip install .
   - pip install tox-travis
   - pip install pytest
