@@ -1,4 +1,5 @@
 sudo: false
+dist: trusty
 
 language: python
 python:
@@ -9,12 +10,12 @@ python:
   - "3.5"
   - "3.6"
   - "pypy"
+  - "pypy3"
   - "nightly"
 
 cache: pip
 
 install:
-  - pip install requests==2.18.3
   - pip install .
   - pip install tox-travis
   - pip install pytest
@@ -38,6 +39,11 @@ after_success:
 
 notifications:
   irc: "chat.freenode.net#pycounter"
+
+matrix:
+  allow_failures:
+    - pypy
+    - pypy3
 
 deploy:
   provider: pypi
