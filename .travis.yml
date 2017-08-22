@@ -10,8 +10,6 @@ python:
   - "3.5"
   - "3.6"
   - "pypy"
-  - "pypy3"
-  - "nightly"
 
 cache: pip
 
@@ -39,11 +37,6 @@ after_success:
 
 notifications:
   irc: "chat.freenode.net#pycounter"
-
-matrix:
-  allow_failures:
-    - pypy
-    - pypy3
 
 deploy:
   provider: pypi
