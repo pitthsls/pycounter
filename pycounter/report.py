@@ -6,6 +6,7 @@ import collections
 import datetime
 import logging
 import re
+import warnings
 
 import arrow
 import six
@@ -611,7 +612,10 @@ def parse_generic(report_reader):
 
     header = six.next(report_reader)
 
-    report.year = _year_from_header(header, report)
+    try:
+        report.year = _year_from_header(header, report)
+    except AttributeError:
+        warnings.warn("Could not determine year from malformed header; keeping as None.")
 
     if report.report_version == 4:
         countable_header = header[0:8]
