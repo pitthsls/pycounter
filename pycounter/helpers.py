@@ -13,10 +13,14 @@ def convert_covered(datestring):
         'YYYY-MM-DD to YYYY-MM-DD'
 
     :return: tuple of datetime.date instances
+
+    (Will also accept MM/DD/YYYY format, ISO 8601 timestamps, or existing
+    datetime objects; these shouldn't be in COUNTER reports, but they
+    do show up in real world data...)
     """
     start_string, end_string = datestring.split(" to ")
-    start_date = datetime.datetime.strptime(start_string, "%Y-%m-%d").date()
-    end_date = datetime.datetime.strptime(end_string, "%Y-%m-%d").date()
+    start_date = convert_date_run(start_string)
+    end_date = convert_date_run(end_string)
 
     return start_date, end_date
 
