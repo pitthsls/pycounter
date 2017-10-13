@@ -615,7 +615,7 @@ def parse_generic(report_reader):
     try:
         report.year = _year_from_header(header, report)
     except AttributeError:
-        warnings.warn("Could not determine year from malformed header; keeping as None.")
+        warnings.warn("Could not determine year from malformed header")
 
     if report.report_version == 4:
         countable_header = header[0:8]
