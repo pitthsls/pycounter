@@ -244,6 +244,9 @@ class CounterReport(object):
                     ))
 
 
+MonthsUsage = collections.namedtuple('MonthsUsage', 'month metric usage')
+
+
 class CounterEresource(six.Iterator):
     """
     Base class for COUNTER statistics lines.
@@ -284,7 +287,7 @@ class CounterEresource(six.Iterator):
     def __iter__(self):
         if self._full_data:
             for item in self._full_data:
-                yield (item[0], self.metric, item[1])
+                yield MonthsUsage(item[0], self.metric, item[1])
 
     def _fill_months(self):
         """Ensure each month in period represented and zero fill if not."""
