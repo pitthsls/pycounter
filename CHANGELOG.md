@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.16 (unreleased)
+## 1.0.0
+
+* Dropped support for python 2.6 and 3.3
+
+## 0.16
 
 ### CounterBook
 
