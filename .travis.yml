@@ -14,6 +14,7 @@ cache: pip
 
 install:
   - pip install .
+  - pip install tox~=2.9
   - pip install tox-travis
   - pip install pytest
   - pip install httmock
