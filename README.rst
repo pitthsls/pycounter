@@ -11,7 +11,7 @@ pycounter
     :target: https://coveralls.io/r/pitthsls/pycounter?branch=master
 
 .. image:: https://img.shields.io/pypi/v/pycounter.svg
-    :target: https://pypi.python.org/pypi/pycounter/
+    :target: https://pypi.org/project/pycounter/
     :alt: Latest Version
 
 .. image:: https://readthedocs.org/projects/pycounter/badge/?version=stable
@@ -40,23 +40,18 @@ Documentation is on `Read the Docs <http://pycounter.readthedocs.io>`_.
 
 Installing
 ----------
-From `pypi <http://pypi.python.org/pypi/pycounter>`_:
+From `pypi <https://pypi.org/project/pycounter/>`_:
 
     pip install pycounter
 
 From inside the source distribution:
 
-    python setup.py install
+    pip install [-e] .
 
-**About dependencies:** pycounter uses
-`lxml <http://lxml.de/>`_, an XML parsing library with a C extension.
-It requires libxml2 and libxslt to be installed to build correctly.
-It may be helpful to install lxml manually before installing pycounter,
-either with the Windows binary installers,
-a linux distro package, or with macports or homebrew on OS X. See the
-`lxml installation docs <http://lxml.de/installation.html>`_ for more
-information.
-    
+(use -e if you plan to work on the source itself, so your changes are used in your installation.
+Probably do all of this in a virtualenv. `The PyPA <https://packaging.python.org/tutorials/installing-packages/>`_
+has a good explanation of how to get started.)
+
 Usage
 -----
 
