@@ -15,18 +15,9 @@ cache: pip
 install:
   - pip install .
   - pip install tox-travis
-  - pip install pytest
-  - pip install httmock
   - pip install coverage
   - pip install coveralls
-  - pip install "pycodestyle<2.4.0"
-  - pip install flake8
-  - pip install flake8-import-order
-  - pip install check-manifest
 
-before_script:
-  - "check-manifest"
-  - "flake8 pycounter"
 
 script:
   - tox
@@ -37,6 +28,21 @@ after_success:
 
 notifications:
   irc: "chat.freenode.net#pycounter"
+
+jobs:
+  include:
+  - python: 3.6
+    env: TOXENV=flake8
+  - python: 2.7
+    env: TOXENV=flake8
+  - python: 3.6
+    env: TOXENV=manifest
+  - python: 3.6
+    env: TOXENV=lint
+
+allow_failures:
+  - python: 3.6
+    env: TOXENV=lint
 
 deploy:
   provider: pypi
