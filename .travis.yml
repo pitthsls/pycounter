@@ -34,15 +34,16 @@ jobs:
   - python: 3.6
     env: TOXENV=flake8
   - python: 2.7
-    env: TOXENV=flake8
+    env: TOXENV=flake8_py2
   - python: 3.6
     env: TOXENV=manifest
   - python: 3.6
     env: TOXENV=lint
 
-allow_failures:
-  - python: 3.6
-    env: TOXENV=lint
+matrix:
+  allow_failures:
+    - python: 3.6
+      env: TOXENV=lint
 
 deploy:
   provider: pypi
