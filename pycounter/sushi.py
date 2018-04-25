@@ -8,10 +8,8 @@ import uuid
 
 
 import arrow
-
 from lxml import etree
 from lxml import objectify
-
 import requests
 import six
 

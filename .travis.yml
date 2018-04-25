@@ -19,8 +19,9 @@ install:
   - pip install httmock
   - pip install coverage
   - pip install coveralls
-  - pip install flake8==2.6.2
-  - pip install flake8-import-order==0.8
+  - pip install pycodestyle<2.4.0
+  - pip install flake8
+  - pip install flake8-import-order
   - pip install check-manifest
 
 before_script:

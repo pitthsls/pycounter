@@ -7,7 +7,6 @@ import os
 import unittest
 
 from click.testing import CliRunner
-
 from httmock import HTTMock, urlmatch
 import mock
 

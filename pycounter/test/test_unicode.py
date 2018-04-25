@@ -5,7 +5,6 @@ from __future__ import absolute_import
 import os
 
 import pytest
-
 from six import text_type
 
 from pycounter import report

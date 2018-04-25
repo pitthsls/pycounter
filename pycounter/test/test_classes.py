@@ -1,7 +1,8 @@
 """Tests regarding instantiating classes"""
 
-from pycounter import report
 import datetime
+
+from pycounter import report
 
 
 def test_counter_journal():
