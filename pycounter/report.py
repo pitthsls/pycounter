@@ -763,7 +763,7 @@ def _year_from_header(header, report):
     first_date_col = 10 if report.report_version == 4 else 5
     if report.report_type in ('BR1', 'BR2') and report.report_version == 4:
         first_date_col = 8
-    elif report.report_type in ('DB1','DB2') and report.report_version == 4:
+    elif report.report_type in ('DB1', 'DB2') and report.report_version == 4:
         first_date_col = 5
     year = int(header[first_date_col].split('-')[1])
     if year < 100:
