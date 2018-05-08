@@ -55,3 +55,14 @@ class ParseCounter4Example(unittest.TestCase):
         self.assertEqual(self.report.period,
                          (datetime.date(2012, 1, 1),
                           datetime.date(2012, 6, 30)))
+
+
+class ParseCounter4SplitExample(unittest.TestCase):
+    """Tests for parsing C4 DB1"""
+    def setUp(self):
+        self.report = pycounter.report.parse(
+            os.path.join(os.path.dirname(__file__),
+                         'data/C4DB1_split_year.tsv'))
+
+    def test_year(self):
+        self.assertEqual(self.report.year, 2012)
