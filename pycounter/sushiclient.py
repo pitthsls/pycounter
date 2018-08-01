@@ -42,7 +42,8 @@ logging.basicConfig()
               help='Output file to write (will be overwritten)',
               type=click.Path(writable=True))
 @click.option('--dump', '-d', is_flag=True)
-@click.option('--no-delay', is_flag=True, )
+@click.option('--no-delay', is_flag=True,
+              help="Do not delay before rerequesting a queued report. Probably don't do this to a real server.")
 def main(url, report, release, start_date, end_date, requestor_id,
          requestor_email, requestor_name, customer_name,
          customer_reference, format_, output_file, dump, no_delay):
