@@ -42,9 +42,12 @@ logging.basicConfig()
               help='Output file to write (will be overwritten)',
               type=click.Path(writable=True))
 @click.option('--dump', '-d', is_flag=True)
+@click.option('--no-delay', is_flag=True,
+              help="Do not delay before rerequesting a queued report. "
+                   "Probably don't do this to a real server.")
 def main(url, report, release, start_date, end_date, requestor_id,
          requestor_email, requestor_name, customer_name,
-         customer_reference, format_, output_file, dump):
+         customer_reference, format_, output_file, dump, no_delay):
     """Main function for the SUSHI client."""
     click.echo("pycounter SUSHI client for URL %s (%s R%s)"
                % (url, report, release))
@@ -70,7 +73,8 @@ def main(url, report, release, start_date, end_date, requestor_id,
                               customer_name=customer_name,
                               start_date=converted_start_date,
                               end_date=converted_end_date,
-                              sushi_dump=dump)
+                              sushi_dump=dump,
+                              no_delay=no_delay)
     output_file = output_file % format_
     report.write_to_file(output_file, format_)
 

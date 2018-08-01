@@ -16,6 +16,22 @@ import pycounter.exceptions
 
 
 @urlmatch(netloc=r'(.*\.)?example\.com$')
+def report_queued_mock(url_unused, request_unused):
+    if report_queued_mock.first_request:
+        path = os.path.join(os.path.dirname(__file__), 'data',
+                            'sushi_queued.xml')
+        report_queued_mock.first_request = False
+    else:
+        path = os.path.join(os.path.dirname(__file__), 'data',
+                            'sushi_simple.xml')
+    with open(path, 'rb') as datafile:
+        return datafile.read().decode('utf-8')
+
+
+report_queued_mock.first_request = True
+
+
+@urlmatch(netloc=r'(.*\.)?example\.com$')
 def sushi_mock(url_unused, request_unused):
     path = os.path.join(os.path.dirname(__file__),
                         'data', 'sushi_simple.xml')
@@ -307,6 +323,20 @@ class TestSushiClient(unittest.TestCase):
             '-e', '2015-12-31',
         ]
         with HTTMock(sushi_mock):
+            runner = CliRunner()
+            with runner.isolated_filesystem():
+                result = runner.invoke(sushiclient.main, arglist)
+                self.assertEqual(result.exit_code, 0)
+
+    def test_queued_report(self):
+        """Test that queued report is retried"""
+        arglist = [
+            'http://www.example.com/Sushi',
+            '-s', '2013-01-01',
+            '-e', '2013-01-31',
+            '--no-delay',
+        ]
+        with HTTMock(report_queued_mock):
             runner = CliRunner()
             with runner.isolated_filesystem():
                 result = runner.invoke(sushiclient.main, arglist)
