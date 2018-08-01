@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import collections
 import datetime
 import logging
+import time
 import uuid
 
 
@@ -25,7 +26,8 @@ NS = pycounter.constants.NS
 def get_sushi_stats_raw(wsdl_url, start_date, end_date, requestor_id=None,
                         requestor_email=None, requestor_name=None,
                         customer_reference=None, customer_name=None,
-                        report="JR1", release=4, sushi_dump=False):
+                        report="JR1", release=4, sushi_dump=False,
+                        ):
     """Get SUSHI stats for a given site in raw XML format.
 
     :param wsdl_url: URL to SOAP WSDL for this provider
@@ -110,9 +112,18 @@ def get_report(*args, **kwargs):
     returns a :class:`pycounter.report.CounterReport` object.
 
     parameters: see get_sushi_stats_raw
+
+    :param no_delay: don't delay in retrying Report Queued
     """
-    raw_report = get_sushi_stats_raw(*args, **kwargs)
-    return _raw_to_full(raw_report)
+    no_delay = kwargs.pop('no_delay', False)
+    delay_amount = 0 if no_delay else 60
+    while True:
+        try:
+            raw_report = get_sushi_stats_raw(*args, **kwargs)
+            return _raw_to_full(raw_report)
+        except pycounter.exceptions.ServiceBusyError:
+            print("Service busy, retrying in %d seconds" % delay_amount)
+            time.sleep(delay_amount)
 
 
 def _ns(namespace, name):
@@ -146,10 +157,13 @@ def _raw_to_full(raw_report):
         try:
             c_report = rep.Report[_ns('counter', 'Reports')].Report
         except AttributeError:
-            logger.error("report not found in XML: %s", raw_report)
-            raise pycounter.exceptions.SushiException(
-                message="report not found in XML",
-                raw=raw_report, xml=o_root)
+            if b'Report Queued' in raw_report:
+                raise pycounter.exceptions.ServiceBusyError('Report Queued')
+            else:
+                logger.error("report not found in XML: %s", raw_report)
+                raise pycounter.exceptions.SushiException(
+                    message="report not found in XML",
+                    raw=raw_report, xml=o_root)
     logger.debug("COUNTER report: %s", etree.tostring(c_report))
     start_date = datetime.datetime.strptime(
         root.find('.//%s' % _ns('sushi', 'Begin')).text,
