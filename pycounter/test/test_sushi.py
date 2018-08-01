@@ -18,10 +18,12 @@ import pycounter.exceptions
 @urlmatch(netloc=r'(.*\.)?example\.com$')
 def report_queued_mock(url_unused, request_unused):
     if report_queued_mock.first_request:
-        path = os.path.join(os.path.dirname(__file__), 'data', 'sushi_queued.xml')
+        path = os.path.join(os.path.dirname(__file__), 'data',
+                            'sushi_queued.xml')
         report_queued_mock.first_request = False
     else:
-        path = os.path.join(os.path.dirname(__file__), 'data', 'sushi_simple.xml')
+        path = os.path.join(os.path.dirname(__file__), 'data',
+                            'sushi_simple.xml')
     with open(path, 'rb') as datafile:
         return datafile.read().decode('utf-8')
 
@@ -353,4 +355,3 @@ class TestMissingItemIdentifier(unittest.TestCase):
     def test_issn(self):
         publication = next(iter(self.report))
         self.assertEqual(publication.issn, "")
-
