@@ -42,6 +42,8 @@ logging.basicConfig()
               help='Output file to write (will be overwritten)',
               type=click.Path(writable=True))
 @click.option('--dump', '-d', is_flag=True)
+@click.option('--no_ssl_verify', is_flag=True,
+              help='Skip SSL verification')
 @click.option('--no-delay', is_flag=True,
               help="Do not delay before rerequesting a queued report. "
                    "Probably don't do this to a real server.")
@@ -75,7 +77,8 @@ def main(url, report, release, start_date, end_date, requestor_id,
                               end_date=converted_end_date,
                               sushi_dump=dump,
                               no_delay=no_delay)
-    output_file = output_file % format_
+    if '%s' in output_file:
+        output_file = output_file % format_
     report.write_to_file(output_file, format_)
 
 

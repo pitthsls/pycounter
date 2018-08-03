@@ -305,6 +305,20 @@ class TestSushiClient(unittest.TestCase):
                     self.assertTrue('Journal Report 1' in tsv_file.read())
                 self.assertEqual(result.exit_code, 0)
 
+    def test_output_file(self):
+        arglist = [
+            '-o', 'other_report.tsv',
+            'http://www.example.com/Sushi',
+        ]
+
+        with HTTMock(sushi_mock):
+            runner = CliRunner()
+            with runner.isolated_filesystem():
+                result = runner.invoke(sushiclient.main, arglist)
+                with open('other_report.tsv') as tsv_file:
+                    self.assertTrue('Journal Report 1' in tsv_file.read())
+                self.assertEqual(result.exit_code, 0)
+
     def test_end_date_error(self):
         """Test trying to use implied start date and explicit end date"""
         arglist = [
