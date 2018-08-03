@@ -43,6 +43,12 @@ called directly if necessary
 
 pycounter.sushi module
 ----------------------
+.. NOTE::
+   Before pycounter 1.1, SUSHI requests were always made with SSL verification
+   turned off. The default is now to verify certificates. If you must contact
+   a SUSHI server without verification, please use the verify=False argument
+   to request() or the --no-ssl-verify flag on sushiclient.
+
 .. module:: pycounter.sushi
 
 Commonly-used function

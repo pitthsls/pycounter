@@ -3,6 +3,13 @@ The sushiclient
 
 pycounter comes with a rudimentary SUSHI command line client.
 
+.. NOTE::
+   Before pycounter 1.1, SUSHI requests were always made with SSL verification
+   turned off. The default is now to verify certificates. If you must contact
+   a SUSHI server without verification, please use the verify=False argument
+   to request() or the --no-ssl-verify flag on sushiclient.
+
+
 Invocation
 ----------
 .. program:: sushiclient
@@ -58,3 +65,7 @@ Options:
 .. option:: -o <output_file>, --output_file <output_file>
 
    Path to write output file to. If file already exists, it will be overwritten.
+
+.. option:: --no_ssl_verify
+
+   Skip SSL certificate verification.
