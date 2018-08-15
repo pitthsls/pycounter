@@ -190,7 +190,10 @@ def _raw_to_full(raw_report):
     except AttributeError:
         report_data['customer'] = ""
 
-    inst_id = customer.find('.//%s' % _ns('counter', 'ID')).text
+    try:
+        inst_id = customer.find('.//%s' % _ns('counter', 'ID')).text
+    except AttributeError:
+        inst_id = u""
     report_data['institutional_identifier'] = inst_id
 
     rep_root = root.find('.//%s' % _ns('counter', 'Report'))
