@@ -52,12 +52,9 @@ def bogus_mock(url_unused, request_unused):
     return "Bogus response with no XML"
 
 
-class TestHelpers(unittest.TestCase):
+def test_helper_ns():
     """Test _ns helper"""
-
-    def test_ns(self):
-        self.assertEqual(
-            sushi._ns("sushi", "name"),
+    assert (sushi._ns("sushi", "name") ==
             "{http://www.niso.org/schemas/sushi}name")
 
 
