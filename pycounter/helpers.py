@@ -48,8 +48,7 @@ def convert_date_run(datestring):
             return datetime.datetime.strptime(datestring, "%m/%d/%Y").date()
         except ValueError:
             # ISO 8601 without timezone
-            return datetime.datetime.strptime(datestring,
-                                              "%Y-%m-%dT%H:%M:%S").date()
+            return datetime.datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S").date()
 
 
 def convert_date_column(datestring):
@@ -115,8 +114,8 @@ def format_stat(stat):
     if isinstance(stat, six.integer_types):
         return stat
 
-    stat = stat.replace(',', '')
-    stat = stat.lstrip('=')
+    stat = stat.replace(",", "")
+    stat = stat.lstrip("=")
     try:
         return int(stat)
     except ValueError:
@@ -134,11 +133,11 @@ def guess_type_from_content(file_obj):
     """
     first_bytes = file_obj.read(2)
     if first_bytes == b"PK":
-        filetype = 'xlsx'
+        filetype = "xlsx"
     else:
         content = file_obj.read()
-        if b'\t' in content:
-            filetype = 'tsv'
+        if b"\t" in content:
+            filetype = "tsv"
         else:
-            filetype = 'csv'
+            filetype = "csv"
     return filetype

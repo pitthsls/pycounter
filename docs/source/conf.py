@@ -18,8 +18,8 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('../../pycounter'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, os.path.abspath("../../pycounter"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "../.."))
 
 # noinspection PyProtectedMember
 from pycounter.version import __version__
@@ -34,30 +34,30 @@ from pycounter.version import __version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.doctest',
-    'sphinx.ext.coverage',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.doctest",
+    "sphinx.ext.coverage",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.viewcode",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The encoding of source files.
 
 # source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = u'pycounter'
-copyright = u'2014-2018, University of Pittsburgh'
+project = u"pycounter"
+copyright = u"2014-2018, University of Pittsburgh"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -73,35 +73,32 @@ release = version
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pycounterdoc'
+htmlhelp_basename = "pycounterdoc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
 
-latex_elements = {
-
-}
+latex_elements = {}
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'pycounter.tex', u'pycounter Documentation',
-     u'Geoffrey Spear', 'manual'),
+    ("index", "pycounter.tex", u"pycounter Documentation", u"Geoffrey Spear", "manual")
 ]
 
 
@@ -109,10 +106,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'pycounter', u'pycounter Documentation',
-     [u'Geoffrey Spear'], 1)
-]
+man_pages = [("index", "pycounter", u"pycounter Documentation", [u"Geoffrey Spear"], 1)]
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -120,7 +114,13 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'pycounter', u'pycounter Documentation',
-     u'Geoffrey Spear', 'pycounter', 'One line description of project.',
-     'Miscellaneous'),
+    (
+        "index",
+        "pycounter",
+        u"pycounter Documentation",
+        u"Geoffrey Spear",
+        "pycounter",
+        "One line description of project.",
+        "Miscellaneous",
+    )
 ]

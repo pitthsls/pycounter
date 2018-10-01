@@ -11,11 +11,11 @@ from pycounter import report
 
 class TestOutputDB1(unittest.TestCase):
     """Test output of DB1"""
+
     def setUp(self):
-        filename = os.path.join(os.path.dirname(__file__), 'data/C4DB1.tsv')
+        filename = os.path.join(os.path.dirname(__file__), "data/C4DB1.tsv")
         rep = report.parse(filename)
-        with csvhelper.UnicodeReader(filename,
-                                     delimiter='\t') as report_reader:
+        with csvhelper.UnicodeReader(filename, delimiter="\t") as report_reader:
             self.file_content = list(report_reader)
 
         self.output_content = rep.as_generic()
@@ -36,11 +36,11 @@ class TestOutputDB1(unittest.TestCase):
 
 class TestOutputDB2(unittest.TestCase):
     """Test output of DB2"""
+
     def setUp(self):
-        filename = os.path.join(os.path.dirname(__file__), 'data/C4DB2.tsv')
+        filename = os.path.join(os.path.dirname(__file__), "data/C4DB2.tsv")
         rep = report.parse(filename)
-        with csvhelper.UnicodeReader(filename,
-                                     delimiter='\t') as report_reader:
+        with csvhelper.UnicodeReader(filename, delimiter="\t") as report_reader:
             self.file_content = list(report_reader)
 
         self.output_content = rep.as_generic()

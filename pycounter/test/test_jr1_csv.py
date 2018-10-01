@@ -11,21 +11,24 @@ import pytest
 from pycounter import report
 
 
-@pytest.mark.parametrize('pub_number,expected', [
-    (0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-    (1, [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 0]),
-])
+@pytest.mark.parametrize(
+    "pub_number,expected",
+    [
+        (0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+        (1, [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 0]),
+    ],
+)
 def test_counter4_csv_data(csv_jr1_report_common_data, pub_number, expected):
     publication = csv_jr1_report_common_data.pubs[pub_number]
     assert [x[2] for x in publication] == expected
 
 
 def test_metric(csv_jr1_report_std):
-    assert csv_jr1_report_std.metric == u'FT Article Requests'
+    assert csv_jr1_report_std.metric == u"FT Article Requests"
 
 
 def test_customer(csv_jr1_report):
-    assert csv_jr1_report.customer == u'University of Maximegalon'
+    assert csv_jr1_report.customer == u"University of Maximegalon"
 
 
 def test_date_run(csv_jr1_report):
@@ -33,12 +36,14 @@ def test_date_run(csv_jr1_report):
 
 
 def test_period(csv_jr1_report):
-    assert csv_jr1_report.period == (datetime.date(2011, 1, 1),
-                                     datetime.date(2011, 12, 31))
+    assert csv_jr1_report.period == (
+        datetime.date(2011, 1, 1),
+        datetime.date(2011, 12, 31),
+    )
 
 
 def test_report_type(csv_jr1_report_std):
-    assert csv_jr1_report_std.report_type == u'JR1'
+    assert csv_jr1_report_std.report_type == u"JR1"
 
 
 def test_ibsn(csv_jr1_r4_report):
@@ -47,9 +52,11 @@ def test_ibsn(csv_jr1_r4_report):
 
 class ParseExample(unittest.TestCase):
     """Tests for parsing C3 JR1"""
+
     def setUp(self):
-        self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                'data/simpleJR1.csv'))
+        self.report = report.parse(
+            os.path.join(os.path.dirname(__file__), "data/simpleJR1.csv")
+        )
 
     def test_reportname(self):
         self.assertEqual(self.report.report_version, 3)
@@ -59,8 +66,7 @@ class ParseExample(unittest.TestCase):
 
     def test_platform(self):
         for publication in self.report:
-            self.assertEqual(publication.publisher,
-                             u"Maximegalon University Press")
+            self.assertEqual(publication.publisher, u"Maximegalon University Press")
             self.assertEqual(publication.platform, u"MJO")
 
     def test_html(self):
@@ -81,17 +87,17 @@ class ParseMultiyear(unittest.TestCase):
     """
 
     def setUp(self):
-        self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                'data/C4JR1my.csv'))
+        self.report = report.parse(
+            os.path.join(os.path.dirname(__file__), "data/C4JR1my.csv")
+        )
 
     def test_period(self):
-        self.assertEqual(self.report.period,
-                         (datetime.date(2011, 10, 1),
-                          datetime.date(2012, 2, 29)))
+        self.assertEqual(
+            self.report.period, (datetime.date(2011, 10, 1), datetime.date(2012, 2, 29))
+        )
 
     def test_monthdata_exception(self):
-        self.assertRaises(AttributeError, getattr,
-                          self.report.pubs[0], 'monthdata')
+        self.assertRaises(AttributeError, getattr, self.report.pubs[0], "monthdata")
 
     def test_data(self):
         self.assertEqual(len(list(self.report.pubs[0])), 5)
@@ -99,12 +105,13 @@ class ParseMultiyear(unittest.TestCase):
         self.assertEqual(usage, [0, 0, 0, 0, 0])
 
     def test_month_data(self):
-        expected = [datetime.date(2011, 10, 1),
-                    datetime.date(2011, 11, 1),
-                    datetime.date(2011, 12, 1),
-                    datetime.date(2012, 1, 1),
-                    datetime.date(2012, 2, 1),
-                    ]
+        expected = [
+            datetime.date(2011, 10, 1),
+            datetime.date(2011, 11, 1),
+            datetime.date(2011, 12, 1),
+            datetime.date(2012, 1, 1),
+            datetime.date(2012, 2, 1),
+        ]
 
         months = [x[0] for x in self.report.pubs[0]]
 
@@ -116,24 +123,24 @@ class ParseBigMultiyear(unittest.TestCase):
     """
 
     def setUp(self):
-        self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                'data/C4JR1big.csv'))
+        self.report = report.parse(
+            os.path.join(os.path.dirname(__file__), "data/C4JR1big.csv")
+        )
 
     def test_period(self):
-        self.assertEqual(self.report.period,
-                         (datetime.date(2011, 1, 1),
-                          datetime.date(2012, 12, 31)))
+        self.assertEqual(
+            self.report.period, (datetime.date(2011, 1, 1), datetime.date(2012, 12, 31))
+        )
 
     def test_monthdata_exception(self):
-        self.assertRaises(AttributeError, getattr,
-                          self.report.pubs[0], 'monthdata')
+        self.assertRaises(AttributeError, getattr, self.report.pubs[0], "monthdata")
 
     def test_data(self):
         usage = [x[2] for x in self.report.pubs[0]]
-        self.assertEqual(usage,
-                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                          ])
+        self.assertEqual(
+            usage,
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        )
 
 
 class ParseGOA(unittest.TestCase):
@@ -141,25 +148,29 @@ class ParseGOA(unittest.TestCase):
     """
 
     def setUp(self):
-        self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                'data/C4JR1GOA.csv'))
+        self.report = report.parse(
+            os.path.join(os.path.dirname(__file__), "data/C4JR1GOA.csv")
+        )
 
     def test_metric(self):
-        self.assertEqual(self.report.metric,
-                         u"Gold Open Access Article Requests")
+        self.assertEqual(self.report.metric, u"Gold Open Access Article Requests")
 
 
 class ParseCounter4Bad(unittest.TestCase):
     """Tests for parsing C4 JR1 with questionable formatting..."""
+
     def setUp(self):
-        self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                'data/C4JR1_bad.csv'))
+        self.report = report.parse(
+            os.path.join(os.path.dirname(__file__), "data/C4JR1_bad.csv")
+        )
 
     def test_counter4_csv_data(self):
 
         publication = self.report.pubs[0]
-        self.assertEqual([x[2] for x in publication],
-                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        self.assertEqual(
+            [x[2] for x in publication], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        )
         publication = self.report.pubs[1]
-        self.assertEqual([x[2] for x in publication],
-                         [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 1000])
+        self.assertEqual(
+            [x[2] for x in publication], [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 1000]
+        )

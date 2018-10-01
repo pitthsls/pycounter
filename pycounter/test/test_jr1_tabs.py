@@ -12,8 +12,9 @@ class ParseExample(common_data.TSVJR1):
     """Test tab-separated JR1"""
 
     def setUp(self):
-        self.report = report.parse(os.path.join(os.path.dirname(__file__),
-                                                'data/simpleJR1.tsv'))
+        self.report = report.parse(
+            os.path.join(os.path.dirname(__file__), "data/simpleJR1.tsv")
+        )
 
     def test_html(self):
         expected = [0, 15, 33, 0]
