@@ -18,6 +18,9 @@ pycounter
     :target: https://readthedocs.org/projects/pycounter/?badge=stable
     :alt: Documentation Status
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/ambv/black
+
 
 pycounter makes working with `COUNTER <http://www.projectcounter.org/>`_
 usage statistics in Python easy, including fetching statistics with NISO

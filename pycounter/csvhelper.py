@@ -25,8 +25,14 @@ class UnicodeReader(six.Iterator):
     All other parameters will be passed through to csv.reader()
     """
 
-    def __init__(self, filename, dialect=csv.excel,
-                 encoding="utf-8", fallback_encoding="latin-1", **kwargs):
+    def __init__(
+        self,
+        filename,
+        dialect=csv.excel,
+        encoding="utf-8",
+        fallback_encoding="latin-1",
+        **kwargs
+    ):
         self.filename = filename
         self.dialect = dialect
         self.encoding = encoding
@@ -37,33 +43,33 @@ class UnicodeReader(six.Iterator):
 
     def __enter__(self):
         if six.PY3:
-            self.fileobj = open(self.filename, 'rt',
-                                encoding=self.encoding, newline='')
+            self.fileobj = open(self.filename, "rt", encoding=self.encoding, newline="")
             try:
                 self.fileobj.read()
             except UnicodeDecodeError:
-                warnings.warn("Decoding with '%s' codec failed; falling "
-                              "back to '%s'" % (self.encoding,
-                                                self.fallback_encoding))
-                self.fileobj = open(self.filename, 'rt',
-                                    encoding=self.fallback_encoding,
-                                    newline='')
+                warnings.warn(
+                    "Decoding with '%s' codec failed; falling "
+                    "back to '%s'" % (self.encoding, self.fallback_encoding)
+                )
+                self.fileobj = open(
+                    self.filename, "rt", encoding=self.fallback_encoding, newline=""
+                )
                 self.encoding = self.fallback_encoding
             finally:
                 self.fileobj.seek(0)
         else:
-            self.fileobj = open(self.filename, 'rb')
+            self.fileobj = open(self.filename, "rb")
             try:
                 self.fileobj.read().decode(self.encoding)
             except UnicodeDecodeError:
-                warnings.warn("Decoding with '%s' codec failed; falling "
-                              "back to '%s'" % (self.encoding,
-                                                self.fallback_encoding))
+                warnings.warn(
+                    "Decoding with '%s' codec failed; falling "
+                    "back to '%s'" % (self.encoding, self.fallback_encoding)
+                )
                 self.encoding = self.fallback_encoding
             finally:
                 self.fileobj.seek(0)
-        self.reader = csv.reader(self.fileobj, dialect=self.dialect,
-                                 **self.kwargs)
+        self.reader = csv.reader(self.fileobj, dialect=self.dialect, **self.kwargs)
         return self
 
     def __exit__(self, type_, value, traceback):
@@ -95,8 +101,14 @@ class UnicodeWriter(object):
     All other parameters will be passed through to csv.writer()
     """
 
-    def __init__(self, filename, dialect=csv.excel,
-                 encoding="utf-8", lineterminator='\n', **kwargs):
+    def __init__(
+        self,
+        filename,
+        dialect=csv.excel,
+        encoding="utf-8",
+        lineterminator="\n",
+        **kwargs
+    ):
         self.filename = filename
         self.dialect = dialect
         self.encoding = encoding
@@ -107,13 +119,15 @@ class UnicodeWriter(object):
 
     def __enter__(self):
         if six.PY3:
-            self.fileobj = open(self.filename, 'wt',
-                                encoding=self.encoding, newline='')
+            self.fileobj = open(self.filename, "wt", encoding=self.encoding, newline="")
         else:
-            self.fileobj = open(self.filename, 'wb')
-        self.writer = csv.writer(self.fileobj, dialect=self.dialect,
-                                 lineterminator=self.lineterminator,
-                                 **self.kwargs)
+            self.fileobj = open(self.filename, "wb")
+        self.writer = csv.writer(
+            self.fileobj,
+            dialect=self.dialect,
+            lineterminator=self.lineterminator,
+            **self.kwargs
+        )
         return self
 
     def __exit__(self, type_, value, traceback):
@@ -125,7 +139,7 @@ class UnicodeWriter(object):
         :param row: list of cells to write to the file
         """
         if not six.PY3:
-            row = [(s or '').encode(self.encoding) for s in row]
+            row = [(s or "").encode(self.encoding) for s in row]
         self.writer.writerow(row)
 
     def writerows(self, rows):
