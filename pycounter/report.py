@@ -748,10 +748,8 @@ def _parse_line(line, report, last_col):
             isbn = line[3].strip()
             issn = line[4].strip()
 
-        elif report.report_type in ("DB1", "DB2"):
-            # format coincidentally works for these. This is a kludge
-            # so leaving this explicit...
-            pass
+        # For DB1 and DB2, nothing additional to do here
+
     else:
         if report.report_type.startswith("JR1"):
             html_total = format_stat(line[-2])
