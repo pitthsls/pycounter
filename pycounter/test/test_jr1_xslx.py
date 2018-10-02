@@ -27,7 +27,7 @@ def test_year(jr1_report):
 
 
 def test_publisher(jr1_report):
-    assert all(
+    assert all(  # pragma: no branch
         publication.publisher == u"American Medical Association"
         for publication in jr1_report
     )
