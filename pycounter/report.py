@@ -704,7 +704,7 @@ def parse_generic(report_reader):
         end_date = last_day(convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
 
-    if report.report_type != "DB1" and report.report_version != 5:
+    if report.report_type != "DB1":
         six.next(report_reader)
 
     if report.report_type == "DB2":
@@ -737,8 +737,8 @@ def _parse_line(line, report, last_col):
     doi = ""
     prop_id = ""
 
-    if report.report_version >= 4:
-        if report.report_type.startswith("JR1") or report.report_type == "TR_J1":
+    if report.report_version == 4:
+        if report.report_type.startswith("JR1"):
             old_line = line
             line = line[0:3] + line[5:7] + line[10:last_col]
             doi = old_line[3]
