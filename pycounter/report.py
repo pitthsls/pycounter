@@ -792,7 +792,7 @@ def _parse_line(line, report, last_col):
     for data in line[5:]:
         month_data.append((curr_month, format_stat(data)))
         curr_month = next_month(curr_month)
-    if report.report_type.startswith("JR") or report.report_type == "TR_J1":
+    if report.report_type.startswith("JR") or report.report_type.startswith("TR_J"):
         return CounterJournal(
             metric=report.metric,
             month_data=month_data,
