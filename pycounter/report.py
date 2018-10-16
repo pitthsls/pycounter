@@ -646,22 +646,25 @@ def parse_generic(report_reader):
         second_line = six.next(report_reader)
         third_line = six.next(report_reader)
         report.report_type, report.report_version = _get_c5_type_and_version(
-            first_line, second_line, third_line
+            first_line,
+            second_line,
+            third_line
         )
     else:
-        report.report_type, report.report_version = _get_type_and_version(first_line[0])
+        report.report_type, report.report_version = _get_type_and_version(
+            first_line[0]
+        )
 
     if report.report_version != 5:
         # noinspection PyTypeChecker
         report.metric = METRICS.get(report.report_type)
 
-    where_data = 1 if report.report_version == 5 else 0
-    report.customer = six.next(report_reader)[where_data]
+    report.customer = six.next(report_reader)[1 if report.report_version == 5 else 0]
 
     if report.report_version >= 4:
         inst_id_line = six.next(report_reader)
         if inst_id_line:
-            report.institutional_identifier = inst_id_line[where_data]
+            report.institutional_identifier = inst_id_line[1 if report.report_version == 5 else 0]
             if report.report_type == "BR2":
                 report.section_type = inst_id_line[1]
 
@@ -671,13 +674,13 @@ def parse_generic(report_reader):
                 six.next(report_reader)
 
         covered_line = six.next(report_reader)
-        report.period = convert_covered(covered_line[where_data])
+        report.period = convert_covered(covered_line[1 if report.report_version == 5 else 0])
 
     if report.report_version < 5:
         six.next(report_reader)
 
     date_run_line = six.next(report_reader)
-    report.date_run = convert_date_run(date_run_line[where_data])
+    report.date_run = convert_date_run(date_run_line[1 if report.report_version == 5 else 0])
 
     header = six.next(report_reader)
 
@@ -704,7 +707,7 @@ def parse_generic(report_reader):
         end_date = last_day(convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
 
-    if report.report_type != "DB1":
+    if report.report_type != "DB1" and report.report_version != 5:
         six.next(report_reader)
 
     if report.report_type == "DB2":
@@ -737,8 +740,8 @@ def _parse_line(line, report, last_col):
     doi = ""
     prop_id = ""
 
-    if report.report_version == 4:
-        if report.report_type.startswith("JR1"):
+    if report.report_version >= 4:
+        if report.report_type.startswith("JR1") or report.report_type == "TR_J1":
             old_line = line
             line = line[0:3] + line[5:7] + line[10:last_col]
             doi = old_line[3]
@@ -783,7 +786,7 @@ def _parse_line(line, report, last_col):
     for data in line[5:]:
         month_data.append((curr_month, format_stat(data)))
         curr_month = next_month(curr_month)
-    if report.report_type.startswith("JR") or report.report_type.startswith("TR_J"):
+    if report.report_type.startswith("JR") or report.report_type == "TR_J1":
         return CounterJournal(
             metric=report.metric,
             month_data=month_data,

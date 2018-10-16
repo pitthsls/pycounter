@@ -1,5 +1,8 @@
 """Tests of title report for journals."""
 from datetime import date
+import os
+
+import pycounter.report
 
 
 def test_version(trj1_report):
@@ -20,3 +23,8 @@ def test_customer(trj1_report):
 
 def test_period(trj1_report):
     assert trj1_report.period == (date(2017, 1, 1), date(2017, 6, 30))
+
+
+def test_parse():
+    report = pycounter.report.parse(os.path.join(os.path.dirname(__file__), "data", "tr_j1.tsv"))
+    assert report.report_version == 5
