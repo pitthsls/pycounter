@@ -1,0 +1,18 @@
+Report_Name	Journal Requests (Excluding OA_Gold)															
+Report_ID	TR_J1															
+Release	5															
+Institution_Name	Sample University															
+Institution_ID	isni=1234567890															
+Metric_Types	Total_Item_Requests; Unique_Item_Requests															
+Report_Filters	Data_Type=Journal; Access_Type=Controlled; Access_Method=Regular															
+Report_Attributes																
+Exceptions																
+Reporting_Period	2017-01-01 to 2017-06-30															
+Created	2017-05-25															
+Created_By	Platform X															
+																
+Title	Publisher	Publisher_ID	Platform	DOI	Proprietary_ID	Print_ISSN	Online_ISSN	URI	Metric_Type	Reporting_ Period_Total	Jan-2017	Feb-2017	Mar-2017	Apr-2017	May-2017	Jun-2017
+Journal A	Publisher X	isni=1234123412341234	PlatformX	/12.1.0.1/1111.2.222	pubx:jnlA	1111-22222	1111-1223		Total_Item_Requests							
+Journal A	Publisher X	isni=1234123412341234	PlatformX	/12.1.0.1/1111.2.222	pubx:jnlA	1111-22222	1111-1223		Unique_Item_Requests							
+Journal B	Publisher X	isni=1234123412341234	PlatformX	/12.1.0.1/1111.2.211	pubx:jnlB	1111-22211	1111-1213		Total_Item_Requests							
+Journal B	Publisher X	isni=1234123412341234	PlatformX	/12.1.0.1/1111.2.211	pubx:jnlB	1111-22211	1111-1213		Unique_Item_Requests							
