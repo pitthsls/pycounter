@@ -385,8 +385,7 @@ class CounterJournal(CounterEresource):
             self.eissn = ""
 
     def __repr__(self):
-        return """<CounterJournal %s, publisher %s,
-        platform %s>""" % (
+        return """<CounterJournal %s, publisher %s, platform %s>""" % (
             self.title,
             self.publisher,
             self.platform,
@@ -467,8 +466,7 @@ class CounterBook(CounterEresource):
             self.issn = u""
 
     def __repr__(self):
-        return """<CounterBook %s (ISBN: %s), publisher %s,
-        platform %s>""" % (
+        return """<CounterBook %s (ISBN: %s), publisher %s, platform %s>""" % (
             self.title,
             self.isbn,
             self.publisher,
@@ -706,10 +704,13 @@ def parse_generic(report_reader):
         end_date = last_day(convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
 
-    if report.report_type != "DB1" and report.report_version != 5:
+    if report.report_type != "DB1":
         six.next(report_reader)
 
     if report.report_type == "DB2":
+        six.next(report_reader)
+
+    if report.report_version == 5:
         six.next(report_reader)
 
     for line in report_reader:
@@ -736,8 +737,8 @@ def _parse_line(line, report, last_col):
     doi = ""
     prop_id = ""
 
-    if report.report_version >= 4:
-        if report.report_type.startswith("JR1") or report.report_type == "TR_J1":
+    if report.report_version == 4:
+        if report.report_type.startswith("JR1"):
             old_line = line
             line = line[0:3] + line[5:7] + line[10:last_col]
             doi = old_line[3]
@@ -753,7 +754,15 @@ def _parse_line(line, report, last_col):
             issn = line[4].strip()
 
         # For DB1 and DB2, nothing additional to do here
-
+    elif report.report_version == 5:
+        old_line = line
+        line = line[0:2] + line[3:4] + line[6:8] + line[11:last_col]
+        doi = old_line[4]
+        prop_id = old_line[5]
+        html_total = 0
+        pdf_total = 0
+        issn = line[3].strip()
+        eissn = line[4].strip()
     else:
         if report.report_type.startswith("JR1"):
             html_total = format_stat(line[-2])
