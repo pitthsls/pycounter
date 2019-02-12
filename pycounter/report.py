@@ -8,7 +8,7 @@ import logging
 import re
 import warnings
 
-import arrow
+import pendulum
 import six
 
 from pycounter import csvhelper
@@ -196,11 +196,7 @@ class CounterReport(object):
         html_usage = 0
 
         number_of_months = len(
-            arrow.Arrow.range(
-                "month",
-                arrow.Arrow.fromdate(self.period[0]),
-                arrow.Arrow.fromdate(self.period[1]),
-            )
+            list(pendulum.period(self.period[0], self.period[1]).range("months"))
         )
         month_data = [0] * number_of_months
         for pub in self.pubs:
@@ -222,11 +218,7 @@ class CounterReport(object):
     def _table_header(self):
         """Generate header for COUNTER table for report, as list of cells."""
         header_cells = list(HEADER_FIELDS[self.report_type])
-        for d_obj in arrow.Arrow.range(
-            "month",
-            arrow.Arrow.fromdate(self.period[0]),
-            arrow.Arrow.fromdate(self.period[1]),
-        ):
+        for d_obj in pendulum.period(self.period[0], self.period[1]).range("months"):
             header_cells.append(d_obj.strftime("%b-%Y"))
         return header_cells
 
@@ -317,11 +309,9 @@ class CounterEresource(six.Iterator):
         """Ensure each month in period represented and zero fill if not."""
         start, end = self.period[0], self.period[1]
         try:
-            for d_obj in arrow.Arrow.range(
-                "month", arrow.Arrow.fromdate(start), arrow.Arrow.fromdate(end)
-            ):
-                if d_obj.date() not in (x[0] for x in self._full_data):
-                    self._full_data.append((d_obj.date(), 0))
+            for d_obj in pendulum.period(start, end).range("months"):
+                if d_obj not in (x[0] for x in self._full_data):
+                    self._full_data.append((d_obj, 0))
         except IndexError:
             pass
         else:
