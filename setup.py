@@ -13,7 +13,7 @@ with open(os.path.join(os.path.dirname(__file__), "pycounter/version.py"), "r") 
 with open("README.rst") as readmefile:
     readme = readmefile.read()
 
-requirements = ["openpyxl", "requests", "six", "arrow", "click"]
+requirements = ["openpyxl", "requests", "six", "pendulum", "click"]
 
 if platform.python_implementation() == "PyPy":
     requirements.append("lxml<=3.4.4")

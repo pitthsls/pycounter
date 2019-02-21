@@ -8,9 +8,9 @@ import time
 import uuid
 
 
-import arrow
 from lxml import etree
 from lxml import objectify
+import pendulum
 import requests
 import six
 
@@ -67,7 +67,7 @@ def get_sushi_stats_raw(
     """
     root = etree.Element("{%(SOAP-ENV)s}Envelope" % NS, nsmap=NS)
     body = etree.SubElement(root, "{%(SOAP-ENV)s}Body" % NS)
-    timestamp = arrow.utcnow().isoformat()
+    timestamp = pendulum.now("UTC").isoformat()
     rr = etree.SubElement(
         body,
         "{%(sushicounter)s}ReportRequest" % NS,
@@ -207,7 +207,7 @@ def _raw_to_full(raw_report):
     rep_root = root.find(".//%s" % _ns("counter", "Report"))
     created_string = rep_root.get("Created")
     if created_string is not None:
-        report_data["date_run"] = arrow.get(created_string)
+        report_data["date_run"] = pendulum.parse(created_string)
     else:
         report_data["date_run"] = datetime.datetime.now()
 
