@@ -7,7 +7,6 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-  - "3.7"
   - "pypy"
 
 cache: pip
@@ -37,19 +36,12 @@ jobs:
     env: TOXENV=flake8_py2
   - python: 3.6
     env: TOXENV=manifest
-  - python: 3.6
-    env: TOXENV=lint
 
 matrix:
   include:
     - python: "3.7"
       dist: "xenial"
       sudo: true
-      env: TOXENV=py37
-  allow_failures:
-    - python: 3.6
-      env: TOXENV=lint
-
 
 deploy:
   provider: pypi
