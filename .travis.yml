@@ -40,13 +40,15 @@ jobs:
     env: TOXENV=lint
 
 matrix:
-  allow_failures:
-    - python: 3.6
-      env: TOXENV=lint
   include:
     - python: "3.7"
       dist: "xenial"
       sudo: true
+      env: TOXENV=py37
+  allow_failures:
+    - python: 3.6
+      env: TOXENV=lint
+
 
 deploy:
   provider: pypi
