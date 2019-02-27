@@ -28,15 +28,26 @@ after_success:
 notifications:
   irc: "chat.freenode.net#pycounter"
 
+jobs:
+  include:
+  - python: 3.6
+    env: TOXENV=flake8
+  - python: 2.7
+    env: TOXENV=flake8_py2
+  - python: 3.6
+    env: TOXENV=manifest
+  - python: 3.6
+    env: TOXENV=lint
 
 matrix:
+  allow_failures:
+    - python: 3.6
+      env: TOXENV=lint
   include:
     - python: "3.7"
       dist: "xenial"
       sudo: true
-      script:
-        - tox
-
+      script: tox
 
 deploy:
   provider: pypi
