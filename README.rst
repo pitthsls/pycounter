@@ -92,3 +92,11 @@ Output of report as TSV::
 
     >>> report.write_tsv("/tmp/counterreport.tsv")
 
+
+Development
+-----------
+Our code is automatically styled using black. To install the pre-commit hook:
+
+    pip install pre-commit
+
+    pre-commit install
