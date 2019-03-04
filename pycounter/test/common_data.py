@@ -1,8 +1,11 @@
+"""Helper for testing common data in different formats."""
 import datetime
 import unittest
 
 
 class TSVJR1(unittest.TestCase):
+    """Assertions about common shared data to subclass."""
+
     report = None  # should be set in subclass setUp.
 
     def test_reportname(self):

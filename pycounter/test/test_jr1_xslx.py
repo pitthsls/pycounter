@@ -2,39 +2,32 @@
 
 from __future__ import absolute_import
 
-import os
-
 import pytest
 
-from pycounter import report
+
+def test_report_type(jr1_report_xlsx):
+    assert jr1_report_xlsx.report_type == u"JR1"
 
 
-@pytest.fixture(params=["JR1.xlsx", "JR1_bad.xlsx"])
-def jr1_report(request):
-    return report.parse(os.path.join(os.path.dirname(__file__), "data", request.param))
+def test_report_version(jr1_report_xlsx):
+    assert jr1_report_xlsx.report_version == 4
 
 
-def test_report_type(jr1_report):
-    assert jr1_report.report_type == u"JR1"
+def test_year(jr1_report_xlsx):
+    assert jr1_report_xlsx.year == 2013
 
 
-def test_report_version(jr1_report):
-    assert jr1_report.report_version == 4
-
-
-def test_year(jr1_report):
-    assert jr1_report.year == 2013
-
-
-def test_publisher(jr1_report):
+def test_publisher(jr1_report_xlsx):
     assert all(  # pragma: no branch
         publication.publisher == u"American Medical Association"
-        for publication in jr1_report
+        for publication in jr1_report_xlsx
     )
 
 
-def test_platform(jr1_report):
-    assert all(publication.platform == u"Silverchair" for publication in jr1_report)
+def test_platform(jr1_report_xlsx):
+    assert all(
+        publication.platform == u"Silverchair" for publication in jr1_report_xlsx
+    )
 
 
 @pytest.mark.parametrize(
@@ -45,6 +38,6 @@ def test_platform(jr1_report):
         (8, [592, 574, 502, 616, 349, 476, 460, 383, 434, 496, 522, 304]),
     ],
 )
-def test_stats(jr1_report, pub_number, expected):
-    publication = jr1_report.pubs[pub_number]
+def test_stats(jr1_report_xlsx, pub_number, expected):
+    publication = jr1_report_xlsx.pubs[pub_number]
     assert [x[2] for x in publication] == expected

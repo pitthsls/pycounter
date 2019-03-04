@@ -3,9 +3,15 @@
 # not require a docstring
 no-docstring-rgx=__.*__|test[A-Z_].*|setUp|tearDown
 
-
 extension-pkg-whitelist=lxml
 disable= bad-continuation, too-few-public-methods, too-many-arguments
+good-names=logger,
+           i,
+           j,
+           k,
+           ex,
+           Run,
+           _
 
 [SIMILARITIES]
 
@@ -23,3 +29,4 @@ ignore-imports=yes
 
 [VARIABLES]
 dummy-variables-rgx=_|dummy|unused|.*_unused
+ignored-argument-names=_.*|^ignored_|^unused_|.*_unused

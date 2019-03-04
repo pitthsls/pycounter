@@ -46,9 +46,9 @@ class TestWritingBR1(unittest.TestCase):
         self.output_content = self.rep.as_generic()
 
     def test_output_tsv(self):
-        tf = tempfile.NamedTemporaryFile(delete=False)
-        tf.close()
-        tmp_loc = tf.name
+        output_file = tempfile.NamedTemporaryFile(delete=False)
+        output_file.close()
+        tmp_loc = output_file.name
         self.rep.write_tsv(tmp_loc)
         logging.debug("Temp file at %s", tmp_loc)
 

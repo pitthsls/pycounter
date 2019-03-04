@@ -68,13 +68,13 @@ def get_sushi_stats_raw(
     root = etree.Element("{%(SOAP-ENV)s}Envelope" % NS, nsmap=NS)
     body = etree.SubElement(root, "{%(SOAP-ENV)s}Body" % NS)
     timestamp = pendulum.now("UTC").isoformat()
-    rr = etree.SubElement(
+    report_req = etree.SubElement(
         body,
         "{%(sushicounter)s}ReportRequest" % NS,
         {"Created": timestamp, "ID": str(uuid.uuid4())},
     )
 
-    req = etree.SubElement(rr, "{%(sushi)s}Requestor" % NS)
+    req = etree.SubElement(report_req, "{%(sushi)s}Requestor" % NS)
     rid = etree.SubElement(req, "{%(sushi)s}ID" % NS)
     rid.text = requestor_id
     req_name_element = etree.SubElement(req, "{%(sushi)s}Name" % NS)
@@ -82,14 +82,17 @@ def get_sushi_stats_raw(
     req_email_element = etree.SubElement(req, "{%(sushi)s}Email" % NS)
     req_email_element.text = requestor_email
 
-    cust_ref_elem = etree.SubElement(rr, "{%(sushi)s}CustomerReference" % NS)
+    cust_ref_elem = etree.SubElement(report_req, "{%(sushi)s}CustomerReference" % NS)
     cid = etree.SubElement(cust_ref_elem, "{%(sushi)s}ID" % NS)
     cid.text = customer_reference
     cust_name_elem = etree.SubElement(cust_ref_elem, "{%(sushi)s}Name" % NS)
     cust_name_elem.text = customer_name
 
     report_def_elem = etree.SubElement(
-        rr, "{%(sushi)s}ReportDefinition" % NS, Name=report, Release=str(release)
+        report_req,
+        "{%(sushi)s}ReportDefinition" % NS,
+        Name=report,
+        Release=str(release),
     )
     filters = etree.SubElement(report_def_elem, "{%(sushi)s}Filters" % NS)
     udr = etree.SubElement(filters, "{%(sushi)s}UsageDateRange" % NS)

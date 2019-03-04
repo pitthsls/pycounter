@@ -15,6 +15,9 @@ from pycounter import sushiclient
 import pycounter.exceptions
 
 
+# pylint: disable= protected-access
+
+
 @urlmatch(netloc=r"(.*\.)?example\.com$")
 def report_queued_mock(url_unused, request_unused):
     if report_queued_mock.first_request:
