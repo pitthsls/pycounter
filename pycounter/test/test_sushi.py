@@ -274,7 +274,7 @@ class TestSushiDump(unittest.TestCase):
     @mock.patch("pycounter.sushi.logger")
     def test_dump(self, mock_logger):
         with HTTMock(sushi_mock):
-            self.report = sushi.get_report(
+            sushi.get_report(
                 "http://www.example.com/Sushi",
                 datetime.date(2015, 1, 1),
                 datetime.date(2015, 1, 31),

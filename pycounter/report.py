@@ -176,6 +176,7 @@ class CounterReport(object):
         return total_lines
 
     def _totals_line(self, metric):
+        """Generate Totals for a given metric."""
         total_cells = [TOTAL_TEXT[self.report_type]]
         publishers = set(resource.publisher for resource in self.pubs)
         if len(publishers) == 1:

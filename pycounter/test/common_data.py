@@ -16,7 +16,7 @@ class TSVJR1(unittest.TestCase):
         self.assertEqual(self.report.year, 2013)
 
     def test_platform(self):
-        for publication in self.report:
+        for publication in self.report:  # pylint: disable=not-an-iterable
             self.assertEqual(publication.publisher, u"aap")
             self.assertEqual(publication.platform, u"Journal of Periodontology Online")
 

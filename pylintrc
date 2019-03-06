@@ -1,7 +1,7 @@
 [BASIC]
 # Regular expression which should only match functions or classes name which do
 # not require a docstring
-no-docstring-rgx=__.*__|test[A-Z_].*|setUp|tearDown
+no-docstring-rgx=__.*__|test[A-Z_].*|setUp|tearDown|.*_mock
 
 extension-pkg-whitelist=lxml
 disable= bad-continuation, too-few-public-methods, too-many-arguments
@@ -30,3 +30,8 @@ ignore-imports=yes
 [VARIABLES]
 dummy-variables-rgx=_|dummy|unused|.*_unused
 ignored-argument-names=_.*|^ignored_|^unused_|.*_unused
+
+[CLASSES]
+defining-attr-methods=__init__,
+                      __new__,
+                      setUp
