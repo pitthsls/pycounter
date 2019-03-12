@@ -18,6 +18,7 @@ import pycounter.constants
 import pycounter.exceptions
 from pycounter.helpers import convert_date_run
 import pycounter.report
+from pycounter import sushi5
 
 logger = logging.getLogger(__name__)
 NS = pycounter.constants.NS
@@ -130,6 +131,9 @@ def get_report(*args, **kwargs):
 
     :param no_delay: don't delay in retrying Report Queued
     """
+    if kwargs["release"] == 5:
+        return sushi5.get_report(*args, **kwargs)
+
     no_delay = kwargs.pop("no_delay", False)
     delay_amount = 0 if no_delay else 60
     while True:
