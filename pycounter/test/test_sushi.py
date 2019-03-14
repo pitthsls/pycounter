@@ -56,64 +56,37 @@ def test_helper_ns():
     assert sushi._ns("sushi", "name") == "{http://www.niso.org/schemas/sushi}name"
 
 
-class TestConvertRawSimple(unittest.TestCase):
-    """Test converting simple SUSHI response"""
-
-    def setUp(self):
-        path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple.xml")
-        with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
-
-    def test_report(self):
-        self.assertEqual(self.report.report_type, u"JR1")
-        self.assertEqual(self.report.report_version, 4)
-
-    def test_customer(self):
-        self.assertEqual(self.report.institutional_identifier, u"exampleLibrary")
-
-    def test_title(self):
-        publication = next(iter(self.report))
-        self.assertEqual(publication.title, u"Journal of fake data")
-
-    def test_data(self):
-        publication = next(iter(self.report))
-        self.assertEqual(publication.html_total, 6)
-        self.assertEqual(publication.pdf_total, 8)
-        self.assertEqual(publication.doi, u"10.5555/12345678")
-        self.assertEqual(publication.proprietary_id, u"JFD")
-        data = [month[2] for month in publication]
-        self.assertEqual(data[0], 14)
+def test_report_version(sushi_report_all):
+    assert 4 == sushi_report_all.report_version
 
 
-class TestConvertRawSimpleNoCustomer(unittest.TestCase):
-    """Test converting simple SUSHI response"""
+def test_report_customer(sushi_report_with_customer):
+    assert u"exampleLibrary" == sushi_report_with_customer.institutional_identifier
 
-    def setUp(self):
-        path = os.path.join(
-            os.path.dirname(__file__), "data", "sushi_simple_no_customer.xml"
-        )
-        with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
 
-    def test_report(self):
-        self.assertEqual(self.report.report_type, u"JR1")
-        self.assertEqual(self.report.report_version, 4)
+def test_report_no_customer(sushi_report_no_customer):
+    assert u"" == sushi_report_no_customer.institutional_identifier
 
-    def test_customer(self):
-        self.assertEqual(self.report.institutional_identifier, u"")
 
-    def test_title(self):
-        publication = next(iter(self.report))
-        self.assertEqual(publication.title, u"Journal of fake data")
+def test_report_type_jr1(sushi_report_jr1):
+    assert u"JR1" == sushi_report_jr1.report_type
 
-    def test_data(self):
-        publication = next(iter(self.report))
-        self.assertEqual(publication.html_total, 6)
-        self.assertEqual(publication.pdf_total, 8)
-        self.assertEqual(publication.doi, u"10.5555/12345678")
-        self.assertEqual(publication.proprietary_id, u"JFD")
-        data = [month[2] for month in publication]
-        self.assertEqual(data[0], 14)
+
+def test_data_jr1(sushi_report_jr1):
+    publication = next(iter(sushi_report_jr1))
+    assert 6 == publication.html_total
+    assert 8 == publication.pdf_total
+    assert u"10.5555/12345678" == publication.doi
+    assert u"JFD" == publication.proprietary_id
+
+    data = [month[2] for month in publication]
+
+    assert 14 == data[0]
+
+
+def test_title_jr1(sushi_report_jr1):
+    publication = next(iter(sushi_report_jr1))
+    assert u"Journal of fake data" == publication.title
 
 
 class TestConvertRawBook(unittest.TestCase):
@@ -126,10 +99,6 @@ class TestConvertRawBook(unittest.TestCase):
 
     def test_report(self):
         self.assertEqual(self.report.report_type, u"BR1")
-        self.assertEqual(self.report.report_version, 4)
-
-    def test_customer(self):
-        self.assertEqual(self.report.institutional_identifier, u"exampleLibrary")
 
     def test_isbn(self):
         i_report = iter(self.report)
@@ -164,10 +133,6 @@ class TestConvertRawDatabase(unittest.TestCase):
 
     def test_report(self):
         self.assertEqual(self.report.report_type, u"DB1")
-        self.assertEqual(self.report.report_version, 4)
-
-    def test_customer(self):
-        self.assertEqual(self.report.institutional_identifier, u"exampleLibrary")
 
     def test_platform(self):
         database = self.databases[0]
