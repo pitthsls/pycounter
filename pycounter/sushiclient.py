@@ -98,6 +98,7 @@ def main(
         end_date=converted_end_date,
         sushi_dump=dump,
         no_delay=no_delay,
+        verify=not no_ssl_verify,
     )
     if "%s" in output_file:
         output_file = output_file % format_
