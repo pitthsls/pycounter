@@ -1,7 +1,9 @@
+import datetime
 import logging
 import time
 import warnings
 
+import pendulum
 import requests
 
 import pycounter.exceptions
@@ -10,13 +12,48 @@ import pycounter.exceptions
 logger = logging.getLogger(__name__)
 
 
+def _dates_from_filters(filters):
+    """Convert report filters to start and end date
+
+    Args:
+        filters: a list of dicts containing SUSHI report filters
+
+    Returns: tuple of start, end dates as datetime.date
+
+    """
+    converted_filters = {
+        k: datetime.datetime.strptime(v, "%Y-%m-%d")
+        for k, v in filters.items()
+        if k in ("Begin_Date", "End_Date")
+    }
+    try:
+        return converted_filters["Begin_Date"], converted_filters["End_Date"]
+    except KeyError:
+        raise ValueError("filters must include a Begin_Date and End_Date")
+
+
 def _raw_to_full(raw_report):
     """Convert a raw report to CounterReport.
 
     :param raw_report: raw report as dict decoded from JSON
     :return: a :class:`pycounter.report.CounterReport`
     """
-    #  FIXME
+    header = raw_report["Report_Header"]
+    start_date, end_date = _dates_from_filters(header["Report_Filters"])
+    date_run = header.get("Created")
+    report_data = {
+        "period": (start_date, end_date),
+        "report_version": int(header["Release"]),
+        "report_type": header["Report_ID"],
+        "customer": header.get("Institution_Name", u""),
+        "institutional_identifier": header.get("Customer_ID", u""),
+        "date_run": pendulum.parse(date_run) if date_run else datetime.datetime.now(),
+    }
+
+    report = pycounter.report.CounterReport(**report_data)
+    #  FIXME - add actual item data to report
+
+    return report
 
 
 def get_sushi_stats_raw(
