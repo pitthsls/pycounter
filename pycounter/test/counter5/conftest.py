@@ -1,8 +1,18 @@
+import datetime
+import io
 import os
 
+from httmock import HTTMock, urlmatch
 import pytest
 
 import pycounter
+
+
+@urlmatch(netloc=r"(.*\.)?example\.com$")
+def sushi_mock(url_unused, request_unused):
+    path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple.json")
+    with io.open(path, "r", encoding="utf-8") as datafile:
+        return datafile.read()
 
 
 @pytest.fixture
@@ -10,3 +20,15 @@ def trj1_report():
     return pycounter.report.parse(
         os.path.join(os.path.dirname(__file__), "data", "tr_j1.tsv")
     )
+
+
+@pytest.fixture
+def sushi5_report():
+    with HTTMock(sushi_mock):
+        return pycounter.sushi.get_report(
+            "http://www.example.com/Sushi",
+            datetime.date(2019, 1, 1),
+            datetime.date(2019, 2, 28),
+            release=5,
+            report="TR_J1",
+        )
