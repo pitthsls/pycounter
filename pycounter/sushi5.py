@@ -21,10 +21,11 @@ def _dates_from_filters(filters):
     Returns: tuple of start, end dates as datetime.date
 
     """
+
     converted_filters = {
-        k: datetime.datetime.strptime(v, "%Y-%m-%d")
-        for k, v in filters.items()
-        if k in ("Begin_Date", "End_Date")
+        filter_["Name"]: datetime.datetime.strptime(filter_["Value"], "%Y-%m-%d").date()
+        for filter_ in filters
+        if filter_["Name"] in ("Begin_Date", "End_Date")
     }
     try:
         return converted_filters["Begin_Date"], converted_filters["End_Date"]
