@@ -1,4 +1,105 @@
 # Changelog
+## 1.1.1 (2019-03-01)
+
+### Bugfixes
+* SUSHI: Deal with missing institutional identifier for customer. [Geoffrey Spear]
+
+  (see Issue #72. This should catch the exception involved in the
+  issue, but there may be a wider issue with the Gale report since
+  the &quot;customer&quot; object involved should not be None if there's
+  an actual report to read, since the report itself is in the
+  Customer XML element.)
+
+
+### Code quality/CI
+
+* Add pre-commit black hook, format all code with black. [Geoffrey Spear]
+
+* Python 3.7 support. [Geoffrey Spear]
+
+* Replace arrow library with pendulum. [Geoffrey Spear]
+
+* Pyup: try updating all deps. [Geoffrey Spear]
+
+
+## 1.1.0 (2018-08-03)
+
+### Other
+
+* SUSHI: Verify SSL certs by default. [Geoffrey Spear]
+
+  (Bumps version to 1.1 because this could be a breaking change for
+  sites that rely on requests to broken servers working without a flag)
+
+  Fixes #67
+
+* Don't try to do string formatting on given output file name. [Geoffrey Spear]
+
+  Fixes #58
+
+
+## 1.0.3 (2018-08-01)
+
+### Bugfixes
+
+* Negate bash regex match correctly. [Geoffrey Spear]
+
+  Issue #63
+
+* Retry SUSHI reports if &quot;Report Queued&quot; message is returned. [Geoffrey Spear]
+
+  (This is kind of an ugly hack that looks for this string in the
+  raw XML. A nicer fix will be possible with a fix for #3 )
+
+### Docs
+* Help for sushiclient --nodelay option (which probably shouldn't actually be used, but was helpful for testing without making the rest suite wait 60 seconds) [Geoffrey Spear]
+
+
+### Code quality/CI
+
+* Exclude builds for flake8/lint/manifest? [Geoffrey Spear]
+  Issue #63
+  
+* Only use pylint version 1. [Geoffrey Spear]
+
+  (version 2 drops py2 support)
+
+
+## 1.0.2 (2018-05-11)
+
+### Bugfixes
+* Fix incorrect first_date_col for DB1 reports. [James Fournie]
+
+  The first date column in a DB1 report should actually have index 5 (6th column).  See: https://www.projectcounter.org/code-of-practice-sections/usage-reports/#databases
+
+### Tests
+
+* Add failing test for PR #60. [Geoffrey Spear]
+
+* Add test for gaps in stats being output correctly. [Geoffrey Spear]
+
+### Code quality/CI
+
+* Create pyup.io config file. [pyup-bot]
+
+* Flake8: Fix whitespace after comma. [James Fournie]
+
+* Run 2.7 flake8 with 2.7; correct matrix syntax. [Geoffrey Spear]
+
+* Do linting through tox instead of directly in .travis.yml. [Geoffrey Spear]
+
+* Docs: pypi stuff. [Geoffrey Spear]
+
+  fix pypi link
+
+  remove some outdated advice on running setup.py install directly
+
+  link to PyPA installing packages page
+
+
+## 1.0.1 (2018-04-06)
+
+* Use universal wheel. [Geoffrey Spear]
 
 ## 1.0.0
 
