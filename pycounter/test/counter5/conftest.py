@@ -26,9 +26,9 @@ def trj1_report():
 def sushi5_report():
     with HTTMock(sushi_mock):
         return pycounter.sushi.get_report(
-            "http://www.example.com/Sushi",
-            datetime.date(2019, 1, 1),
-            datetime.date(2019, 2, 28),
+            url="http://www.example.com/Sushi",
+            start_date=datetime.date(2019, 1, 1),
+            end_date=datetime.date(2019, 2, 28),
             release=5,
             report="TR_J1",
         )

@@ -6,6 +6,7 @@ import warnings
 import pendulum
 import requests
 
+import pycounter.report
 import pycounter.exceptions
 
 
