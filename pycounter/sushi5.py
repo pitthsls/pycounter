@@ -1,3 +1,5 @@
+"""COUNTER 5 SUSHI support."""
+
 import datetime
 import logging
 import time
@@ -8,7 +10,7 @@ import requests
 
 import pycounter.report
 import pycounter.exceptions
-
+from pycounter.helpers import convert_date_run
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +55,51 @@ def _raw_to_full(raw_report):
     }
 
     report = pycounter.report.CounterReport(**report_data)
-    #  FIXME - add actual item data to report
+
+    for item in raw_report["Report_Items"]:
+        publisher_name = item.get("Publisher", u"")
+        platform = item.get("Platform", u"")
+        title = item["Title"]
+        eissn = issn = isbn = doi = prop_id = u""
+
+        for identifier in item["Item_ID"]:
+            if identifier["Type"] == "Print_ISSN":
+                issn = identifier["Value"]
+            elif identifier["Type"] == "Online_ISSN":
+                eissn = identifier["Value"]
+            elif identifier["Type"] == "ISBN":
+                isbn = identifier["Value"]
+            elif identifier["Type"] == "DOI":
+                doi = identifier["Value"]
+            elif identifier["Type"] == "Proprietary_ID":
+                prop_id = identifier["Value"]
+
+        month_data = []
+
+        for perform_item in item["Performance"]:
+            item_date = convert_date_run(perform_item["Period"]["Begin_Date"])
+            usage = None
+            for inst in perform_item["Instance"]:
+                if inst["Metric_Type"] == u"Total_Item_Requests":
+                    usage = inst["Count"]
+            if usage is not None:
+                month_data.append((item_date, int(usage)))
+
+        if report.report_type.startswith("TR_J"):
+            report.pubs.append(
+                pycounter.report.CounterJournal(
+                    title=title,
+                    platform=platform,
+                    publisher=publisher_name,
+                    period=report.period,
+                    metric=report.metric,
+                    issn=issn,
+                    eissn=eissn,
+                    doi=doi,
+                    proprietary_id=prop_id,
+                    month_data=month_data,
+                )
+            )
 
     return report
 

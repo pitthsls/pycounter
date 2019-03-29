@@ -35,7 +35,7 @@ setup(
     keywords="library COUNTER journals usage_statistics SUSHI",
     test_suite="pycounter.test",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 2.7",

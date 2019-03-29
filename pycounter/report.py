@@ -648,14 +648,10 @@ def parse_generic(report_reader):
         second_line = six.next(report_reader)
         third_line = six.next(report_reader)
         report.report_type, report.report_version = _get_c5_type_and_version(
-            first_line,
-            second_line,
-            third_line
+            first_line, second_line, third_line
         )
     else:
-        report.report_type, report.report_version = _get_type_and_version(
-            first_line[0]
-        )
+        report.report_type, report.report_version = _get_type_and_version(first_line[0])
 
     if report.report_version != 5:
         # noinspection PyTypeChecker
@@ -666,7 +662,9 @@ def parse_generic(report_reader):
     if report.report_version >= 4:
         inst_id_line = six.next(report_reader)
         if inst_id_line:
-            report.institutional_identifier = inst_id_line[1 if report.report_version == 5 else 0]
+            report.institutional_identifier = inst_id_line[
+                1 if report.report_version == 5 else 0
+            ]
             if report.report_type == "BR2":
                 report.section_type = inst_id_line[1]
 
@@ -676,13 +674,22 @@ def parse_generic(report_reader):
                 six.next(report_reader)
 
         covered_line = six.next(report_reader)
-        report.period = convert_covered(covered_line[1 if report.report_version == 5 else 0])
+        report.period = convert_covered(
+            covered_line[1 if report.report_version == 5 else 0]
+        )
 
     if report.report_version < 5:
         six.next(report_reader)
 
     date_run_line = six.next(report_reader)
-    report.date_run = convert_date_run(date_run_line[1 if report.report_version == 5 else 0])
+    report.date_run = convert_date_run(
+        date_run_line[1 if report.report_version == 5 else 0]
+    )
+
+    if report.report_version == 5:
+        for _ in range(2):
+            # Skip Created_By and blank line
+            six.next(report_reader)
 
     header = six.next(report_reader)
 
@@ -825,10 +832,7 @@ def _get_type_and_version(specifier):
     return report_type, report_version
 
 
-def _get_c5_type_and_version(
-            first_line,
-            second_line,
-            third_line):
+def _get_c5_type_and_version(first_line, second_line, third_line):
     return second_line[1], int(third_line[1])
 
 
