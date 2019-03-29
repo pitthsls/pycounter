@@ -8,9 +8,10 @@ import warnings
 import pendulum
 import requests
 
-import pycounter.report
 import pycounter.exceptions
 from pycounter.helpers import convert_date_run
+import pycounter.report
+
 
 logger = logging.getLogger(__name__)
 
@@ -60,15 +61,16 @@ def _raw_to_full(raw_report):
         publisher_name = item.get("Publisher", u"")
         platform = item.get("Platform", u"")
         title = item["Title"]
-        eissn = issn = isbn = doi = prop_id = u""
+        eissn = issn = doi = prop_id = u""
+        # isbn = u""
 
         for identifier in item["Item_ID"]:
             if identifier["Type"] == "Print_ISSN":
                 issn = identifier["Value"]
             elif identifier["Type"] == "Online_ISSN":
                 eissn = identifier["Value"]
-            elif identifier["Type"] == "ISBN":
-                isbn = identifier["Value"]
+            # elif identifier["Type"] == "ISBN":
+            #     isbn = identifier["Value"]
             elif identifier["Type"] == "DOI":
                 doi = identifier["Value"]
             elif identifier["Type"] == "Proprietary_ID":
