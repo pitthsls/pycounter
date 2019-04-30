@@ -52,6 +52,7 @@ def _raw_to_full(raw_report):
         "report_type": header["Report_ID"],
         "customer": header.get("Institution_Name", u""),
         "institutional_identifier": header.get("Customer_ID", u""),
+        "metric": "FT Item Requests",  # FIXME: this is for COUNTER4 compatibility
         "date_run": pendulum.parse(date_run) if date_run else datetime.datetime.now(),
     }
 

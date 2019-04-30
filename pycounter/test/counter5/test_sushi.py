@@ -17,3 +17,9 @@ def test_data(sushi5_report):
     publication = next(iter(sushi5_report))
     data = [month[2] for month in publication]
     assert 14 == data[0]
+
+
+def test_metric(sushi5_report):
+    publication = next(iter(sushi5_report))
+    metrics = [month[1] for month in publication]
+    assert metrics[0] == u"FT Item Requests"  # FIXME: COUNTER4 compat kludge
