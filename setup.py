@@ -30,6 +30,7 @@ setup(
     maintainer="Geoffrey Spear",
     maintainer_email="speargh@pitt.edu",
     url="http://www.github.com/pitthsls/pycounter",
+    project_urls={"Documentation": "https://pycounter.readthedocs.io"},
     description="Project COUNTER/NISO SUSHI statistics",
     long_description=readme,
     keywords="library COUNTER journals usage_statistics SUSHI",
