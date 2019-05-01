@@ -62,7 +62,7 @@ def get_sushi_stats_raw(
 
     :param release: report release number (should generally be `4`.)
 
-    :param sushi_dump: produces dump of XML to DEBUG logger
+    :param sushi_dump: produces dump of XML (or JSON, for COUNTER 5) to DEBUG logger
 
     :param verify: bool: whether to verify SSL certificates
 
