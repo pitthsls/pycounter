@@ -18,7 +18,16 @@ API Docs
 
    pycounter.report
    pycounter.sushi
+   pycounter.exceptions
 
+Internal APIs
+=============
+
+.. autosummary::
+   pycounter.sushi5
+   pycounter.constants
+   pycounter.csvhelper
+   pycounter.helpers
 
 Indices and tables
 ==================
