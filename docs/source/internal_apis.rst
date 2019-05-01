@@ -4,27 +4,27 @@ pycounter Internal APIs
 pycounter.sushi5 module
 -----------------------
 
-.. module:: pycounter.sushi5
+.. automodule:: pycounter.sushi5
    :members:
    :undoc-members:
 
 pycounter.constants module
 -----------------------
 
-.. module:: pycounter.constants
+.. automodule:: pycounter.constants
    :members:
    :undoc-members:
 
 pycounter.csvhelper module
 -----------------------
 
-.. module:: pycounter.csvhelper
+.. automodule:: pycounter.csvhelper
    :members:
    :undoc-members:
 
 pycounter.helpers module
 -----------------------
 
-.. module:: pycounter.helpers
+.. automodule:: pycounter.helpers
    :members:
    :undoc-members:
