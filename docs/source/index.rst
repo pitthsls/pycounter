@@ -43,4 +43,5 @@ Contents
 .. toctree::
 
     pycounter
+    internal_apis
     sushiclient
