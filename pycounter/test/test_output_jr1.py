@@ -8,7 +8,6 @@ import os
 import tempfile
 import unittest
 
-from pycounter import csvhelper
 from pycounter import report
 
 
