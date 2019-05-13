@@ -57,36 +57,36 @@ def test_helper_ns():
 
 
 def test_report_version(sushi_report_all):
-    assert 4 == sushi_report_all.report_version
+    assert sushi_report_all.report_version == 4
 
 
 def test_report_customer(sushi_report_with_customer):
-    assert u"exampleLibrary" == sushi_report_with_customer.institutional_identifier
+    assert sushi_report_with_customer.institutional_identifier == u"exampleLibrary"
 
 
 def test_report_no_customer(sushi_report_no_customer):
-    assert u"" == sushi_report_no_customer.institutional_identifier
+    assert sushi_report_no_customer.institutional_identifier == u""
 
 
 def test_report_type_jr1(sushi_report_jr1):
-    assert u"JR1" == sushi_report_jr1.report_type
+    assert sushi_report_jr1.report_type == u"JR1"
 
 
 def test_data_jr1(sushi_report_jr1):
     publication = next(iter(sushi_report_jr1))
-    assert 6 == publication.html_total
-    assert 8 == publication.pdf_total
-    assert u"10.5555/12345678" == publication.doi
-    assert u"JFD" == publication.proprietary_id
+    assert publication.html_total == 6
+    assert publication.pdf_total == 8
+    assert publication.doi == u"10.5555/12345678"
+    assert publication.proprietary_id == u"JFD"
 
     data = [month[2] for month in publication]
 
-    assert 14 == data[0]
+    assert data[0] == 14
 
 
 def test_title_jr1(sushi_report_jr1):
     publication = next(iter(sushi_report_jr1))
-    assert u"Journal of fake data" == publication.title
+    assert publication.title == u"Journal of fake data"
 
 
 class TestConvertRawBook(unittest.TestCase):
