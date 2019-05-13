@@ -27,6 +27,14 @@
           "Value": "0737-1764"
         },
         {
+          "Type": "DOI",
+          "Value": "some.fake.doi"
+        },
+        {
+          "Type": "Proprietary_ID",
+          "Value": "journ.fake.data"
+        },
+        {
           "Type": "Online_ISSN",
           "Value": "1234-5678"
         }

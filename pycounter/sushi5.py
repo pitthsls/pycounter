@@ -33,7 +33,7 @@ def _dates_from_filters(filters):
     }
     try:
         return converted_filters["Begin_Date"], converted_filters["End_Date"]
-    except KeyError:
+    except KeyError:  # pragma: no cover
         raise ValueError("filters must include a Begin_Date and End_Date")
 
 
@@ -153,7 +153,7 @@ def get_sushi_stats_raw(
     :param url: str: URL to endpoint for this provider
 
     """
-    if url is None and wsdl_url:
+    if url is None and wsdl_url:  # pragma: no cover
         warnings.warn(
             DeprecationWarning(
                 "wsdl_url argument to get_sushi_stats"
@@ -175,7 +175,7 @@ def get_sushi_stats_raw(
         headers={"User-Agent": "pycounter/%s" % pycounter.__version__},
     )
 
-    if sushi_dump:
+    if sushi_dump:  # pragma: no cover
         logger.debug(
             "SUSHI DUMP: request: %s \n\n response: %s",
             vars(response.request),
@@ -200,6 +200,6 @@ def get_report(*args, **kwargs):
         try:
             raw_report = get_sushi_stats_raw(*args, **kwargs)
             return _raw_to_full(raw_report)
-        except pycounter.exceptions.ServiceBusyError:
+        except pycounter.exceptions.ServiceBusyError:  # pragma: no cover
             print("Service busy, retrying in %d seconds" % delay_amount)
             time.sleep(delay_amount)
