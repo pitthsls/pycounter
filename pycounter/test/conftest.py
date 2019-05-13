@@ -3,6 +3,7 @@ import os
 
 import pytest
 
+from pycounter import csvhelper
 from pycounter import report
 import pycounter.sushi
 
@@ -83,3 +84,22 @@ def sushi_report_no_customer(request):
 def sushi_report_jr1(request):
     """Report from SUSHI, shared common data, JR1 only."""
     return parse_sushi_file(request.param)
+
+
+@pytest.fixture(
+    params=[
+        "C4BR1.tsv",
+        "C4DB1.tsv",
+        "C4JR1.csv",
+        "C4BR2.tsv",
+        "C4DB2.tsv",
+        "C4JR1mul.csv",
+    ]
+)
+def common_output(request):
+    """Common data for output."""
+    delim = {"tsv": "\t", "csv": ","}[request.param.split(".")[1]]
+    filename = os.path.join(os.path.dirname(__file__), "data", request.param)
+    with csvhelper.UnicodeReader(filename, delimiter=delim) as report_reader:
+        content = list(report_reader)
+    return report.parse(filename).as_generic(), content
