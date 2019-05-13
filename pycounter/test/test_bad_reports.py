@@ -9,6 +9,8 @@ import pycounter.exceptions
 
 
 class TestParseBad(unittest.TestCase):
+    """Tests for parsing bad reports."""
+
     def test_bogus_report_type(self):
         data = [[u"Bogus Report 7 (R4)"]]
         self.assertRaises(
@@ -29,6 +31,8 @@ class TestParseBad(unittest.TestCase):
 
 
 class TestBogusFiletype(unittest.TestCase):
+    """Test file extension being incorrect."""
+
     def test_bogus_file_type(self):
         self.assertRaises(
             pycounter.exceptions.PycounterException, report.parse, "no_such_file", "qsx"

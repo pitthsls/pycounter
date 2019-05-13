@@ -1,3 +1,4 @@
+"""Pytest fixtures for COUNTER 5 test suite."""
 import datetime
 import io
 import os
@@ -17,6 +18,7 @@ def sushi_mock(url_unused, request_unused):
 
 @pytest.fixture
 def trj1_report():
+    """Tab-separated title report."""
     return pycounter.report.parse(
         os.path.join(os.path.dirname(__file__), "data", "tr_j1.tsv")
     )
@@ -24,6 +26,7 @@ def trj1_report():
 
 @pytest.fixture
 def sushi5_report():
+    """JSON SUSHI report."""
     with HTTMock(sushi_mock):
         return pycounter.sushi.get_report(
             url="http://www.example.com/Sushi",
