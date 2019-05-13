@@ -1,0 +1,78 @@
+{
+  "Report_Header": {
+    "Created": "2019-03-28T11:25:11Z",
+    "Created_By": "Example Vendor",
+    "Customer_ID": "exampleLibrary",
+    "Report_ID": "TR_J1",
+    "Release": "5",
+    "Institution_Name": "Example Library",
+    "Report_Name": "Journal Requests (Excluding \"OA_Gold\")",
+    "Report_Filters": [
+      {
+        "Name": "Begin_Date",
+        "Value": "2019-01-01"
+      },
+      {
+        "Name": "End_Date",
+        "Value": "2019-02-28"
+      }
+    ]
+  },
+  "Report_Items": [
+    {
+      "Title": "Journal of fake data",
+      "Item_ID": [
+        {
+          "Type": "Print_ISSN",
+          "Value": "0737-1764"
+        },
+        {
+          "Type": "Online_ISSN",
+          "Value": "1234-5678"
+        }
+      ],
+      "Platform": "ExamplePlatform",
+      "Publisher": "Example Publisher",
+      "Publisher_ID": [
+        {
+          "Type": "Proprietary",
+          "Value": "Example: 42"
+        }
+      ],
+      "Performance": [
+        {
+          "Period": {
+            "Begin_Date": "2019-01-01",
+            "End_Date": "2019-01-31"
+          },
+          "Instance": [
+            {
+              "Metric_Type": "Total_Item_Requests",
+              "Count": 14
+            },
+            {
+              "Metric_Type": "Unique_Item_Requests",
+              "Count": 9
+            }
+          ]
+        },
+        {
+          "Period": {
+            "Begin_Date": "2019-02-01",
+            "End_Date": "2019-02-28"
+          },
+          "Instance": [
+            {
+              "Metric_Type": "Total_Item_Requests",
+              "Count": 16
+            },
+            {
+              "Metric_Type": "Unique_Item_Requests",
+              "Count": 12
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

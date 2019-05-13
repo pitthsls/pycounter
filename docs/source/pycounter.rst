@@ -58,3 +58,8 @@ Commonly-used function
 Other functions
 ^^^^^^^^^^^^^^^
 .. autofunction:: get_sushi_stats_raw
+
+pycounter.exceptions module
+---------------------------
+
+.. module:: pycounter.exceptions

@@ -66,6 +66,16 @@ Options:
 
    Path to write output file to. If file already exists, it will be overwritten.
 
+.. option:: -d, --dump
+
+   Dump raw request and response to logger.
+
 .. option:: --no_ssl_verify
 
    Skip SSL certificate verification.
+
+.. option:: --no-delay
+
+   Do not wait 60 seconds before retrying a request in case of failure. This is
+   provided mainly for testing; it's not recommended to skip the delay when
+   talking to someone else's server...
