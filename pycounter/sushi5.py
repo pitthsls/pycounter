@@ -146,26 +146,7 @@ def get_sushi_stats_raw(
     :param url: str: URL to endpoint for this provider
 
     """
-    if release != 5:  # pragma: no cover
-        raise pycounter.exceptions.SushiException(
-            "The sushi5 module only supports " "release 5"
-        )
-    deprecated_args = set(kwargs) & DEPRECATED_KEYS
-    if deprecated_args:  # pragma: no cover
-        warnings.warn(
-            DeprecationWarning(
-                "The argument(s) %s are no longer used for SUSHI "
-                "requests in COUNTER 5." % ", ".join(deprecated_args)
-            )
-        )
-    unknown_args = set(kwargs) - DEPRECATED_KEYS
-    if unknown_args:  # pragma: no cover
-        warnings.warn(
-            pycounter.exceptions.SushiWarning(
-                "The arguments %s are not known for "
-                "SUSHI requests in COUNTER 5." % ", ".join(deprecated_args)
-            )
-        )
+    _check_params(kwargs, release)
     if url is None and wsdl_url:  # pragma: no cover
         warnings.warn(
             DeprecationWarning(
@@ -197,6 +178,30 @@ def get_sushi_stats_raw(
         )
 
     return response.json()
+
+
+def _check_params(kwargs, release):
+    """Warn about unnecessary/wrong params to get_sushi_stats_raw."""
+    if release != 5:  # pragma: no cover
+        raise pycounter.exceptions.SushiException(
+            "The sushi5 module only supports " "release 5"
+        )
+    deprecated_args = set(kwargs) & DEPRECATED_KEYS
+    if deprecated_args:  # pragma: no cover
+        warnings.warn(
+            DeprecationWarning(
+                "The argument(s) %s are no longer used for SUSHI "
+                "requests in COUNTER 5." % ", ".join(deprecated_args)
+            )
+        )
+    unknown_args = set(kwargs) - DEPRECATED_KEYS
+    if unknown_args:  # pragma: no cover
+        warnings.warn(
+            pycounter.exceptions.SushiWarning(
+                "The arguments %s are not known for "
+                "SUSHI requests in COUNTER 5." % ", ".join(deprecated_args)
+            )
+        )
 
 
 def get_report(*args, **kwargs):
