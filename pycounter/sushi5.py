@@ -119,7 +119,7 @@ def get_sushi_stats_raw(
     sushi_dump=False,
     verify=True,
     url=None,
-    **kwargs,
+    **kwargs
 ):
     """Get SUSHI stats for a given site in dict (decoded from JSON) format.
 
@@ -150,7 +150,7 @@ def get_sushi_stats_raw(
         raise pycounter.exceptions.SushiException(
             "The sushi5 module only supports " "release 5"
         )
-    deprecated_args = kwargs.keys() & DEPRECATED_KEYS
+    deprecated_args = set(kwargs) & DEPRECATED_KEYS
     if deprecated_args:  # pragma: no cover
         warnings.warn(
             DeprecationWarning(
@@ -158,7 +158,7 @@ def get_sushi_stats_raw(
                 "requests in COUNTER 5." % ", ".join(deprecated_args)
             )
         )
-    unknown_args = kwargs.keys() - DEPRECATED_KEYS
+    unknown_args = set(kwargs) - DEPRECATED_KEYS
     if unknown_args:  # pragma: no cover
         warnings.warn(
             pycounter.exceptions.SushiWarning(
