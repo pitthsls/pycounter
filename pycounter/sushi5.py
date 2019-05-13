@@ -12,6 +12,7 @@ import pycounter.exceptions
 from pycounter.helpers import convert_date_run
 import pycounter.report
 
+DEPRECATED_KEYS = {"requestor_email", "requestor_name", "customer_name"}
 
 logger = logging.getLogger(__name__)
 
@@ -50,8 +51,8 @@ def _raw_to_full(raw_report):
         "period": (start_date, end_date),
         "report_version": int(header["Release"]),
         "report_type": header["Report_ID"],
-        "customer": header.get("Institution_Name", u""),
-        "institutional_identifier": header.get("Customer_ID", u""),
+        "customer": header.get("Institution_Name", ""),
+        "institutional_identifier": header.get("Customer_ID", ""),
         "metric": "FT Item Requests",  # FIXME: this is for COUNTER4 compatibility
         "date_run": pendulum.parse(date_run) if date_run else datetime.datetime.now(),
     }
@@ -59,10 +60,10 @@ def _raw_to_full(raw_report):
     report = pycounter.report.CounterReport(**report_data)
 
     for item in raw_report["Report_Items"]:
-        publisher_name = item.get("Publisher", u"")
-        platform = item.get("Platform", u"")
+        publisher_name = item.get("Publisher", "")
+        platform = item.get("Platform", "")
         title = item["Title"]
-        eissn = issn = doi = prop_id = u""
+        eissn = issn = doi = prop_id = ""
         # isbn = u""
 
         for identifier in item["Item_ID"]:
@@ -83,7 +84,7 @@ def _raw_to_full(raw_report):
             item_date = convert_date_run(perform_item["Period"]["Begin_Date"])
             usage = None
             for inst in perform_item["Instance"]:
-                if inst["Metric_Type"] == u"Total_Item_Requests":
+                if inst["Metric_Type"] == "Total_Item_Requests":
                     usage = inst["Count"]
             if usage is not None:
                 month_data.append((item_date, int(usage)))
@@ -112,15 +113,13 @@ def get_sushi_stats_raw(
     start_date=None,
     end_date=None,
     requestor_id=None,
-    requestor_email=None,
-    requestor_name=None,
     customer_reference=None,
-    customer_name=None,
     report="TR_J1",
     release=5,
     sushi_dump=False,
     verify=True,
     url=None,
+    **kwargs,
 ):
     """Get SUSHI stats for a given site in dict (decoded from JSON) format.
 
@@ -133,26 +132,40 @@ def get_sushi_stats_raw(
 
     :param requestor_id: requestor ID as defined by SUSHI protocol
 
-    :param requestor_email: requestor email address, if required by provider
-
-    :param requestor_name: Internationally recognized organization name
-
     :param customer_reference: customer reference number as defined by SUSHI
         protocol
 
-    :param customer_name: Internationally recognized organization name
-
     :param report: report type, values defined by SUSHI protocol
 
-    :param release: report release number (should generally be `4`.)
+    :param release: COUNTER release (only 5 is supported in this module)
 
-    :param sushi_dump: produces dump of XML to DEBUG logger
+    :param sushi_dump: produces dump of JSON to DEBUG logger
 
     :param verify: bool: whether to verify SSL certificates
 
     :param url: str: URL to endpoint for this provider
 
     """
+    if release != 5:  # pragma: no cover
+        raise pycounter.exceptions.SushiException(
+            "The sushi5 module only supports " "release 5"
+        )
+    deprecated_args = kwargs.keys() & DEPRECATED_KEYS
+    if deprecated_args:  # pragma: no cover
+        warnings.warn(
+            DeprecationWarning(
+                "The argument(s) %s are no longer used for SUSHI "
+                "requests in COUNTER 5." % ", ".join(deprecated_args)
+            )
+        )
+    unknown_args = kwargs.keys() - DEPRECATED_KEYS
+    if unknown_args:  # pragma: no cover
+        warnings.warn(
+            pycounter.exceptions.SushiWarning(
+                "The arguments %s are not known for "
+                "SUSHI requests in COUNTER 5." % ", ".join(deprecated_args)
+            )
+        )
     if url is None and wsdl_url:  # pragma: no cover
         warnings.warn(
             DeprecationWarning(
@@ -173,6 +186,7 @@ def get_sushi_stats_raw(
         "{url}/reports/{report}".format(**url_params),
         params=req_params,
         headers={"User-Agent": "pycounter/%s" % pycounter.__version__},
+        verify=verify,
     )
 
     if sushi_dump:  # pragma: no cover
