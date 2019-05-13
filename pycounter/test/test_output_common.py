@@ -1,3 +1,6 @@
+"""Check data in common output formats."""
+
+
 def test_header_content(common_output):
     assert common_output[0][0:7] == common_output[1][0:7]
 

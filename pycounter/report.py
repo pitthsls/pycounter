@@ -832,7 +832,7 @@ def _get_type_and_version(specifier):
     return report_type, report_version
 
 
-def _get_c5_type_and_version(first_line, second_line, third_line):
+def _get_c5_type_and_version(unused_first_line, second_line, third_line):
     """Find COUNTER 5 specific type and version."""
     return second_line[1], int(third_line[1])
 
