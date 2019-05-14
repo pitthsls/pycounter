@@ -2,7 +2,6 @@
 
 import datetime
 import logging
-import time
 import warnings
 
 import pendulum
@@ -56,7 +55,7 @@ def _get_identifiers(item):
     return identifiers
 
 
-def _raw_to_full(raw_report):
+def raw_to_full(raw_report):
     """Convert a raw report to CounterReport.
 
     :param raw_report: raw report as dict decoded from JSON
@@ -206,23 +205,3 @@ def _check_params(kwargs, release):
                 "SUSHI requests in COUNTER 5." % ", ".join(deprecated_args)
             )
         )
-
-
-def get_report(*args, **kwargs):
-    """Get a usage report from a COUNTER 5 (RESTful) SUSHI server.
-
-    returns a :class:`pycounter.report.CounterReport` object.
-
-    parameters: see get_sushi_stats_raw
-
-    :param no_delay: don't delay in retrying Report Queued
-    """
-    no_delay = kwargs.pop("no_delay", False)
-    delay_amount = 0 if no_delay else 60
-    while True:
-        try:
-            raw_report = get_sushi_stats_raw(*args, **kwargs)
-            return _raw_to_full(raw_report)
-        except pycounter.exceptions.ServiceBusyError:  # pragma: no cover
-            print("Service busy, retrying in %d seconds" % delay_amount)
-            time.sleep(delay_amount)

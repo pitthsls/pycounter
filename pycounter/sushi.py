@@ -133,14 +133,19 @@ def get_report(*args, **kwargs):
     :param no_delay: don't delay in retrying Report Queued
     """
     if kwargs.get("release") == 5:
-        return sushi5.get_report(*args, **kwargs)
+        gssr = sushi5.get_sushi_stats_raw
+        rtf = sushi5.raw_to_full
+
+    else:
+        gssr = get_sushi_stats_raw
+        rtf = raw_to_full
 
     no_delay = kwargs.pop("no_delay", False)
     delay_amount = 0 if no_delay else 60
     while True:
         try:
-            raw_report = get_sushi_stats_raw(*args, **kwargs)
-            return _raw_to_full(raw_report)
+            raw_report = gssr(*args, **kwargs)
+            return rtf(raw_report)
         except pycounter.exceptions.ServiceBusyError:
             print("Service busy, retrying in %d seconds" % delay_amount)
             time.sleep(delay_amount)
@@ -155,7 +160,7 @@ def _ns(namespace, name):
     return "{" + NS[namespace] + "}" + name
 
 
-def _raw_to_full(raw_report):
+def raw_to_full(raw_report):
     """Convert a raw report to CounterReport.
 
     :param raw_report: raw XML report

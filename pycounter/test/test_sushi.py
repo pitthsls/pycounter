@@ -15,9 +15,6 @@ from pycounter import sushiclient
 import pycounter.exceptions
 
 
-# pylint: disable= protected-access
-
-
 @urlmatch(netloc=r"(.*\.)?example\.com$")
 def report_queued_mock(url_unused, request_unused):
     if report_queued_mock.first_request:
@@ -95,7 +92,7 @@ class TestConvertRawBook(unittest.TestCase):
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple_br1.xml")
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
 
     def test_report(self):
         self.assertEqual(self.report.report_type, u"BR1")
@@ -128,7 +125,7 @@ class TestConvertRawDatabase(unittest.TestCase):
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple_db1.xml")
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
         self.databases = list(self.report)
 
     def test_report(self):
@@ -182,7 +179,7 @@ class TestRawDatabaseWithMissingData(unittest.TestCase):
             os.path.dirname(__file__), "data", "sushi_db1_missing_record_view.xml"
         )
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
         # missing data only injected when making generic to write
         self.report.as_generic()
         self.databases = list(self.report)
@@ -206,7 +203,7 @@ class TestMissingMonth(unittest.TestCase):
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__), "data", "sushi_missing_jan.xml")
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
         self.publication = next(iter(self.report))
 
     def test_february(self):
@@ -347,7 +344,7 @@ class TestMissingItemIdentifier(unittest.TestCase):
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__), "data", "sushi_missing_ii.xml")
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
 
     def test_issn(self):
         publication = next(iter(self.report))
