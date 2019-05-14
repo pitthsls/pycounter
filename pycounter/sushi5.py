@@ -38,6 +38,24 @@ def _dates_from_filters(filters):
         raise ValueError("filters must include a Begin_Date and End_Date")
 
 
+def _get_identifiers(item):
+    """Pull identifiers from an item into a dict."""
+    identifiers = {"eissn": "", "issn": "", "doi": "", "prop_id": "", "isbn": ""}
+    for identifier in item["Item_ID"]:
+        if identifier["Type"] == "Print_ISSN":
+            identifiers["issn"] = identifier["Value"]
+        elif identifier["Type"] == "Online_ISSN":
+            identifiers["eissn"] = identifier["Value"]
+        elif identifier["Type"] == "ISBN":
+            identifiers["eisnn"] = identifier["Value"]
+        elif identifier["Type"] == "DOI":
+            identifiers["doi"] = identifier["Value"]
+        elif identifier["Type"] == "Proprietary_ID":
+            identifiers["prop_id"] = identifier["Value"]
+
+    return identifiers
+
+
 def _raw_to_full(raw_report):
     """Convert a raw report to CounterReport.
 
@@ -45,38 +63,24 @@ def _raw_to_full(raw_report):
     :return: a :class:`pycounter.report.CounterReport`
     """
     header = raw_report["Report_Header"]
-    start_date, end_date = _dates_from_filters(header["Report_Filters"])
+    period = _dates_from_filters(header["Report_Filters"])
     date_run = header.get("Created")
-    report_data = {
-        "period": (start_date, end_date),
-        "report_version": int(header["Release"]),
-        "report_type": header["Report_ID"],
-        "customer": header.get("Institution_Name", ""),
-        "institutional_identifier": header.get("Customer_ID", ""),
-        "metric": "FT Item Requests",  # FIXME: this is for COUNTER4 compatibility
-        "date_run": pendulum.parse(date_run) if date_run else datetime.datetime.now(),
-    }
-
-    report = pycounter.report.CounterReport(**report_data)
+    report = pycounter.report.CounterReport(
+        period=period,
+        report_version=int(header["Release"]),
+        report_type=header["Report_ID"],
+        customer=header.get("Institution_Name", ""),
+        institutional_identifier=header.get("Customer_ID", ""),
+        metric="FT Item Requests",  # FIXME: this is for COUNTER4 compatibility
+        date_run=pendulum.parse(date_run) if date_run else datetime.datetime.now(),
+    )
 
     for item in raw_report["Report_Items"]:
         publisher_name = item.get("Publisher", "")
         platform = item.get("Platform", "")
         title = item["Title"]
-        eissn = issn = doi = prop_id = ""
-        # isbn = u""
 
-        for identifier in item["Item_ID"]:
-            if identifier["Type"] == "Print_ISSN":
-                issn = identifier["Value"]
-            elif identifier["Type"] == "Online_ISSN":
-                eissn = identifier["Value"]
-            # elif identifier["Type"] == "ISBN":
-            #     isbn = identifier["Value"]
-            elif identifier["Type"] == "DOI":
-                doi = identifier["Value"]
-            elif identifier["Type"] == "Proprietary_ID":
-                prop_id = identifier["Value"]
+        identifiers = _get_identifiers(item)
 
         month_data = []
 
@@ -97,10 +101,10 @@ def _raw_to_full(raw_report):
                     publisher=publisher_name,
                     period=report.period,
                     metric=report.metric,
-                    issn=issn,
-                    eissn=eissn,
-                    doi=doi,
-                    proprietary_id=prop_id,
+                    issn=identifiers["issn"],
+                    eissn=identifiers["eissn"],
+                    doi=identifiers["doi"],
+                    proprietary_id=identifiers["prop_id"],
                     month_data=month_data,
                 )
             )
