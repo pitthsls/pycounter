@@ -42,11 +42,15 @@ jobs:
     dist: "xenial"
     sudo: true
     script: tox
+  - python: "3.6"
+    env: TOXENV=mutmut
 
 matrix:
   allow_failures:
     - python: 3.6
-      env: TOXENV=lint
+      env:
+      - TOXENV=lint
+      - TOXENV=mutmut
 
 deploy:
   provider: pypi
@@ -54,7 +58,7 @@ deploy:
   password:
     secure: hCCjmC5IU/Ch5Ux1WpOwnI5/veifCQ4uTs7z6HL7tQaaFkLArGlTSKuAGTs8P753PlxJwTiLvjYRkjHt0Tzav6GoZ3TkU4/QHnd6JZLhOth9uTj7ENgW3kWJ1zwZU9acLqDub1jqXglJVUWk6Ave1UMkNLFfhSnLW+v4x8m94Ww=
   on:
-    condition: "! $TOXENV =~ ^flake8|lint|manifest$"
+    condition: "! $TOXENV =~ ^flake8|lint|manifest|mutmut$"
     tags: true
     python: 3.6
   distributions: "sdist bdist_wheel"
