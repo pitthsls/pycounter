@@ -5,7 +5,6 @@ from __future__ import absolute_import
 import os
 import unittest
 
-from pycounter.constants import METRICS
 import pycounter.report
 
 
@@ -23,10 +22,6 @@ class ParseCounter4Example(unittest.TestCase):
     def test_stats(self):
         publication = self.report.pubs[0]
         self.assertEqual([x[2] for x in publication], [0, 20, 0, 0, 5, 0])
-
-    def test_report_metric(self):
-        for metric in self.report.metric:
-            self.assertTrue(metric in METRICS[self.report.report_type])
 
     def test_row_metric(self):
         publication = self.report.pubs[0]
