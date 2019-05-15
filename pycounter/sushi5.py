@@ -46,7 +46,7 @@ def _get_identifiers(item):
         elif identifier["Type"] == "Online_ISSN":
             identifiers["eissn"] = identifier["Value"]
         elif identifier["Type"] == "ISBN":
-            identifiers["eisnn"] = identifier["Value"]
+            identifiers["isbn"] = identifier["Value"]
         elif identifier["Type"] == "DOI":
             identifiers["doi"] = identifier["Value"]
         elif identifier["Type"] == "Proprietary_ID":
