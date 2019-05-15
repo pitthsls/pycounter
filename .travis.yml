@@ -48,9 +48,9 @@ jobs:
 matrix:
   allow_failures:
     - python: 3.6
-      env:
-      - TOXENV=lint
-      - TOXENV=mutmut
+      env: TOXENV=lint
+    - python: "3.6"
+      env: TOXENV=mutmut
 
 deploy:
   provider: pypi
