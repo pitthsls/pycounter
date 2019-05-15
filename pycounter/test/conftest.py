@@ -125,12 +125,12 @@ def all_book_reports(request):
 @pytest.fixture(params=["C4BR1.tsv", "simpleJR1.tsv"])
 def report_file_output(request):
     """Reports with their expected output."""
-    report = parsedata(request.param)
+    rpt = parsedata(request.param)
     with open(
         os.path.join(os.path.dirname(__file__), "data", request.param), "rb"
     ) as f:
         expected_data = f.read()
-    return report, expected_data
+    return rpt, expected_data
 
 
 @pytest.fixture(params=["C4DB1.tsv", "C4DB2.tsv"])
