@@ -11,6 +11,7 @@ import pycounter
 
 @urlmatch(netloc=r"(.*\.)?example\.com$")
 def sushi_mock(url_unused, request_unused):
+    """Mocked SUSHI service."""
     path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple.json")
     with io.open(path, "r", encoding="utf-8") as datafile:
         return datafile.read()

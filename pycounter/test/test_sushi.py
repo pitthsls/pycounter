@@ -50,7 +50,7 @@ def bogus_mock(url_unused, request_unused):
 
 def test_helper_ns():
     """Test _ns helper"""
-    assert sushi._ns("sushi", "name") == "{http://www.niso.org/schemas/sushi}name"
+    assert sushi.ns("sushi", "name") == "{http://www.niso.org/schemas/sushi}name"
 
 
 def test_report_version(sushi_report_all):

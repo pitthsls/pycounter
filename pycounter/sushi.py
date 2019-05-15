@@ -151,7 +151,7 @@ def get_report(*args, **kwargs):
             time.sleep(delay_amount)
 
 
-def _ns(namespace, name):
+def ns(namespace, name):
     """Convenience function to make a namespaced XML name.
 
     :param namespace: one of 'SOAP-ENV', 'sushi', 'sushicounter', 'counter'
@@ -176,11 +176,11 @@ def raw_to_full(raw_report):
     o_root = objectify.fromstring(raw_report)
     rep = None
     try:
-        rep = o_root.Body[_ns("sushicounter", "ReportResponse")]
-        c_report = rep.Report[_ns("counter", "Report")]
+        rep = o_root.Body[ns("sushicounter", "ReportResponse")]
+        c_report = rep.Report[ns("counter", "Report")]
     except AttributeError:
         try:
-            c_report = rep.Report[_ns("counter", "Reports")].Report
+            c_report = rep.Report[ns("counter", "Reports")].Report
         except AttributeError:
             if b"Report Queued" in raw_report:
                 raise pycounter.exceptions.ServiceBusyError("Report Queued")
@@ -191,33 +191,33 @@ def raw_to_full(raw_report):
                 )
     logger.debug("COUNTER report: %s", etree.tostring(c_report))
     start_date = datetime.datetime.strptime(
-        root.find(".//%s" % _ns("sushi", "Begin")).text, "%Y-%m-%d"
+        root.find(".//%s" % ns("sushi", "Begin")).text, "%Y-%m-%d"
     ).date()
 
     end_date = datetime.datetime.strptime(
-        root.find(".//%s" % _ns("sushi", "End")).text, "%Y-%m-%d"
+        root.find(".//%s" % ns("sushi", "End")).text, "%Y-%m-%d"
     ).date()
 
     report_data = {"period": (start_date, end_date)}
 
-    rep_def = root.find(".//%s" % _ns("sushi", "ReportDefinition"))
+    rep_def = root.find(".//%s" % ns("sushi", "ReportDefinition"))
     report_data["report_version"] = int(rep_def.get("Release"))
 
     report_data["report_type"] = rep_def.get("Name")
 
-    customer = root.find(".//%s" % _ns("counter", "Customer"))
+    customer = root.find(".//%s" % ns("counter", "Customer"))
     try:
-        report_data["customer"] = customer.find(".//%s" % _ns("counter", "Name")).text
+        report_data["customer"] = customer.find(".//%s" % ns("counter", "Name")).text
     except AttributeError:
         report_data["customer"] = ""
 
     try:
-        inst_id = customer.find(".//%s" % _ns("counter", "ID")).text
+        inst_id = customer.find(".//%s" % ns("counter", "ID")).text
     except AttributeError:
         inst_id = u""
     report_data["institutional_identifier"] = inst_id
 
-    rep_root = root.find(".//%s" % _ns("counter", "Report"))
+    rep_root = root.find(".//%s" % ns("counter", "Report"))
     created_string = rep_root.get("Created")
     if created_string is not None:
         report_data["date_run"] = pendulum.parse(created_string)
