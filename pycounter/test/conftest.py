@@ -113,3 +113,9 @@ def common_output(request):
 def br_c1(request):
     """Version 1 (COUNTER 3) book reports."""
     return parsedata(request.param)
+
+
+@pytest.fixture(params=["C4BR2.tsv", "C4BR1.tsv", "simpleBR1.csv", "simpleBR2.csv"])
+def all_book_reports(request):
+    """All book reports."""
+    return parsedata(request.param)
