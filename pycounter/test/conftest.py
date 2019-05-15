@@ -39,7 +39,7 @@ def csv_jr1_r4_report(request):
     return parsedata(request.param)
 
 
-@pytest.fixture(params=["JR1.xlsx", "JR1_bad.xlsx"])
+@pytest.fixture(params=["JR1.xlsx", "JR1_bad.xlsx", "xlsxJR1"])
 def jr1_report_xlsx(request):
     """Excel formatted JR1 reports."""
     return parsedata(request.param)
