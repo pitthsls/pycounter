@@ -2,7 +2,6 @@
 
 from __future__ import absolute_import
 
-import datetime
 import os
 import unittest
 
@@ -20,15 +19,6 @@ class ParseCounter4Example(unittest.TestCase):
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u"DB2")
-        self.assertEqual(self.report.report_version, 4)
-
-    def test_year(self):
-        self.assertEqual(self.report.year, 2012)
-
-    def test_platform(self):
-        for publication in self.report:
-            self.assertEqual(publication.publisher, u"Megadodo Publications")
-            self.assertEqual(publication.platform, u"HHGTTG Online")
 
     def test_stats(self):
         publication = self.report.pubs[0]
@@ -44,15 +34,4 @@ class ParseCounter4Example(unittest.TestCase):
         self.assertEqual(
             jan_data[1],
             "Access denied: concurrent/" "simultaneous user license " "limit exceeded",
-        )
-
-    def test_customer(self):
-        self.assertEqual(self.report.customer, u"University of Maximegalon")
-
-    def test_date_run(self):
-        self.assertEqual(self.report.date_run, datetime.date(2012, 7, 9))
-
-    def test_period(self):
-        self.assertEqual(
-            self.report.period, (datetime.date(2012, 1, 1), datetime.date(2012, 6, 30))
         )

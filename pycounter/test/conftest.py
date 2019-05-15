@@ -130,3 +130,9 @@ def report_file_output(request):
     ) as f:
         expected_data = f.read()
     return report, expected_data
+
+
+@pytest.fixture(params=["C4DB1.tsv", "C4DB2.tsv"])
+def db_report(request):
+    """All C4 database reports."""
+    return parsedata(request.param)
