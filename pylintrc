@@ -11,6 +11,8 @@ good-names=logger,
            k,
            ex,
            Run,
+           ns,
+           f,
            _
 
 [SIMILARITIES]
