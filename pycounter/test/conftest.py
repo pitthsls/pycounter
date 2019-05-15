@@ -9,6 +9,7 @@ import pycounter.sushi
 
 
 def parsedata(filename):
+    """Helper function returns a report from a filename relative to data directory."""
     return report.parse(os.path.join(os.path.dirname(__file__), "data", filename))
 
 
@@ -119,3 +120,13 @@ def br_c1(request):
 def all_book_reports(request):
     """All book reports."""
     return parsedata(request.param)
+
+
+@pytest.fixture(params=["C4BR1.tsv", "simpleJR1.tsv"])
+def report_file_output(request):
+    report = parsedata(request.param)
+    with open(
+        os.path.join(os.path.dirname(__file__), "data", request.param), "rb"
+    ) as f:
+        expected_data = f.read()
+    return report, expected_data
