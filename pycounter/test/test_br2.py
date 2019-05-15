@@ -20,19 +20,6 @@ class ParseExample(unittest.TestCase):
 
     def test_reportname(self):
         self.assertEqual(self.report.report_type, u"BR2")
-        self.assertEqual(self.report.report_version, 1)
-
-    def test_year(self):
-        self.assertEqual(self.report.year, 2012)
-
-    def test_platform(self):
-        for publication in self.report:
-            self.assertEqual(publication.publisher, u"Megadodo Publications")
-            self.assertEqual(publication.platform, u"HHGTTG Online")
-
-    def test_stats(self):
-        publication = self.report.pubs[0]
-        self.assertEqual([x[2] for x in publication], [0, 25, 0, 0, 0, 0])
 
 
 class ParseCounter4Example(unittest.TestCase):
