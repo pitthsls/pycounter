@@ -67,6 +67,7 @@ def get_sushi_stats_raw(
     :param verify: bool: whether to verify SSL certificates
 
     """
+    # pylint: disable=too-many-locals
     root = etree.Element("{%(SOAP-ENV)s}Envelope" % NS, nsmap=NS)
     body = etree.SubElement(root, "{%(SOAP-ENV)s}Body" % NS)
     timestamp = pendulum.now("UTC").isoformat()
@@ -166,6 +167,7 @@ def raw_to_full(raw_report):
     :param raw_report: raw XML report
     :return: a :class:`pycounter.report.CounterReport`
     """
+    # pylint: disable=too-many-statements,too-many-branches,too-many-locals
     try:
         root = etree.fromstring(raw_report)
     except etree.XMLSyntaxError:

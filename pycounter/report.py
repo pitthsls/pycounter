@@ -58,6 +58,8 @@ class CounterReport(object):
 
     """
 
+    # pylint: disable=too-many-instance-attributes
+
     def __init__(
         self,
         report_type=None,
@@ -641,6 +643,7 @@ def parse_generic(report_reader):
     :return: CounterReport object
 
     """
+    # pylint: disable=too-many-locals,too-many-branches,too-many-statements
     report = CounterReport()
 
     first_line = six.next(report_reader)

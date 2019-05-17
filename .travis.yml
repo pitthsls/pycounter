@@ -43,11 +43,6 @@ jobs:
     sudo: true
     script: tox
 
-matrix:
-  allow_failures:
-    - python: 3.6
-      env: TOXENV=lint
-
 deploy:
   provider: pypi
   user: Wooble
