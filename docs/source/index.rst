@@ -9,7 +9,7 @@ pycounter
 Release v\ |version|
 
 .. include:: ../../README.rst
-   :start-line: 24
+   :start-line: 27
 
 API Docs
 ========

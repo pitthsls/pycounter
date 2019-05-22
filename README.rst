@@ -21,6 +21,9 @@ pycounter
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/ambv/black
 
+.. image:: https://dev.azure.com/SPEARGH/SPEARGH/_apis/build/status/pitthsls.pycounter?branchName=master
+    :target: https://dev.azure.com/SPEARGH/SPEARGH/_apis/build/status/pitthsls.pycounter?branchName=master
+
 
 pycounter makes working with `COUNTER <http://www.projectcounter.org/>`_
 usage statistics in Python easy, including fetching statistics with NISO
