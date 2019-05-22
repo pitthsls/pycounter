@@ -22,7 +22,7 @@ pycounter
     :target: https://github.com/ambv/black
 
 .. image:: https://dev.azure.com/SPEARGH/SPEARGH/_apis/build/status/pitthsls.pycounter?branchName=master
-    :target: https://dev.azure.com/SPEARGH/SPEARGH/_apis/build/status/pitthsls.pycounter?branchName=master
+    :target: https://dev.azure.com/SPEARGH/SPEARGH/_build/latest?definitionId=1&branchName=master
 
 
 pycounter makes working with `COUNTER <http://www.projectcounter.org/>`_
