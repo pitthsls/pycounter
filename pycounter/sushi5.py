@@ -127,7 +127,7 @@ def get_sushi_stats_raw(
     """Get SUSHI stats for a given site in dict (decoded from JSON) format.
 
     :param wsdl_url: (Deprecated; for backward compatibility with COUNTER 4 SUSHI
-    code. Use `url` instead.) URL to API endpoint for this provider
+        code. Use `url` instead.) URL to API endpoint for this provider
 
     :param start_date: start date for report (must be first day of a month)
 

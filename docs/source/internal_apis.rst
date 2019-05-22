@@ -9,21 +9,21 @@ pycounter.sushi5 module
    :undoc-members:
 
 pycounter.constants module
------------------------
+--------------------------
 
 .. automodule:: pycounter.constants
    :members:
    :undoc-members:
 
 pycounter.csvhelper module
------------------------
+--------------------------
 
 .. automodule:: pycounter.csvhelper
    :members:
    :undoc-members:
 
 pycounter.helpers module
------------------------
+------------------------
 
 .. automodule:: pycounter.helpers
    :members:

@@ -39,7 +39,6 @@ setup(
     description="Project COUNTER/NISO SUSHI statistics",
     long_description=readme,
     keywords="library COUNTER journals usage_statistics SUSHI",
-    test_suite="pycounter.test",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
@@ -50,7 +49,10 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
     ],
+    extras_require={
+        "docs": ["sphinx", "sphinx_rtd_theme"],
+        "tests": ["httmock", "mock", "pytest"],
+    },
     install_requires=requirements,
-    tests_require=["httmock", "mock", "pytest"],
     entry_points={"console_scripts": ["sushiclient = pycounter.sushiclient:main"]},
 )
