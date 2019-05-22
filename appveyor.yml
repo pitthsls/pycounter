@@ -1,0 +1,8 @@
+version: 1.0.{build}
+build_script:
+- cmd: >-
+    python -m pip install --ignore-installed -U pip virtualenv
+
+    pip install tox
+
+    tox -e py27,py34,py35,py36,py37,flake8,pypy,pypy3
