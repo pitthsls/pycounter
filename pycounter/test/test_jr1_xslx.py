@@ -25,9 +25,8 @@ def test_publisher(jr1_report_xlsx):
 
 
 def test_platform(jr1_report_xlsx):
-    assert all(
-        publication.platform == u"Silverchair" for publication in jr1_report_xlsx
-    )
+    for publication in jr1_report_xlsx:
+        assert publication.platform == u"Silverchair"
 
 
 @pytest.mark.parametrize(

@@ -15,9 +15,6 @@ from pycounter import sushiclient
 import pycounter.exceptions
 
 
-# pylint: disable= protected-access
-
-
 @urlmatch(netloc=r"(.*\.)?example\.com$")
 def report_queued_mock(url_unused, request_unused):
     if report_queued_mock.first_request:
@@ -53,40 +50,40 @@ def bogus_mock(url_unused, request_unused):
 
 def test_helper_ns():
     """Test _ns helper"""
-    assert sushi._ns("sushi", "name") == "{http://www.niso.org/schemas/sushi}name"
+    assert sushi.ns("sushi", "name") == "{http://www.niso.org/schemas/sushi}name"
 
 
 def test_report_version(sushi_report_all):
-    assert 4 == sushi_report_all.report_version
+    assert sushi_report_all.report_version == 4
 
 
 def test_report_customer(sushi_report_with_customer):
-    assert u"exampleLibrary" == sushi_report_with_customer.institutional_identifier
+    assert sushi_report_with_customer.institutional_identifier == u"exampleLibrary"
 
 
 def test_report_no_customer(sushi_report_no_customer):
-    assert u"" == sushi_report_no_customer.institutional_identifier
+    assert sushi_report_no_customer.institutional_identifier == u""
 
 
 def test_report_type_jr1(sushi_report_jr1):
-    assert u"JR1" == sushi_report_jr1.report_type
+    assert sushi_report_jr1.report_type == u"JR1"
 
 
 def test_data_jr1(sushi_report_jr1):
     publication = next(iter(sushi_report_jr1))
-    assert 6 == publication.html_total
-    assert 8 == publication.pdf_total
-    assert u"10.5555/12345678" == publication.doi
-    assert u"JFD" == publication.proprietary_id
+    assert publication.html_total == 6
+    assert publication.pdf_total == 8
+    assert publication.doi == u"10.5555/12345678"
+    assert publication.proprietary_id == u"JFD"
 
     data = [month[2] for month in publication]
 
-    assert 14 == data[0]
+    assert data[0] == 14
 
 
 def test_title_jr1(sushi_report_jr1):
     publication = next(iter(sushi_report_jr1))
-    assert u"Journal of fake data" == publication.title
+    assert publication.title == u"Journal of fake data"
 
 
 class TestConvertRawBook(unittest.TestCase):
@@ -95,7 +92,7 @@ class TestConvertRawBook(unittest.TestCase):
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple_br1.xml")
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
 
     def test_report(self):
         self.assertEqual(self.report.report_type, u"BR1")
@@ -128,7 +125,7 @@ class TestConvertRawDatabase(unittest.TestCase):
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple_db1.xml")
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
         self.databases = list(self.report)
 
     def test_report(self):
@@ -182,7 +179,7 @@ class TestRawDatabaseWithMissingData(unittest.TestCase):
             os.path.dirname(__file__), "data", "sushi_db1_missing_record_view.xml"
         )
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
         # missing data only injected when making generic to write
         self.report.as_generic()
         self.databases = list(self.report)
@@ -206,7 +203,7 @@ class TestMissingMonth(unittest.TestCase):
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__), "data", "sushi_missing_jan.xml")
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
         self.publication = next(iter(self.report))
 
     def test_february(self):
@@ -347,7 +344,7 @@ class TestMissingItemIdentifier(unittest.TestCase):
     def setUp(self):
         path = os.path.join(os.path.dirname(__file__), "data", "sushi_missing_ii.xml")
         with open(path, "rb") as datafile:
-            self.report = sushi._raw_to_full(datafile.read())
+            self.report = sushi.raw_to_full(datafile.read())
 
     def test_issn(self):
         publication = next(iter(self.report))

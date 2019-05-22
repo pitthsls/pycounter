@@ -90,6 +90,7 @@ REPORT_DESCRIPTIONS = {
     u"and Page-Type (formatted for normal browsers/delivered "
     u"to mobile devices and for mobile devices/delivered to "
     u"mobile devices)",
+    u"TR_J1": u'Journal Requests (Excluding "OA_Gold")',
 }
 
 HEADER_FIELDS = {
@@ -172,6 +173,19 @@ HEADER_FIELDS = {
         u"Platform",
         u"Access denied category",
         u"Reporting Period Total",
+    ),
+    # FIXME: this is outputting counter 5 reports in 4 format for... reasons.
+    "TR_J1": (
+        u"Journal",
+        u"Publisher",
+        u"Platform",
+        u"Journal DOI",
+        u"Proprietary Identifier",
+        u"Print ISSN",
+        u"Online ISSN",
+        u"Reporting Period Total",
+        u"Reporting Period HTML",
+        u"Reporting Period PDF",
     ),
 }
 

@@ -6,6 +6,7 @@ recursive-include docs *.gitkeep
 recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include pycounter *.csv
+recursive-include pycounter *.json
 recursive-include pycounter *.tsv
 recursive-include pycounter *.xlsx
 recursive-include pycounter *.xml
@@ -17,3 +18,4 @@ include CHANGELOG.md
 include .pyup.yml
 include .pre-commit-config.yaml
 include bandit.yml
+include appveyor.yml

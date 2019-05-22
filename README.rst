@@ -33,12 +33,16 @@ Developed by the `Health Sciences Library System <http://www.hsls.pitt.edu>`_
 of the `University of Pittsburgh <http://www.pitt.edu>`_  to support importing
 usage data into our in-house Electronic Resources Management (ERM) system.
 
-Licensed under the MIT license. See the file LICENSE for details.
+Licensed under the `MIT <https://choosealicense.com/licenses/mit/>`_ license.
+See the file LICENSE for details.
 
-pycounter is tested on Python 2.7, 3.4, 3.5, 3.6, 3.7 and pypy2 (if you're still
-stuck on Python 2.6 or 3.3, please use version 0.16.1 of pycounter)
+pycounter is tested on Python 2.7, 3.4, 3.5, 3.6, 3.7 and pypy (2 and 3)
 
-Documentation is on `Read the Docs <http://pycounter.readthedocs.io>`_.
+pycounter 2.x will be the last version with support for `Python 2
+<https://pythonclock.org/>`_.
+
+Documentation is on `Read the Docs <http://pycounter.readthedocs.io>`_ and
+the code can be found on `GitHub <https://github.com/pitthsls/pycounter>`_.
 
 
 Installing
@@ -54,6 +58,19 @@ From inside the source distribution:
 (use -e if you plan to work on the source itself, so your changes are used in your installation.
 Probably do all of this in a virtualenv. `The PyPA <https://packaging.python.org/tutorials/installing-packages/>`_
 has a good explanation of how to get started.)
+
+
+COUNTER 5 Note
+--------------
+
+In this alpha release, reports are output in COUNTER 4 format with COUNTER 5 data,
+which is wrong, and probably not a valid apples-to-apples comparison since, for example,
+TR_J1 excludes Gold Open Access counts that would be included in JR1, and also has
+HTML and PDF columns that will always be 0 because these are no longer reported.
+
+Before the final 2.0 release, it will be capable of producing actual COUNTER 5 reports,
+probably with an API for getting COUNTER 4 style data compatible with scripts that
+were making assumptions about the data received to pass it into another system.
 
 Usage
 -----
@@ -100,3 +117,4 @@ Our code is automatically styled using black. To install the pre-commit hook:
     pip install pre-commit
 
     pre-commit install
+

@@ -14,10 +14,12 @@ import pendulum
 import requests
 import six
 
+from pycounter import sushi5
 import pycounter.constants
 import pycounter.exceptions
 from pycounter.helpers import convert_date_run
 import pycounter.report
+
 
 logger = logging.getLogger(__name__)
 NS = pycounter.constants.NS
@@ -60,11 +62,12 @@ def get_sushi_stats_raw(
 
     :param release: report release number (should generally be `4`.)
 
-    :param sushi_dump: produces dump of XML to DEBUG logger
+    :param sushi_dump: produces dump of XML (or JSON, for COUNTER 5) to DEBUG logger
 
     :param verify: bool: whether to verify SSL certificates
 
     """
+    # pylint: disable=too-many-locals
     root = etree.Element("{%(SOAP-ENV)s}Envelope" % NS, nsmap=NS)
     body = etree.SubElement(root, "{%(SOAP-ENV)s}Body" % NS)
     timestamp = pendulum.now("UTC").isoformat()
@@ -130,18 +133,26 @@ def get_report(*args, **kwargs):
 
     :param no_delay: don't delay in retrying Report Queued
     """
+    if kwargs.get("release") == 5:
+        gssr = sushi5.get_sushi_stats_raw
+        rtf = sushi5.raw_to_full
+
+    else:
+        gssr = get_sushi_stats_raw
+        rtf = raw_to_full
+
     no_delay = kwargs.pop("no_delay", False)
     delay_amount = 0 if no_delay else 60
     while True:
         try:
-            raw_report = get_sushi_stats_raw(*args, **kwargs)
-            return _raw_to_full(raw_report)
+            raw_report = gssr(*args, **kwargs)
+            return rtf(raw_report)
         except pycounter.exceptions.ServiceBusyError:
             print("Service busy, retrying in %d seconds" % delay_amount)
             time.sleep(delay_amount)
 
 
-def _ns(namespace, name):
+def ns(namespace, name):
     """Convenience function to make a namespaced XML name.
 
     :param namespace: one of 'SOAP-ENV', 'sushi', 'sushicounter', 'counter'
@@ -150,12 +161,13 @@ def _ns(namespace, name):
     return "{" + NS[namespace] + "}" + name
 
 
-def _raw_to_full(raw_report):
+def raw_to_full(raw_report):
     """Convert a raw report to CounterReport.
 
     :param raw_report: raw XML report
     :return: a :class:`pycounter.report.CounterReport`
     """
+    # pylint: disable=too-many-statements,too-many-branches,too-many-locals
     try:
         root = etree.fromstring(raw_report)
     except etree.XMLSyntaxError:
@@ -166,11 +178,11 @@ def _raw_to_full(raw_report):
     o_root = objectify.fromstring(raw_report)
     rep = None
     try:
-        rep = o_root.Body[_ns("sushicounter", "ReportResponse")]
-        c_report = rep.Report[_ns("counter", "Report")]
+        rep = o_root.Body[ns("sushicounter", "ReportResponse")]
+        c_report = rep.Report[ns("counter", "Report")]
     except AttributeError:
         try:
-            c_report = rep.Report[_ns("counter", "Reports")].Report
+            c_report = rep.Report[ns("counter", "Reports")].Report
         except AttributeError:
             if b"Report Queued" in raw_report:
                 raise pycounter.exceptions.ServiceBusyError("Report Queued")
@@ -181,33 +193,33 @@ def _raw_to_full(raw_report):
                 )
     logger.debug("COUNTER report: %s", etree.tostring(c_report))
     start_date = datetime.datetime.strptime(
-        root.find(".//%s" % _ns("sushi", "Begin")).text, "%Y-%m-%d"
+        root.find(".//%s" % ns("sushi", "Begin")).text, "%Y-%m-%d"
     ).date()
 
     end_date = datetime.datetime.strptime(
-        root.find(".//%s" % _ns("sushi", "End")).text, "%Y-%m-%d"
+        root.find(".//%s" % ns("sushi", "End")).text, "%Y-%m-%d"
     ).date()
 
     report_data = {"period": (start_date, end_date)}
 
-    rep_def = root.find(".//%s" % _ns("sushi", "ReportDefinition"))
+    rep_def = root.find(".//%s" % ns("sushi", "ReportDefinition"))
     report_data["report_version"] = int(rep_def.get("Release"))
 
     report_data["report_type"] = rep_def.get("Name")
 
-    customer = root.find(".//%s" % _ns("counter", "Customer"))
+    customer = root.find(".//%s" % ns("counter", "Customer"))
     try:
-        report_data["customer"] = customer.find(".//%s" % _ns("counter", "Name")).text
+        report_data["customer"] = customer.find(".//%s" % ns("counter", "Name")).text
     except AttributeError:
         report_data["customer"] = ""
 
     try:
-        inst_id = customer.find(".//%s" % _ns("counter", "ID")).text
+        inst_id = customer.find(".//%s" % ns("counter", "ID")).text
     except AttributeError:
         inst_id = u""
     report_data["institutional_identifier"] = inst_id
 
-    rep_root = root.find(".//%s" % _ns("counter", "Report"))
+    rep_root = root.find(".//%s" % ns("counter", "Report"))
     created_string = rep_root.get("Created")
     if created_string is not None:
         report_data["date_run"] = pendulum.parse(created_string)

@@ -73,6 +73,7 @@ def main(
     no_delay,
 ):
     """Main function for the SUSHI client."""
+    # pylint: disable=too-many-locals
     click.echo("pycounter SUSHI client for URL %s (%s R%s)" % (url, report, release))
     if end_date is not None and start_date is None:
         click.echo("Cannot specify --end_date without --start_date", err=True)
