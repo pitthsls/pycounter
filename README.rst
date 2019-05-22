@@ -36,8 +36,7 @@ usage data into our in-house Electronic Resources Management (ERM) system.
 Licensed under the `MIT <https://choosealicense.com/licenses/mit/>`_ license.
 See the file LICENSE for details.
 
-pycounter is tested on Python 2.7, 3.4, 3.5, 3.6, 3.7 and pypy2 (if you're still
-stuck on Python 2.6 or 3.3, please use version 0.16.1 of pycounter)
+pycounter is tested on Python 2.7, 3.4, 3.5, 3.6, 3.7 and pypy (2 and 3)
 
 pycounter 2.x will be the last version with support for `Python 2
 <https://pythonclock.org/>`_.

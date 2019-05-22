@@ -19,12 +19,11 @@ requirements = [
     "six",
     "pendulum==2.0.2",  # FIXME: Unpin once poetry fixes its utf-8 issues
     "click",
+    "lxml",
 ]
 
 if platform.python_implementation() == "PyPy":
-    requirements.append("lxml<=3.4.4")
-else:
-    requirements.append("lxml")
+    requirements = ["cython"] + requirements
 
 setup(
     name="pycounter",

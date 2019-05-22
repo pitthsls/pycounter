@@ -18,3 +18,4 @@ include CHANGELOG.md
 include .pyup.yml
 include .pre-commit-config.yaml
 include bandit.yml
+include appveyor.yml
