@@ -70,7 +70,7 @@ def raw_to_full(raw_report):
         report_type=header["Report_ID"],
         customer=header.get("Institution_Name", ""),
         institutional_identifier=header.get("Customer_ID", ""),
-        metric="FT Item Requests",  # FIXME: this is for COUNTER4 compatibility
+        metric=None,  # COUNTER 5 reports usually contain multiple metrics
         date_run=pendulum.parse(date_run) if date_run else datetime.datetime.now(),
     )
 
@@ -99,7 +99,7 @@ def raw_to_full(raw_report):
                     platform=platform,
                     publisher=publisher_name,
                     period=report.period,
-                    metric=report.metric,
+                    metric="Total_Item_Requests",
                     issn=identifiers["issn"],
                     eissn=identifiers["eissn"],
                     doi=identifiers["doi"],
