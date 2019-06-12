@@ -1,4 +1,9 @@
 # Changelog
+## 2.0 (unreleased)
+
+* COUNTER 5 support.
+* Drops support for python 3.4, which is at its end of life.
+
 ## 1.1.1 (2019-03-01)
 
 ### Bugfixes
