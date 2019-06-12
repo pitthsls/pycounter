@@ -5,4 +5,4 @@ build_script:
 
     pip install tox
 
-    tox -e py27,py34,py35,py36,py37,flake8
+    tox -e py27,py35,py36,py37,flake8
