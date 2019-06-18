@@ -3,7 +3,7 @@
 import io
 import os
 
-from httmock import HTTMock, all_requests
+from httmock import all_requests, HTTMock
 import pytest
 
 import pycounter.exceptions

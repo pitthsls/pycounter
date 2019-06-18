@@ -59,6 +59,7 @@ class Sushi5Error(SushiException):
     """
 
     def __init__(self, message, severity, code):
+        super(Sushi5Error, self).__init__(message)
         self.message = message
         self.severity = severity
         self.code = code
