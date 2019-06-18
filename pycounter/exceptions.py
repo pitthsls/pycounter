@@ -51,6 +51,19 @@ class RequestorNotAuthorizedError(SushiException):
     pass
 
 
+class Sushi5Error(SushiException):
+    """Error from SUSHI release 5.
+
+    Attributes:
+        message: error message from the server
+    """
+
+    def __init__(self, message, severity, code):
+        self.message = message
+        self.severity = severity
+        self.code = code
+
+
 class ReportNotSupportedError(SushiException):
     """Server cannot serve the requested report name or version."""
 

@@ -1,0 +1,18 @@
+{
+    "Report_Header": {
+        "Created": "2019-06-18T12:53:32Z",
+        "Created_By": null,
+        "Customer_ID": null,
+        "Exceptions": [
+            {
+                "Code": 2000,
+                "Message": "Requestor Not Authorized to Access Service",
+                "Severity": "Error"
+            }
+        ],
+        "Release": "5",
+        "Report_Filters": [],
+        "Report_ID": "TR_J1",
+        "Report_Name": "Journal Requests (Excluding OA_Gold)"
+    }
+}

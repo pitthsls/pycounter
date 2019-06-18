@@ -180,7 +180,16 @@ def get_sushi_stats_raw(
             response.content,
         )
 
-    return response.json()
+    response_data = response.json()
+
+    if "Exceptions" in response_data["Report_Header"]:
+        raise pycounter.exceptions.Sushi5Error(
+            message=response_data["Report_Header"]["Exceptions"][0]["Message"],
+            severity=response_data["Report_Header"]["Exceptions"][0]["Severity"],
+            code=response_data["Report_Header"]["Exceptions"][0]["Code"],
+        )
+
+    return response_data
 
 
 def _check_params(kwargs, release):
