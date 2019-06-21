@@ -10,32 +10,32 @@ import pycounter.exceptions
 import pycounter.sushi5
 
 
-def test_report_type(sushi5_report):
-    assert sushi5_report.report_type == u"TR_J1"
+def test_report_type(sushi5_report_trj1):
+    assert sushi5_report_trj1.report_type == u"TR_J1"
 
 
-def test_report_version(sushi5_report):
-    assert sushi5_report.report_version == 5
+def test_report_version(sushi5_report_trj1):
+    assert sushi5_report_trj1.report_version == 5
 
 
-def test_report_customer(sushi5_report):
-    assert sushi5_report.institutional_identifier == u"exampleLibrary"
+def test_report_customer(sushi5_report_trj1):
+    assert sushi5_report_trj1.institutional_identifier == u"exampleLibrary"
 
 
-def test_data(sushi5_report):
-    publication = next(iter(sushi5_report))
+def test_data(sushi5_report_trj1):
+    publication = next(iter(sushi5_report_trj1))
     data = [month[2] for month in publication]
     assert data[0] == 14
 
 
-def test_metric(sushi5_report):
-    publication = next(iter(sushi5_report))
+def test_metric(sushi5_report_trj1):
+    publication = next(iter(sushi5_report_trj1))
     metrics = [month[1] for month in publication]
     assert metrics[0] == u"Total_Item_Requests"
 
 
-def test_doi(sushi5_report):
-    publication = next(iter(sushi5_report))
+def test_doi(sushi5_report_trj1):
+    publication = next(iter(sushi5_report_trj1))
     assert publication.doi == "some.fake.doi"
 
 

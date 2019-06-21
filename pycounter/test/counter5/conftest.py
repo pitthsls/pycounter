@@ -26,7 +26,7 @@ def trj1_report():
 
 
 @pytest.fixture
-def sushi5_report():
+def sushi5_report_trj1():
     """JSON SUSHI report."""
     with HTTMock(sushi_mock):
         return pycounter.sushi.get_report(
