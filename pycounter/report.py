@@ -206,8 +206,8 @@ class CounterReport(object):
             if pub.metric != metric:
                 continue
             if self.report_type == "JR1":
-                pdf_usage += pub.pdf_total
-                html_usage += pub.html_total
+                pdf_usage += pub.pdf_total  # pytype: disable=attribute-error
+                html_usage += pub.html_total  # pytype: disable=attribute-error
             for month, data in enumerate(pub):
                 total_usage += data[2]
                 month_data[month] += data[2]
