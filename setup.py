@@ -17,7 +17,7 @@ requirements = [
     "openpyxl",
     "requests",
     "six",
-    "pendulum==2.0.2",  # FIXME: Unpin once poetry fixes its utf-8 issues
+    "pendulum==2.0.5",  # FIXME: Unpin once poetry fixes its utf-8 issues
     "click",
     "lxml",
 ]
