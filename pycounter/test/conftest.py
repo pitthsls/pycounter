@@ -21,6 +21,12 @@ def csv_jr1_report(request):
     return parsedata(request.param)
 
 
+@pytest.fixture(params=["simpleJR1.tsv", "tsvC4JR1"])
+def tsv_jr1(request):
+    """TSV file"""
+    return parsedata(request.param)
+
+
 @pytest.fixture(params=["csvC4JR1", "C4JR1.csv", "simpleJR1.csv", "C4JR1_bad.csv"])
 def csv_jr1_report_std(request):
     """Standard (non-GOA) JR1 reports."""
