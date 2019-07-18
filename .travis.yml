@@ -3,7 +3,7 @@ dist: xenial
 language: python
 python:
   - "2.7"
-im  - "3.5"
+  - "3.5"
   - "3.6"
   - "3.7"
   - "pypy2.7-6.0"
@@ -15,7 +15,6 @@ cache: pip
 install:
   - pip install .
   - pip install tox-travis
-  - pip install coverage
   - pip install coveralls
 
 script:
