@@ -38,7 +38,7 @@ def get_sushi_stats_raw(
     release=4,
     sushi_dump=False,
     verify=True,
-    **extra_params,
+    **extra_params
 ):
     """Get SUSHI stats for a given site in raw XML format.
 
@@ -118,8 +118,9 @@ def get_sushi_stats_raw(
         "Content-Length": str(len(payload)),
     }
 
-    response = requests.post(url=wsdl_url, headers=headers, data=payload, verify=verify,
-                             **extra_params)
+    response = requests.post(
+        url=wsdl_url, headers=headers, data=payload, verify=verify, **extra_params
+    )
 
     if sushi_dump:
         logger.debug(
