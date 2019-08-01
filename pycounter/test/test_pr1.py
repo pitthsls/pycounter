@@ -21,7 +21,8 @@ class ParseCounter4Example(unittest.TestCase):
 
     def test_stats(self):
         publication = self.report.pubs[0]
-        self.assertEqual([x[2] for x in publication], [91, 41, 13, 21, 44, 8, 0, 0, 36, 36, 7, 2])
+        self.assertEqual([x[2] for x in publication],
+                         [91, 41, 13, 21, 44, 8, 0, 0, 36, 36, 7, 2])
 
     def test_row_metric(self):
         # test metric of the first row
