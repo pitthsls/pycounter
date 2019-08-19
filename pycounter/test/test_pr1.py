@@ -31,3 +31,13 @@ class ParseCounter4Example(unittest.TestCase):
         # test metric of the second row
         jan_data = next(iter(self.report.pubs[1]))
         self.assertEqual(jan_data[1], "Searches-federated and automated")
+
+
+def test_output(tmp_path):
+    report = pycounter.report.parse(
+        os.path.join(os.path.dirname(__file__), "data/PR1.tsv")
+    )
+    report.write_tsv(str(tmp_path / "outputfile.tsv"))
+    with open(str(tmp_path / "outputfile.tsv"), "rb") as new_file:
+        new_content = new_file.read()
+    assert b"Searches-federated" in new_content
