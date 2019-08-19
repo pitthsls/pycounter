@@ -548,6 +548,45 @@ class CounterDatabase(CounterEresource):
         return data_line
 
 
+class CounterPlatform(CounterEresource):
+    """a COUNTER platform report line."""
+
+    def __init__(
+        self,
+        period=None,
+        metric=None,
+        month_data=None,
+        platform="",
+        publisher="",
+    ):
+        super(CounterPlatform, self).__init__(
+            period=period,
+            metric=metric,
+            month_data=month_data,
+            title='',  # no title for platform report
+            platform=platform,
+            publisher=publisher
+        )
+        self.isbn = None
+
+    def as_generic(self):
+        """Return data for this line as list of COUNTER report cells."""
+        self._fill_months()
+
+        data_line = [self.platform, self.publisher, self.metric]
+        total_usage = 0
+        month_data = []
+
+        for data in self:
+            total_usage += data[2]
+            month_data.append(six.text_type(data[2]))
+
+        data_line.append(six.text_type(total_usage))
+        data_line.extend(month_data)
+
+        return data_line
+
+
 def parse(filename, filetype=None, encoding="utf-8", fallback_encoding="latin-1"):
     """Parse a COUNTER file, first attempting to determine type.
 
@@ -719,10 +758,12 @@ def parse_generic(report_reader):
         end_date = last_day(convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
 
-    if report.report_type != "DB1" and report.report_version != 5:
+    if report.report_type not in ("DB1", "PR1") and report.report_version != 5:
+        # these reports do not have line with totals
         six.next(report_reader)
 
     if report.report_type == "DB2":
+        # this report has two lines of totals
         six.next(report_reader)
 
     for line in report_reader:
@@ -784,7 +825,8 @@ def _parse_line(line, report, last_col):
     }
     month_data = []
     curr_month = report.period[0]
-    for data in line[5:]:
+    months_start_idx = 5 if report.report_type != 'PR1' else 4
+    for data in line[months_start_idx:]:
         month_data.append((curr_month, format_stat(data)))
         curr_month = next_month(curr_month)
     if report.report_type.startswith("JR") or report.report_type == "TR_J1":
@@ -811,6 +853,10 @@ def _parse_line(line, report, last_col):
         )
     elif report.report_type.startswith("DB"):
         return CounterDatabase(metric=line[3], month_data=month_data, **common_args)
+    elif report.report_type == "PR1":
+        # there is no title in the PR1 report
+        return CounterPlatform(metric=line[2], month_data=month_data, platform=line[0],
+                               publisher=line[1], period=report.period)
     raise PycounterException("Should be unreachable")  # pragma: no cover
 
 
@@ -829,7 +875,7 @@ def _get_type_and_version(specifier):
         report_version = int(rt_match.group(3))
     else:
         raise UnknownReportTypeError("No match in line: %s" % specifier)
-    if not any(report_type.startswith(x) for x in ("JR", "BR", "DB")):
+    if not any(report_type.startswith(x) for x in ("JR", "BR", "DB", "PR1")):
         raise UnknownReportTypeError(report_type)
 
     return report_type, report_version
@@ -851,6 +897,8 @@ def _year_from_header(header, report):
         first_date_col = 8
     elif report.report_type in ("DB1", "DB2") and report.report_version == 4:
         first_date_col = 5
+    elif report.report_type == "PR1" and report.report_version == 4:
+        first_date_col = 4
     year = int(header[first_date_col].split("-")[1])
     if year < 100:
         year += 2000
