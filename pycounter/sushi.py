@@ -289,7 +289,8 @@ def raw_to_full(raw_report):
                         pdf_usage += int(inst.Count)
                     elif inst.MetricType == "ft_html":
                         html_usage += int(inst.Count)
-                    elif report.report_type.startswith("DB"):
+                    elif report.report_type.startswith("DB") or \
+                            report.report_type == "PR1":
                         metrics_for_db[inst.MetricType].append(
                             (item_date, int(inst.Count))
                         )
@@ -343,5 +344,16 @@ def raw_to_full(raw_report):
                             month_data=month_data,
                         )
                     )
-
+            elif report.report_type == "PR1":
+                for metric_code, month_data in six.iteritems(metrics_for_db):
+                    metric = pycounter.constants.DB_METRIC_MAP[metric_code]
+                    report.pubs.append(
+                        pycounter.report.CounterPlatform(
+                            platform=platform,
+                            publisher=publisher_name,
+                            period=report.period,
+                            metric=metric,
+                            month_data=month_data,
+                        )
+                    )
     return report

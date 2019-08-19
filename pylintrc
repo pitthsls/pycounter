@@ -41,3 +41,6 @@ ignored-argument-names=_.*|^ignored_|^unused_|.*_unused
 defining-attr-methods=__init__,
                       __new__,
                       setUp
+
+[DESIGN]
+max-locals=16
