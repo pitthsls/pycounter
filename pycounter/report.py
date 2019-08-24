@@ -309,7 +309,6 @@ class CounterEresource(six.Iterator):
     def _fill_months(self):
         """Ensure each month in period represented and zero fill if not."""
         start, end = self.period[0], self.period[1]
-        # TODO: ensure start, end are first days of month
         try:
             for d_obj in pendulum.period(start, end).range("months"):
                 if d_obj not in (x[0] for x in self._full_data):
