@@ -198,19 +198,17 @@ class CounterReport(object):
         pdf_usage = 0
         html_usage = 0
 
-        number_of_months = len(
-            list(pendulum.period(self.period[0], self.period[1]).range("months"))
-        )
-        month_data = [0] * number_of_months
+        months = list(pendulum.period(self.period[0], self.period[1]).range("months"))
+        month_data = [0] * len(months)
         for pub in self.pubs:
             if pub.metric != metric:
                 continue
             if self.report_type == "JR1":
                 pdf_usage += pub.pdf_total  # pytype: disable=attribute-error
                 html_usage += pub.html_total  # pytype: disable=attribute-error
-            for month, data in enumerate(pub):
+            for data in pub:
                 total_usage += data[2]
-                month_data[month] += data[2]
+                month_data[months.index(data[0])] += data[2]
         total_cells.append(six.text_type(total_usage))
         if self.report_type == "JR1":
             total_cells.append(six.text_type(html_usage))
@@ -311,6 +309,7 @@ class CounterEresource(six.Iterator):
     def _fill_months(self):
         """Ensure each month in period represented and zero fill if not."""
         start, end = self.period[0], self.period[1]
+        # TODO: ensure start, end are first days of month
         try:
             for d_obj in pendulum.period(start, end).range("months"):
                 if d_obj not in (x[0] for x in self._full_data):
