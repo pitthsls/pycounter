@@ -4,12 +4,12 @@ import datetime
 
 def test_publisher(all_book_reports):
     for publication in all_book_reports:
-        assert publication.publisher == u"Megadodo Publications"
+        assert publication.publisher == "Megadodo Publications"
 
 
 def test_platform(all_book_reports):
     for publication in all_book_reports:
-        assert publication.platform == u"HHGTTG Online"
+        assert publication.platform == "HHGTTG Online"
 
 
 def test_stats(all_book_reports):
@@ -18,7 +18,7 @@ def test_stats(all_book_reports):
 
 
 def test_customer(all_book_reports):
-    assert all_book_reports.customer == u"University of Maximegalon"
+    assert all_book_reports.customer == "University of Maximegalon"
 
 
 def test_date_run(all_book_reports):

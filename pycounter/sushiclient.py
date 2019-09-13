@@ -74,7 +74,7 @@ def main(
 ):
     """Main function for the SUSHI client."""
     # pylint: disable=too-many-locals
-    click.echo("pycounter SUSHI client for URL %s (%s R%s)" % (url, report, release))
+    click.echo(f"pycounter SUSHI client for URL {url} ({report} R{release})")
     if end_date is not None and start_date is None:
         click.echo("Cannot specify --end_date without --start_date", err=True)
         sys.exit(1)

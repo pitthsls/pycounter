@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # pycounter documentation build configuration file, created by
 # sphinx-quickstart on Thu Nov 13 08:44:21 2014.
@@ -56,8 +55,8 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"pycounter"
-copyright = u"2014-2019, University of Pittsburgh"
+project = "pycounter"
+copyright = "2014-2019, University of Pittsburgh"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -98,7 +97,7 @@ latex_elements = {}
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ("index", "pycounter.tex", u"pycounter Documentation", u"Geoffrey Spear", "manual")
+    ("index", "pycounter.tex", "pycounter Documentation", "Geoffrey Spear", "manual")
 ]
 
 
@@ -106,7 +105,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [("index", "pycounter", u"pycounter Documentation", [u"Geoffrey Spear"], 1)]
+man_pages = [("index", "pycounter", "pycounter Documentation", ["Geoffrey Spear"], 1)]
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -117,8 +116,8 @@ texinfo_documents = [
     (
         "index",
         "pycounter",
-        u"pycounter Documentation",
-        u"Geoffrey Spear",
+        "pycounter Documentation",
+        "Geoffrey Spear",
         "pycounter",
         "One line description of project.",
         "Miscellaneous",

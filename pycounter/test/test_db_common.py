@@ -10,16 +10,16 @@ def test_version(db_report):
 
 def test_publisher(db_report):
     for publication in db_report:
-        assert publication.publisher == u"Megadodo Publications"
+        assert publication.publisher == "Megadodo Publications"
 
 
 def test_platform(db_report):
     for publication in db_report:
-        assert publication.platform == u"HHGTTG Online"
+        assert publication.platform == "HHGTTG Online"
 
 
 def test_customer(db_report):
-    assert db_report.customer == u"University of Maximegalon"
+    assert db_report.customer == "University of Maximegalon"
 
 
 def test_date_run(db_report):

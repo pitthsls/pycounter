@@ -24,11 +24,11 @@ def test_counter4_csv_data(csv_jr1_report_common_data, pub_number, expected):
 
 
 def test_metric(csv_jr1_report_std):
-    assert csv_jr1_report_std.metric == u"FT Article Requests"
+    assert csv_jr1_report_std.metric == "FT Article Requests"
 
 
 def test_customer(csv_jr1_report):
-    assert csv_jr1_report.customer == u"University of Maximegalon"
+    assert csv_jr1_report.customer == "University of Maximegalon"
 
 
 def test_date_run(csv_jr1_report):
@@ -43,7 +43,7 @@ def test_period(csv_jr1_report):
 
 
 def test_report_type(csv_jr1_report_std):
-    assert csv_jr1_report_std.report_type == u"JR1"
+    assert csv_jr1_report_std.report_type == "JR1"
 
 
 def test_ibsn(csv_jr1_r4_report):
@@ -121,7 +121,7 @@ class ParseGOA(unittest.TestCase):
         )
 
     def test_metric(self):
-        self.assertEqual(self.report.metric, u"Gold Open Access Article Requests")
+        self.assertEqual(self.report.metric, "Gold Open Access Article Requests")
 
 
 class ParseCounter4Bad(unittest.TestCase):

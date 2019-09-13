@@ -17,7 +17,7 @@ class ParseCounter4Example(unittest.TestCase):
         )
 
     def test_reportname(self):
-        self.assertEqual(self.report.report_type, u"PR1")
+        self.assertEqual(self.report.report_type, "PR1")
 
     def test_stats(self):
         publication = self.report.pubs[0]
