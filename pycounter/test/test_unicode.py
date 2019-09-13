@@ -11,7 +11,7 @@ from pycounter import report
 
 
 @pytest.mark.parametrize("attribute", ["title", "publisher", "platform"])
-@pytest.mark.parametrize("filename", ["JR1.xlsx", "simpleJR1.tsv", "simpleJR1.csv"])
+@pytest.mark.parametrize("filename", ["JR1.xlsx", "simpleJR1.tsv"])
 def test_unicode_fields(filename, attribute):
     """All parsers should return text fields as unicode"""
     rep = report.parse(os.path.join(os.path.dirname(__file__), "data", filename))

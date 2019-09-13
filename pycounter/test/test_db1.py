@@ -37,5 +37,5 @@ class ParseCounter4SplitExample(unittest.TestCase):
             os.path.join(os.path.dirname(__file__), "data/C4DB1_split_year.tsv")
         )
 
-    def test_year(self):
-        self.assertEqual(self.report.year, 2012)
+    def test_reportname(self):
+        self.assertEqual(self.report.report_type, u"DB1")

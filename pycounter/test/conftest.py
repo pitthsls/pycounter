@@ -13,9 +13,7 @@ def parsedata(filename):
     return report.parse(os.path.join(os.path.dirname(__file__), "data", filename))
 
 
-@pytest.fixture(
-    params=["csvC4JR1", "C4JR1.csv", "simpleJR1.csv", "C4JR1_bad.csv", "C4JR1GOA.csv"]
-)
+@pytest.fixture(params=["csvC4JR1", "C4JR1.csv", "C4JR1_bad.csv", "C4JR1GOA.csv"])
 def csv_jr1_report(request):
     """Various CSV format JR1 reports."""
     return parsedata(request.param)
@@ -27,13 +25,13 @@ def tsv_jr1(request):
     return parsedata(request.param)
 
 
-@pytest.fixture(params=["csvC4JR1", "C4JR1.csv", "simpleJR1.csv", "C4JR1_bad.csv"])
+@pytest.fixture(params=["csvC4JR1", "C4JR1.csv", "C4JR1_bad.csv"])
 def csv_jr1_report_std(request):
     """Standard (non-GOA) JR1 reports."""
     return parsedata(request.param)
 
 
-@pytest.fixture(params=["csvC4JR1", "C4JR1.csv", "simpleJR1.csv"])
+@pytest.fixture(params=["csvC4JR1", "C4JR1.csv"])
 def csv_jr1_report_common_data(request):
     """JR1 reports with shared common data we can make assertions about."""
     return parsedata(request.param)
@@ -116,13 +114,7 @@ def common_output(request):
     return parsedata(request.param).as_generic(), content
 
 
-@pytest.fixture(params=["simpleBR1.csv", "simpleBR2.csv"])
-def br_c1(request):
-    """Version 1 (COUNTER 3) book reports."""
-    return parsedata(request.param)
-
-
-@pytest.fixture(params=["C4BR2.tsv", "C4BR1.tsv", "simpleBR1.csv", "simpleBR2.csv"])
+@pytest.fixture(params=["C4BR2.tsv", "C4BR1.tsv"])
 def all_book_reports(request):
     """All book reports."""
     return parsedata(request.param)
