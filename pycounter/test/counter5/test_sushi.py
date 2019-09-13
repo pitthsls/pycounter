@@ -19,7 +19,7 @@ def test_report_version(sushi5_report_trj1):
 
 
 def test_report_customer(sushi5_report_trj1):
-    assert sushi5_report_trj1.institutional_identifier == u"exampleLibrary"
+    assert sushi5_report_trj1.institutional_identifier == "exampleLibrary"
 
 
 def test_data(sushi5_report_trj1):
