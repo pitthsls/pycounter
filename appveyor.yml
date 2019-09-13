@@ -9,6 +9,7 @@ environment:
   - TOXENV: py37
 
 install:
+  - python -m pip install --ignore-installed -U pip
   - pip install tox
 
 test_script:
