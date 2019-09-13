@@ -6,7 +6,6 @@ import collections
 import datetime
 import logging
 import re
-import warnings
 
 import pendulum
 
@@ -16,11 +15,9 @@ from pycounter.constants import REPORT_DESCRIPTIONS, TOTAL_TEXT
 from pycounter.exceptions import PycounterException, UnknownReportTypeError
 from pycounter.helpers import (
     convert_covered,
-    convert_date_column,
     convert_date_run,
     format_stat,
     guess_type_from_content,
-    last_day,
     next_month,
 )
 
@@ -157,7 +154,7 @@ class CounterReport(object):
             self._ensure_required_metrics()
             try:
                 self.pubs.sort(key=lambda x: METRICS[self.report_type].index(x.metric))
-            except ValueError:
+            except ValueError:  # pragma: nocover
                 pass
 
         for pub in sorted(self.pubs, key=lambda x: x.title):
@@ -231,7 +228,7 @@ class CounterReport(object):
         """
         try:
             required_metrics = METRICS[self.report_type]
-        except LookupError:
+        except LookupError:  # pragma: nocover
             raise UnknownReportTypeError(self.report_type)
 
         dbs = collections.defaultdict(set)
@@ -311,7 +308,7 @@ class CounterEresource:
             for d_obj in pendulum.period(start, end).range("months"):
                 if d_obj not in (x[0] for x in self._full_data):
                     self._full_data.append((d_obj, 0))
-        except IndexError:
+        except IndexError:  # pragma: nocover
             pass
         else:
             self._full_data.sort()
@@ -382,7 +379,7 @@ class CounterJournal(CounterEresource):
         else:
             self.eissn = ""
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: nocover
         return """<CounterJournal %s, publisher %s,
         platform %s>""" % (
             self.title,
@@ -726,28 +723,11 @@ def parse_generic(report_reader):
 
     header = next(report_reader)
 
-    if report.report_version < 5:
-        try:
-            year = _year_from_header(header, report)
-        except AttributeError:
-            warnings.warn("Could not determine year from malformed header")
-
-    if report.report_version >= 4:
-        countable_header = header[0:8]
-        for col in header[8:]:
-            if col:
-                countable_header.append(col)
-        last_col = len(countable_header)
-    else:
-        last_col = 0
-        for val in header:
-            if "YTD" in val:
-                break
-            last_col += 1
-
-        start_date = datetime.date(year, 1, 1)
-        end_date = last_day(convert_date_column(header[last_col - 1]))
-        report.period = (start_date, end_date)
+    countable_header = header[0:8]
+    for col in header[8:]:
+        if col:
+            countable_header.append(col)
+    last_col = len(countable_header)
 
     if report.report_type not in ("DB1", "PR1") and report.report_version != 5:
         # these reports do not have line with totals
@@ -781,31 +761,22 @@ def _parse_line(line, report, last_col):
     doi = ""
     prop_id = ""
 
-    if report.report_version >= 4:
-        if report.report_type.startswith("JR1") or report.report_type == "TR_J1":
-            old_line = line
-            line = line[0:3] + line[5:7] + line[10:last_col]
-            doi = old_line[3]
-            prop_id = old_line[4]
-            html_total = format_stat(old_line[8])
-            pdf_total = format_stat(old_line[9])
-            issn = line[3].strip()
-            eissn = line[4].strip()
+    if report.report_type.startswith("JR1") or report.report_type == "TR_J1":
+        old_line = line
+        line = line[0:3] + line[5:7] + line[10:last_col]
+        doi = old_line[3]
+        prop_id = old_line[4]
+        html_total = format_stat(old_line[8])
+        pdf_total = format_stat(old_line[9])
+        issn = line[3].strip()
+        eissn = line[4].strip()
 
-        elif report.report_type in ("BR1", "BR2"):
-            line = line[0:3] + line[5:7] + line[8:last_col]
-            isbn = line[3].strip()
-            issn = line[4].strip()
+    elif report.report_type in ("BR1", "BR2"):
+        line = line[0:3] + line[5:7] + line[8:last_col]
+        isbn = line[3].strip()
+        issn = line[4].strip()
 
-        # For DB1 and DB2, nothing additional to do here
-
-    else:
-        if report.report_type.startswith("JR1"):
-            html_total = format_stat(line[-2])
-            pdf_total = format_stat(line[-1])
-            issn = line[3].strip()
-            eissn = line[4].strip()
-        line = line[0:last_col]
+    # For DB1 and DB2, nothing additional to do here
 
     logging.debug(line)
     common_args = {
@@ -871,10 +842,11 @@ def _get_type_and_version(specifier):
         report_version = int(rt_match.group(3))
     else:
         raise UnknownReportTypeError("No match in line: %s" % specifier)
+    # pragma: nocover
     if not any(report_type.startswith(x) for x in ("JR", "BR", "DB", "PR1")):
         raise UnknownReportTypeError(report_type)
 
-    if report_version < 4:
+    if report_version < 4:  # pragma: nocover
         raise UnknownReportTypeError("Only COUNTER 4&5 are supported.")
 
     return report_type, report_version

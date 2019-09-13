@@ -49,17 +49,6 @@ def convert_date_run(datestring):
             return datetime.datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S").date()
 
 
-def convert_date_column(datestring):
-    """
-    Convert human-readable month to date of first day of month.
-
-    :param datestring: the string to convert to a date. Format like "Jan-2014".
-
-    :return: datetime.date
-    """
-    return datetime.datetime.strptime(datestring.strip(), "%b-%Y").date()
-
-
 def last_day(orig_date):
     """
     Find last day of a month from any day in the month.
