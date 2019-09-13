@@ -95,6 +95,7 @@ class CounterReport(object):
 
     @property
     def year(self):
+        """Year report was issued (deprecated)."""
         warnings.warn(
             DeprecationWarning(
                 "CounterReport.year is deprecated."
@@ -106,6 +107,7 @@ class CounterReport(object):
 
     @year.setter
     def year(self, value):
+        """Set year report was issued."""
         self._year = value
 
     def __iter__(self):
