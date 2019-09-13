@@ -1,4 +1,3 @@
-# coding: utf-8
 """Test parsing of COUNTER BR2 book report."""
 
 from __future__ import absolute_import
@@ -18,8 +17,8 @@ class ParseCounter4Example(unittest.TestCase):
         )
 
     def test_reportname(self):
-        self.assertEqual(self.report.report_type, u"BR2")
+        self.assertEqual(self.report.report_type, "BR2")
         self.assertEqual(self.report.report_version, 4)
 
     def test_metric(self):
-        self.assertEqual(self.report.metric, u"Book Section Requests")
+        self.assertEqual(self.report.metric, "Book Section Requests")

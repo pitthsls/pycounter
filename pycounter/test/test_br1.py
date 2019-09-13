@@ -17,12 +17,12 @@ class ParseCounter4Example(unittest.TestCase):
         )
 
     def test_reportname(self):
-        self.assertEqual(self.report.report_type, u"BR1")
+        self.assertEqual(self.report.report_type, "BR1")
         self.assertEqual(self.report.report_version, 4)
 
     def test_metric(self):
-        self.assertEqual(self.report.metric, u"Book Title Requests")
+        self.assertEqual(self.report.metric, "Book Title Requests")
 
     def test_isbn(self):
         publication = self.report.pubs[0]
-        self.assertEqual(publication.isbn, u"9787490833809")
+        self.assertEqual(publication.isbn, "9787490833809")

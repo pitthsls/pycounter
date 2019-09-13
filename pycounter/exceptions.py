@@ -17,7 +17,7 @@ class SushiException(PycounterException):
     """Base class for SUSHI-related exceptions."""
 
     def __init__(self, message, raw=None, xml=None):
-        super(SushiException, self).__init__(message)
+        super().__init__(message)
         self.raw = raw
         self.xml = xml
 
@@ -59,7 +59,7 @@ class Sushi5Error(SushiException):
     """
 
     def __init__(self, message, severity, code):
-        super(Sushi5Error, self).__init__(message)
+        super().__init__(message)
         self.message = message
         self.severity = severity
         self.code = code
