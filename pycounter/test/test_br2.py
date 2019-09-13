@@ -5,7 +5,6 @@ from __future__ import absolute_import
 
 import os
 import unittest
-import warnings
 
 import pycounter.report
 
