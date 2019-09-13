@@ -10,6 +10,7 @@ environment:
 
 install:
   - python -m pip install --ignore-installed -U pip
+  - pip install -U virtualenv
   - pip install tox
 
 test_script:
