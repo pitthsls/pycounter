@@ -39,10 +39,16 @@ def test_totals_sparse_data(tmp_path):
 
     start = date(2019, 1, 1)
     end = date(2019, 3, 31)
-    cb1 = CounterBook(period=(start, end), title="Book 1",
-                      month_data=[(date(2019, 2, 1), 3), (date(2019, 3, 1), 5)])
-    cb2 = CounterBook(period=(start, end), title="Book 2",
-                      month_data=[(date(2019, 1, 1), 1), (date(2019, 3, 1), 7)])
+    cb1 = CounterBook(
+        period=(start, end),
+        title="Book 1",
+        month_data=[(date(2019, 2, 1), 3), (date(2019, 3, 1), 5)],
+    )
+    cb2 = CounterBook(
+        period=(start, end),
+        title="Book 2",
+        month_data=[(date(2019, 1, 1), 1), (date(2019, 3, 1), 7)],
+    )
     report = CounterReport(report_type="BR2", period=(start, end))
     report.pubs = [cb1, cb2]
     report.write_tsv(str(tmp_path / "outputfile.tsv"))
@@ -53,7 +59,7 @@ def test_totals_sparse_data(tmp_path):
     totals_line = output_lines[8]
     assert totals_line.startswith("Total for all titles")
     totals = totals_line.split("\t")
-    assert [int(t) for t in totals[-3:]] == [0+1, 3+0, 5+7], "check totals match"
+    assert [int(t) for t in totals[-3:]] == [0 + 1, 3 + 0, 5 + 7], "check totals match"
     # book 1 line
     book_line = output_lines[9]
     assert book_line.startswith("Book 1")

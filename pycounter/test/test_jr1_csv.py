@@ -82,6 +82,11 @@ class ParseExample(unittest.TestCase):
         self.assertEqual(actual, expected)
 
 
+def test_counter3_deprecation():
+    with pytest.warns(DeprecationWarning):
+        report.parse(os.path.join(os.path.dirname(__file__), "data/simpleJR1.csv"))
+
+
 class ParseMultiyear(unittest.TestCase):
     """Multi-year COUNTER report
     """

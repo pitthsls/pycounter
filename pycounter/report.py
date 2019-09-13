@@ -550,20 +550,15 @@ class CounterPlatform(CounterEresource):
     """a COUNTER platform report line."""
 
     def __init__(
-        self,
-        period=None,
-        metric=None,
-        month_data=None,
-        platform="",
-        publisher="",
+        self, period=None, metric=None, month_data=None, platform="", publisher=""
     ):
         super(CounterPlatform, self).__init__(
             period=period,
             metric=metric,
             month_data=month_data,
-            title='',  # no title for platform report
+            title="",  # no title for platform report
             platform=platform,
-            publisher=publisher
+            publisher=publisher,
         )
         self.isbn = None
 
@@ -823,7 +818,7 @@ def _parse_line(line, report, last_col):
     }
     month_data = []
     curr_month = report.period[0]
-    months_start_idx = 5 if report.report_type != 'PR1' else 4
+    months_start_idx = 5 if report.report_type != "PR1" else 4
     for data in line[months_start_idx:]:
         month_data.append((curr_month, format_stat(data)))
         curr_month = next_month(curr_month)
@@ -853,8 +848,13 @@ def _parse_line(line, report, last_col):
         return CounterDatabase(metric=line[3], month_data=month_data, **common_args)
     elif report.report_type == "PR1":
         # there is no title in the PR1 report
-        return CounterPlatform(metric=line[2], month_data=month_data, platform=line[0],
-                               publisher=line[1], period=report.period)
+        return CounterPlatform(
+            metric=line[2],
+            month_data=month_data,
+            platform=line[0],
+            publisher=line[1],
+            period=report.period,
+        )
     raise PycounterException("Should be unreachable")  # pragma: no cover
 
 
@@ -875,6 +875,15 @@ def _get_type_and_version(specifier):
         raise UnknownReportTypeError("No match in line: %s" % specifier)
     if not any(report_type.startswith(x) for x in ("JR", "BR", "DB", "PR1")):
         raise UnknownReportTypeError(report_type)
+
+    if report_version < 4:
+        warnings.warn(
+            DeprecationWarning(
+                "Parsing COUNTER versions before 4 ("
+                "current: {}) will not be supported in "
+                "the next release of pycounter.".format(report_version)
+            )
+        )
 
     return report_type, report_version
 

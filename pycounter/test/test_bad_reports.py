@@ -8,10 +8,7 @@ from pycounter import report
 import pycounter.exceptions
 
 
-@pytest.mark.parametrize(
-    "report_type",
-    [u"Bogus Report 7 (R4)"],
-)
+@pytest.mark.parametrize("report_type", [u"Bogus Report 7 (R4)"])
 def test_report_type(report_type):
     """Report type doesn't exist."""
     data = [[report_type]]

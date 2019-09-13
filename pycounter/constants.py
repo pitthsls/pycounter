@@ -174,12 +174,7 @@ HEADER_FIELDS = {
         u"Access denied category",
         u"Reporting Period Total",
     ),
-    "PR1": (
-        u"Platform",
-        u"Publisher",
-        u"User Activity",
-        u"Reporting Period Total",
-    ),
+    "PR1": (u"Platform", u"Publisher", u"User Activity", u"Reporting Period Total"),
     # FIXME: this is outputting counter 5 reports in 4 format for... reasons.
     "TR_J1": (
         u"Journal",

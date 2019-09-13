@@ -289,8 +289,10 @@ def raw_to_full(raw_report):
                         pdf_usage += int(inst.Count)
                     elif inst.MetricType == "ft_html":
                         html_usage += int(inst.Count)
-                    elif report.report_type.startswith("DB") or \
-                            report.report_type == "PR1":
+                    elif (
+                        report.report_type.startswith("DB")
+                        or report.report_type == "PR1"
+                    ):
                         metrics_for_db[inst.MetricType].append(
                             (item_date, int(inst.Count))
                         )
