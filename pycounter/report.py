@@ -25,7 +25,7 @@ from pycounter.helpers import (
 )
 
 
-class CounterReport(object):
+class CounterReport:
     """
     a COUNTER usage statistics report.
 
@@ -84,11 +84,8 @@ class CounterReport(object):
         self.section_type = section_type
 
     def __repr__(self):
-        return "<CounterReport %s version %s for date range %s to %s>" % (
-            self.report_type,
-            self.report_version,
-            self.period[0],
-            self.period[1],
+        return "<CounterReport {} version {} for date range {} to {}>".format(
+            self.report_type, self.report_version, self.period[0], self.period[1]
         )
 
     def __iter__(self):
@@ -130,25 +127,22 @@ class CounterReport(object):
             if code == self.report_type[0:2]:
                 rep_type = name
 
-        report_name = "%s Report %s (R%s)" % (
-            rep_type,
-            self.report_type[-1],
-            self.report_version,
+        report_name = "{} Report {} (R{})".format(
+            rep_type, self.report_type[-1], self.report_version
         )
         output_lines.append([report_name, REPORT_DESCRIPTIONS[self.report_type]])
         if self.report_type == "BR2":
-            output_lines.append([self.customer, u"Section Type:"])
+            output_lines.append([self.customer, "Section Type:"])
             output_lines.append([self.institutional_identifier, self.section_type])
         else:
             output_lines.append([self.customer])
             output_lines.append([self.institutional_identifier])
-        output_lines.append([u"Period covered by Report:"])
-        period = "%s to %s" % (
-            self.period[0].strftime("%Y-%m-%d"),
-            self.period[1].strftime("%Y-%m-%d"),
+        output_lines.append(["Period covered by Report:"])
+        period = "{} to {}".format(
+            self.period[0].strftime("%Y-%m-%d"), self.period[1].strftime("%Y-%m-%d")
         )
         output_lines.append([period])
-        output_lines.append([u"Date run:"])
+        output_lines.append(["Date run:"])
         output_lines.append([self.date_run.strftime("%Y-%m-%d")])
         output_lines.append(self._table_header())
         if self.report_type in ("JR1", "BR1", "BR2", "DB2"):
@@ -168,7 +162,7 @@ class CounterReport(object):
     def _totals_lines(self):
         """Generate Totals for COUNTER report, as list of lists of cells."""
         total_lines = []
-        metrics = set(resource.metric for resource in self.pubs)
+        metrics = {resource.metric for resource in self.pubs}
 
         for metric in sorted(metrics):
             total_lines.append(self._totals_line(metric))
@@ -178,18 +172,18 @@ class CounterReport(object):
     def _totals_line(self, metric):
         """Generate Totals for a given metric."""
         total_cells = [TOTAL_TEXT[self.report_type]]
-        publishers = set(resource.publisher for resource in self.pubs)
+        publishers = {resource.publisher for resource in self.pubs}
         if len(publishers) == 1:
             total_cells.append(publishers.pop())
         else:
-            total_cells.append(u"")
-        platforms = set(resource.platform for resource in self.pubs)
+            total_cells.append("")
+        platforms = {resource.platform for resource in self.pubs}
         if len(platforms) == 1:
             total_cells.append(platforms.pop())
         else:
-            total_cells.append(u"")
+            total_cells.append("")
         if self.report_type in ("JR1", "BR1", "BR2"):
-            total_cells.extend([u""] * 4)
+            total_cells.extend([""] * 4)
         elif self.report_type == "DB2":
             total_cells.append(metric)
         total_usage = 0
@@ -350,7 +344,7 @@ class CounterJournal(CounterEresource):
     def __init__(
         self,
         period=None,
-        metric=METRICS[u"JR1"],
+        metric=METRICS["JR1"],
         issn=None,
         eissn=None,
         month_data=None,
@@ -362,9 +356,7 @@ class CounterJournal(CounterEresource):
         doi="",
         proprietary_id="",
     ):
-        super(CounterJournal, self).__init__(
-            period, metric, month_data, title, platform, publisher
-        )
+        super().__init__(period, metric, month_data, title, platform, publisher)
         self.html_total = html_total
         self.pdf_total = pdf_total
         self.doi = doi
@@ -448,9 +440,7 @@ class CounterBook(CounterEresource):
         print_isbn=None,
         online_isbn=None,
     ):
-        super(CounterBook, self).__init__(
-            period, metric, month_data, title, platform, publisher
-        )
+        super().__init__(period, metric, month_data, title, platform, publisher)
         self.eissn = None
         self.doi = doi
         self.proprietary_id = proprietary_id
@@ -462,7 +452,7 @@ class CounterBook(CounterEresource):
         if issn is not None:
             self.issn = issn
         else:
-            self.issn = u""
+            self.issn = ""
 
     def __repr__(self):
         return """<CounterBook %s (ISBN: %s), publisher %s,
@@ -485,7 +475,7 @@ class CounterBook(CounterEresource):
          online_ISBN and/or print_ISBN, the online one, if any, will be
          returned, otherwise the print.
         """
-        return self._isbn or self.online_isbn or self.print_isbn or u""
+        return self._isbn or self.online_isbn or self.print_isbn or ""
 
     def as_generic(self):
         """Get data for this line as list of COUNTER report cells."""
@@ -521,9 +511,7 @@ class CounterDatabase(CounterEresource):
         platform="",
         publisher="",
     ):
-        super(CounterDatabase, self).__init__(
-            period, metric, month_data, title, platform, publisher
-        )
+        super().__init__(period, metric, month_data, title, platform, publisher)
         self.isbn = None
 
     def as_generic(self):
@@ -550,7 +538,7 @@ class CounterPlatform(CounterEresource):
     def __init__(
         self, period=None, metric=None, month_data=None, platform="", publisher=""
     ):
-        super(CounterPlatform, self).__init__(
+        super().__init__(
             period=period,
             metric=metric,
             month_data=month_data,
