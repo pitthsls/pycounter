@@ -2,11 +2,8 @@ dist: xenial
 
 language: python
 python:
-  - "2.7"
-  - "3.5"
   - "3.6"
   - "3.7"
-  - "pypy2.7-6.0"
   - "pypy3.5-6.0"
   - "3.8-dev"
 
@@ -31,8 +28,6 @@ jobs:
   include:
   - python: 3.6
     env: TOXENV=flake8
-  - python: 2.7
-    env: TOXENV=flake8_py2
   - python: 3.6
     env: TOXENV=manifest
   - python: 3.6
