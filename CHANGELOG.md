@@ -1,5 +1,12 @@
 # Changelog
-## 2.1.1 (2020-01-24)
+## 3.0.0 (unreleased)
+
+* COUNTER 3 support removed (was at EOL in 2014).
+* CounterReport no longer has .year attribute (doesn't make sense for part or multi
+year reports, and wasn't on COUNTER 5 reports in pycounter 2.0)
+* Dropped support for python 2 and 3.5. Now supports only python 3.6+
+
+## 2.1.2 (2020-01-24)
 * less strict date handling in Begin/End date strings to allow working with
 badly-formatted reports that exist in the wild.
 
