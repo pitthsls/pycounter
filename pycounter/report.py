@@ -82,7 +82,7 @@ class CounterReport(object):
             self.date_run = datetime.date.today()
         else:
             self.date_run = date_run
-        self.year = None
+        self._year = None
         self.section_type = section_type
 
     def __repr__(self):
@@ -92,6 +92,21 @@ class CounterReport(object):
             self.period[0],
             self.period[1],
         )
+
+    @property
+    def year(self):
+        warnings.warn(
+            DeprecationWarning(
+                "CounterReport.year is deprecated."
+                "Reports may span multiple years. "
+                "COUNTER 5 reports will not have a year set."
+            )
+        )
+        return self._year
+
+    @year.setter
+    def year(self, value):
+        self._year = value
 
     def __iter__(self):
         return iter(self.pubs)
