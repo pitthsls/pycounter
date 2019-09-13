@@ -1,8 +1,14 @@
 version: 1.0.{build}
-build_script:
-- cmd: >-
-    python -m pip install --ignore-installed -U pip virtualenv
 
-    pip install tox
+environment:
+  matrix:
+  - TOXENV: py27
+  - TOXENV: py35
+  - TOXENV: py36
+  - TOXENV: py37
 
-    tox -e py27,py35,py36,py37,flake8
+install:
+  - pip install tox
+
+test_script:
+  - tox
