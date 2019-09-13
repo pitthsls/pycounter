@@ -1,6 +1,5 @@
 """Tests for COUNTER 5 SUSHI support."""
 
-import io
 import os
 
 from httmock import all_requests, HTTMock

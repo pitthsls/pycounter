@@ -1,6 +1,5 @@
 """Pytest fixtures for COUNTER 5 test suite."""
 import datetime
-import io
 import os
 
 from httmock import HTTMock, urlmatch
