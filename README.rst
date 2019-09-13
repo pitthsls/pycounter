@@ -66,12 +66,12 @@ has a good explanation of how to get started.)
 COUNTER 5 Note
 --------------
 
-In this alpha release, reports are output in COUNTER 4 format with COUNTER 5 data,
+In this release, reports are output in COUNTER 4 format with COUNTER 5 data,
 which is wrong, and probably not a valid apples-to-apples comparison since, for example,
 TR_J1 excludes Gold Open Access counts that would be included in JR1, and also has
 HTML and PDF columns that will always be 0 because these are no longer reported.
 
-Before the final 2.0 release, it will be capable of producing actual COUNTER 5 reports,
+Before the 3.0 release, it should be capable of producing actual COUNTER 5 reports,
 probably with an API for getting COUNTER 4 style data compatible with scripts that
 were making assumptions about the data received to pass it into another system.
 

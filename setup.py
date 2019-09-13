@@ -33,7 +33,7 @@ setup(
     long_description=readme,
     keywords="library COUNTER journals usage_statistics SUSHI",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 2.7",
@@ -43,7 +43,7 @@ setup(
     ],
     extras_require={
         "docs": ["sphinx", "sphinx_rtd_theme"],
-        "tests": ["httmock", "mock", "pytest"],
+        "tests": ["httmock", "mock", "pytest", "coverage"],
     },
     install_requires=requirements,
     entry_points={"console_scripts": ["sushiclient = pycounter.sushiclient:main"]},
