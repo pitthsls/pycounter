@@ -93,7 +93,6 @@ class CounterReport(object):
             self.date_run = datetime.date.today()
         else:
             self.date_run = date_run
-        self._year = None
         self.section_type = section_type
 
     def __repr__(self):
@@ -103,23 +102,6 @@ class CounterReport(object):
             self.period[0],
             self.period[1],
         )
-
-    @property
-    def year(self):
-        """Year report was issued (deprecated)."""
-        warnings.warn(
-            DeprecationWarning(
-                "CounterReport.year is deprecated."
-                "Reports may span multiple years. "
-                "COUNTER 5 reports will not have a year set."
-            )
-        )
-        return self._year
-
-    @year.setter
-    def year(self, value):
-        """Set year report was issued."""
-        self._year = value
 
     def __iter__(self):
         return iter(self.pubs)
@@ -776,7 +758,7 @@ def parse_generic(report_reader):
 
     if report.report_version < 5:
         try:
-            report.year = _year_from_header(header, report)
+            year = _year_from_header(header, report)
         except AttributeError:
             warnings.warn("Could not determine year from malformed header")
 
@@ -793,7 +775,7 @@ def parse_generic(report_reader):
                 break
             last_col += 1
 
-        start_date = datetime.date(report.year, 1, 1)
+        start_date = datetime.date(year, 1, 1)
         end_date = last_day(convert_date_column(header[last_col - 1]))
         report.period = (start_date, end_date)
 
@@ -945,13 +927,7 @@ def _get_type_and_version(specifier):
         raise UnknownReportTypeError(report_type)
 
     if report_version < 4:
-        warnings.warn(
-            DeprecationWarning(
-                "Parsing COUNTER versions before 4 ("
-                "current: {}) will not be supported in "
-                "the next release of pycounter.".format(report_version)
-            )
-        )
+        raise UnknownReportTypeError("Only COUNTER 4&5 are supported.")
 
     return report_type, report_version
 
@@ -962,10 +938,9 @@ def _get_c5_type_and_version(second_line, third_line):
 
 
 def _year_from_header(header, report):
-    """Get the year for the report from the header.
+    """Get the year of the first month in the report from the header.
 
-    NOTE: for multi-year reports, this will be the date of the first month,
-    and probably doesn't make sense to talk of a report having a year...
+    (Only used for COUNTER 4.)
     """
     first_date_col = 10 if report.report_version == 4 else 5
     if report.report_type in ("BR1", "BR2") and report.report_version == 4:

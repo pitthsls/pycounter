@@ -2,14 +2,6 @@
 import datetime
 
 
-def test_version(br_c1):
-    assert br_c1.report_version == 1
-
-
-def test_year(all_book_reports):
-    assert all_book_reports.year == 2012
-
-
 def test_publisher(all_book_reports):
     for publication in all_book_reports:
         assert publication.publisher == u"Megadodo Publications"

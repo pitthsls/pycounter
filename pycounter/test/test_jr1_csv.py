@@ -50,43 +50,6 @@ def test_ibsn(csv_jr1_r4_report):
     assert csv_jr1_r4_report.pubs[1].isbn is None
 
 
-class ParseExample(unittest.TestCase):
-    """Tests for parsing C3 JR1"""
-
-    def setUp(self):
-        self.report = report.parse(
-            os.path.join(os.path.dirname(__file__), "data/simpleJR1.csv")
-        )
-
-    def test_reportname(self):
-        self.assertEqual(self.report.report_version, 3)
-
-    def test_year(self):
-        self.assertEqual(self.report.year, 2011)
-
-    def test_platform(self):
-        for publication in self.report:
-            self.assertEqual(publication.publisher, u"Maximegalon University Press")
-            self.assertEqual(publication.platform, u"MJO")
-
-    def test_html(self):
-        expected = [0, 0]
-        actual = [pub.html_total for pub in self.report.pubs]
-
-        self.assertEqual(actual, expected)
-
-    def test_pdf(self):
-        expected = [0, 16]
-        actual = [pub.pdf_total for pub in self.report.pubs]
-
-        self.assertEqual(actual, expected)
-
-
-def test_counter3_deprecation():
-    with pytest.warns(DeprecationWarning):
-        report.parse(os.path.join(os.path.dirname(__file__), "data/simpleJR1.csv"))
-
-
 class ParseMultiyear(unittest.TestCase):
     """Multi-year COUNTER report
     """

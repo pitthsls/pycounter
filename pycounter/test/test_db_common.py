@@ -8,10 +8,6 @@ def test_version(db_report):
     assert db_report.report_version == 4
 
 
-def test_year(db_report):
-    assert db_report.year == 2012
-
-
 def test_publisher(db_report):
     for publication in db_report:
         assert publication.publisher == u"Megadodo Publications"

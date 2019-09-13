@@ -13,10 +13,6 @@ def test_report_version(jr1_report_xlsx):
     assert jr1_report_xlsx.report_version == 4
 
 
-def test_year(jr1_report_xlsx):
-    assert jr1_report_xlsx.year == 2013
-
-
 def test_publisher(jr1_report_xlsx):
     assert all(  # pragma: no branch
         publication.publisher == u"American Medical Association"
