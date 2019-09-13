@@ -12,7 +12,6 @@ from lxml import etree
 from lxml import objectify
 import pendulum
 import requests
-import six
 
 from pycounter import sushi5
 import pycounter.constants
@@ -324,7 +323,7 @@ def raw_to_full(raw_report):
                     )
                 )
             elif report.report_type == "BR3":
-                for metric_code, month_data in six.iteritems(metrics_for_db):
+                for metric_code, month_data in metrics_for_db.items():
                     metric = pycounter.constants.DB_METRIC_MAP[metric_code]
                     report.pubs.append(
                         pycounter.report.CounterBook(
@@ -359,7 +358,7 @@ def raw_to_full(raw_report):
                     )
                 )
             elif report.report_type.startswith("DB"):
-                for metric_code, month_data in six.iteritems(metrics_for_db):
+                for metric_code, month_data in metrics_for_db.items():
                     metric = pycounter.constants.DB_METRIC_MAP[metric_code]
                     report.pubs.append(
                         pycounter.report.CounterDatabase(
@@ -372,7 +371,7 @@ def raw_to_full(raw_report):
                         )
                     )
             elif report.report_type == "PR1":
-                for metric_code, month_data in six.iteritems(metrics_for_db):
+                for metric_code, month_data in metrics_for_db.items():
                     metric = pycounter.constants.DB_METRIC_MAP[metric_code]
                     report.pubs.append(
                         pycounter.report.CounterPlatform(
@@ -384,7 +383,7 @@ def raw_to_full(raw_report):
                         )
                     )
             elif report.report_type == "JR2":
-                for metric_code, month_data in six.iteritems(metrics_for_db):
+                for metric_code, month_data in metrics_for_db.items():
                     metric = pycounter.constants.DB_METRIC_MAP[metric_code]
                     report.pubs.append(
                         pycounter.report.CounterJournal(

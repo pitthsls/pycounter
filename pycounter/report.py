@@ -9,7 +9,6 @@ import re
 import warnings
 
 import pendulum
-import six
 
 from pycounter import csvhelper
 from pycounter.constants import CODES, HEADER_FIELDS, METRICS
@@ -224,11 +223,11 @@ class CounterReport(object):
             for data in pub:
                 total_usage += data[2]
                 month_data[months.index(data[0])] += data[2]
-        total_cells.append(six.text_type(total_usage))
+        total_cells.append(str(total_usage))
         if self.report_type == "JR1":
-            total_cells.append(six.text_type(html_usage))
-            total_cells.append(six.text_type(pdf_usage))
-        total_cells.extend(six.text_type(d) for d in month_data)
+            total_cells.append(str(html_usage))
+            total_cells.append(str(pdf_usage))
+        total_cells.extend(str(d) for d in month_data)
         return total_cells
 
     def _table_header(self):
@@ -260,7 +259,7 @@ class CounterReport(object):
         for database in self.pubs:
             dbs[database.title].add(database.metric)
 
-        for database, metrics in six.iteritems(dbs):
+        for database, metrics in dbs.items():
             for metric in (m for m in required_metrics if m not in metrics):
                 self.pubs.append(
                     CounterDatabase(
@@ -277,7 +276,7 @@ class CounterReport(object):
 MonthsUsage = collections.namedtuple("MonthsUsage", "month metric usage")
 
 
-class CounterEresource(six.Iterator):
+class CounterEresource:
     """
     Base class for COUNTER statistics lines.
 
@@ -431,13 +430,13 @@ class CounterJournal(CounterEresource):
         month_data = []
         for data in self:
             total_usage += data[2]
-            month_data.append(six.text_type(data[2]))
+            month_data.append(str(data[2]))
         if self.metric.startswith("Access"):
             data_line.append(self.metric)
-        data_line.append(six.text_type(total_usage))
+        data_line.append(str(total_usage))
         if not self.metric.startswith("Access"):
-            data_line.append(six.text_type(self.html_total))
-            data_line.append(six.text_type(self.pdf_total))
+            data_line.append(str(self.html_total))
+            data_line.append(str(self.pdf_total))
         data_line.extend(month_data)
         return data_line
 
@@ -531,10 +530,10 @@ class CounterBook(CounterEresource):
         month_data = []
         for data in self:
             total_usage += data[2]
-            month_data.append(six.text_type(data[2]))
+            month_data.append(str(data[2]))
         if self.metric and self.metric.startswith("Access"):
             data_line.append(self.metric)
-        data_line.append(six.text_type(total_usage))
+        data_line.append(str(total_usage))
         data_line.extend(month_data)
         return data_line
 
@@ -566,9 +565,9 @@ class CounterDatabase(CounterEresource):
 
         for data in self:
             total_usage += data[2]
-            month_data.append(six.text_type(data[2]))
+            month_data.append(str(data[2]))
 
-        data_line.append(six.text_type(total_usage))
+        data_line.append(str(total_usage))
         data_line.extend(month_data)
 
         return data_line
@@ -600,9 +599,9 @@ class CounterPlatform(CounterEresource):
 
         for data in self:
             total_usage += data[2]
-            month_data.append(six.text_type(data[2]))
+            month_data.append(str(data[2]))
 
-        data_line.append(six.text_type(total_usage))
+        data_line.append(str(total_usage))
         data_line.extend(month_data)
 
         return data_line
@@ -706,10 +705,10 @@ def parse_generic(report_reader):
     # pylint: disable=too-many-locals,too-many-branches,too-many-statements
     report = CounterReport()
 
-    first_line = six.next(report_reader)
+    first_line = next(report_reader)
     if first_line[0] == "Report_Name":  # COUNTER 5 report
-        second_line = six.next(report_reader)
-        third_line = six.next(report_reader)
+        second_line = next(report_reader)
+        third_line = next(report_reader)
         report.report_type, report.report_version = _get_c5_type_and_version(
             second_line, third_line
         )
@@ -720,10 +719,10 @@ def parse_generic(report_reader):
         # noinspection PyTypeChecker
         report.metric = METRICS.get(report.report_type)
 
-    report.customer = six.next(report_reader)[1 if report.report_version == 5 else 0]
+    report.customer = next(report_reader)[1 if report.report_version == 5 else 0]
 
     if report.report_version >= 4:
-        inst_id_line = six.next(report_reader)
+        inst_id_line = next(report_reader)
         if inst_id_line:
             report.institutional_identifier = inst_id_line[
                 1 if report.report_version == 5 else 0
@@ -731,20 +730,20 @@ def parse_generic(report_reader):
             if report.report_type == "BR2":
                 report.section_type = inst_id_line[1]
 
-        six.next(report_reader)
+        next(report_reader)
         if report.report_version == 5:
             for _ in range(3):
-                six.next(report_reader)
+                next(report_reader)
 
-        covered_line = six.next(report_reader)
+        covered_line = next(report_reader)
         report.period = convert_covered(
             covered_line[1 if report.report_version == 5 else 0]
         )
 
     if report.report_version < 5:
-        six.next(report_reader)
+        next(report_reader)
 
-    date_run_line = six.next(report_reader)
+    date_run_line = next(report_reader)
     report.date_run = convert_date_run(
         date_run_line[1 if report.report_version == 5 else 0]
     )
@@ -752,9 +751,9 @@ def parse_generic(report_reader):
     if report.report_version == 5:
         for _ in range(2):
             # Skip Created_By and blank line
-            six.next(report_reader)
+            next(report_reader)
 
-    header = six.next(report_reader)
+    header = next(report_reader)
 
     if report.report_version < 5:
         try:
@@ -781,11 +780,11 @@ def parse_generic(report_reader):
 
     if report.report_type not in ("DB1", "PR1") and report.report_version != 5:
         # these reports do not have line with totals
-        six.next(report_reader)
+        next(report_reader)
 
     if report.report_type in ("DB2", "BR3", "JR3"):
         # this report has two lines of totals
-        six.next(report_reader)
+        next(report_reader)
 
     for line in report_reader:
         if not line:

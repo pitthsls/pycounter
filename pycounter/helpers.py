@@ -4,7 +4,6 @@ import datetime
 import re
 
 import pendulum
-import six
 
 
 def convert_covered(datestring):
@@ -128,7 +127,7 @@ def format_stat(stat):
 
     :return: int
     """
-    if isinstance(stat, six.integer_types):
+    if isinstance(stat, int):
         return stat
 
     stat = stat.replace(",", "")
