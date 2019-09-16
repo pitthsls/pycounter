@@ -107,6 +107,23 @@ def raw_to_full(raw_report):
                     month_data=month_data,
                 )
             )
+        elif report.report_type.startswith("TR_B"):
+            report.pubs.append(
+                pycounter.report.CounterBook(
+                    title=title,
+                    platform=platform,
+                    publisher=publisher_name,
+                    period=report.period,
+                    metric="Total_Item_Requests",
+                    issn=identifiers["issn"],
+                    isbn=identifiers["isbn"],
+                    doi=identifiers["doi"],
+                    proprietary_id=identifiers["prop_id"],
+                    month_data=month_data,
+                )
+            )
+        else:
+            raise pycounter.exceptions.UnknownReportTypeError
 
     return report
 
