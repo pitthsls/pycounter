@@ -625,9 +625,9 @@ def parse(filename, filetype=None, encoding="utf-8", fallback_encoding="latin-1"
 
     if filetype == "tsv":
         return parse_separated(filename, "\t", encoding, fallback_encoding)
-    elif filetype == "xlsx":
+    if filetype == "xlsx":
         return parse_xlsx(filename)
-    elif filetype == "csv":
+    if filetype == "csv":
         return parse_separated(filename, ",", encoding, fallback_encoding)
     else:
         raise PycounterException("Unknown file type %s" % filetype)
@@ -838,7 +838,7 @@ def _parse_line(line, report, last_col):
             pdf_total=pdf_total,
             **common_args
         )
-    elif report.report_type.startswith("BR"):
+    if report.report_type.startswith("BR"):
         return CounterBook(
             metric=metric,
             month_data=month_data,
@@ -848,9 +848,9 @@ def _parse_line(line, report, last_col):
             proprietary_id=prop_id,
             **common_args
         )
-    elif report.report_type.startswith("DB"):
+    if report.report_type.startswith("DB"):
         return CounterDatabase(metric=line[3], month_data=month_data, **common_args)
-    elif report.report_type == "PR1":
+    if report.report_type == "PR1":
         # there is no title in the PR1 report
         return CounterPlatform(
             metric=line[2],
