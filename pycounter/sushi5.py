@@ -196,7 +196,7 @@ def _check_params(kwargs, release):
     """Warn about unnecessary/wrong params to get_sushi_stats_raw."""
     if release != 5:  # pragma: no cover
         raise pycounter.exceptions.SushiException(
-            "The sushi5 module only supports " "release 5"
+            "The sushi5 module only supports release 5"
         )
     deprecated_args = set(kwargs) & DEPRECATED_KEYS
     if deprecated_args:  # pragma: no cover
