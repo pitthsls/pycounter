@@ -598,8 +598,7 @@ def parse(filename, filetype=None, encoding="utf-8", fallback_encoding="latin-1"
         return parse_xlsx(filename)
     if filetype == "csv":
         return parse_separated(filename, ",", encoding, fallback_encoding)
-    else:
-        raise PycounterException("Unknown file type %s" % filetype)
+    raise PycounterException("Unknown file type %s" % filetype)
 
 
 def parse_xlsx(filename):
