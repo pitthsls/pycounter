@@ -57,3 +57,9 @@ def test_error_not_authorized():
     assert exc.message == u"Requestor Not Authorized to Access Service"
     assert exc.severity == "Error"
     assert exc.code == 2000
+
+
+def test_bk_data(sushi5_report_trb1):
+    publication = next(iter(sushi5_report_trb1))
+    data = [month[2] for month in publication]
+    assert data[0] == 22
