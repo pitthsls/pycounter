@@ -32,6 +32,7 @@ def trj1_report():
     )
 
 
+
 @pytest.fixture
 def trj2_report():
     """Tab-separated title turnaways report."""
