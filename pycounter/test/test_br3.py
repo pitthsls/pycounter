@@ -8,7 +8,7 @@ def test_metric(br3_report):
 
 
 def test_type(br3_report):
-    assert br3_report.report_type == u"BR3"
+    assert br3_report.report_type == "BR3"
 
 
 def test_data(br3_report):
@@ -17,6 +17,6 @@ def test_data(br3_report):
     item = next(iter(row))
     assert item == (
         datetime.date(2012, 1, 1),
-        u"Access denied: concurrent/simultaneous user license limit exceeded",
+        "Access denied: concurrent/simultaneous user license limit exceeded",
         4,
     )
