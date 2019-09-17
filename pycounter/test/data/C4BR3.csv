@@ -1,0 +1,14 @@
+Book Report 3 (R4),"Access Denied to Content Items by Month, Title and Category",,,,,,,,,,,,,
+University of Maximegalon,,,,,,,,,,,,,,
+BlahBlah,,,,,,,,,,,,,,
+Period covered by Report:,,,,,,,,,,,,,,
+2012-01-01 to 2012-06-30,,,,,,,,,,,,,,
+Date run:,,,,,,,,,,,,,,
+2012-07-09,,,,,,,,,,,,,,
+,Publisher,Platform,Book DOI,Propriatary Identifier,ISBN,ISSN,Access Denied Category,Reporting Period Total,Jan-2012,Feb-2012,Mar-2012,Apr-2012,May-2012,Jun-2012
+Total for all titles,Megadodo Publications,HHGTTG Online,,,,,Access denied: concurrent/simultaneous user license limit exceeded,14,4,0,2,2,3,3
+Total for all titles,Megadodo Publications,HHGTTG Online,,,,,Access denied: content item not licensed,30,10,3,9,1,4,3
+Hitchhikers Guide to the Galaxy,Megadodo Publications,HHGTTG Online,,,9787490833809,1900-1000,Access denied: concurrent/simultaneous user license limit exceeded,14,4,0,2,2,3,3
+Hitchhikers Guide to the Galaxy,Megadodo Publications,HHGTTG Online,,,9787490833809,1900-1000,Access denied: content item not licensed,0,0,0,0,0,0,0
+Öfake Book,Megadodo Publications,HHGTTG Online,,,9783572324031,,Access denied: concurrent/simultaneous user license limit exceeded,0,0,0,0,0,0,0
+Öfake Book,Megadodo Publications,HHGTTG Online,,,9783572324031,,Access denied: content item not licensed,30,10,3,9,1,4,3
