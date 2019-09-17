@@ -780,6 +780,7 @@ def _parse_line(line, report, last_col):
     doi = ""
     prop_id = ""
 
+    metric = report.metric
     if report.report_type.startswith("JR1") or report.report_type == "TR_J1":
         old_line = line
         line = line[0:3] + line[5:7] + line[10:last_col]
@@ -795,6 +796,16 @@ def _parse_line(line, report, last_col):
         isbn = line[3].strip()
         issn = line[4].strip()
 
+    elif report.report_type in ("BR3", "JR2"):
+        metric = line[7]
+        doi = line[3]
+        prop_id = line[4]
+        line = line[0:3] + line[5:7] + line[9:last_col]
+        eissn = line[4].strip()
+        if report.report_type == "BR3":
+            isbn = line[3].strip()
+        else:
+            issn = line[3].strip()
     # For DB1 and DB2, nothing additional to do here
     elif report.report_type in ("BR3", "JR2"):
             metric = line[7]
