@@ -135,3 +135,15 @@ def report_file_output(request):
 def db_report(request):
     """All C4 database reports."""
     return parsedata(request.param)
+
+
+@pytest.fixture
+def br3_report():
+    """Book report 3 (turnaways)."""
+    return parsedata("C4BR3.csv")
+
+
+@pytest.fixture
+def jr2_report():
+    """Journal report 2 (turnaways)."""
+    return parsedata("C4JR2.csv")

@@ -77,7 +77,7 @@ Usage
 -----
 
 Parsing COUNTER reports (currently supports 4 in .csv, .tsv,
-or .xlsx files, reports JR1, DB1, DB2, BR1, and BR2) and COUNTER 5::
+or .xlsx files, reports JR1, JR2, DB1, DB2, BR1, BR2, and BR3) and COUNTER 5::
 
     >>> import pycounter.report
     >>> report = pycounter.report.parse("COUNTER4_2015.tsv")  # filename or path to file

@@ -6,6 +6,9 @@
 year reports, and wasn't on COUNTER 5 reports in pycounter 2.0)
 * Dropped support for python 2 and 3.5. Now supports only python 3.6+
 
+## 2.1.0 (unreleased)
+* add support for COUNTER 4 title-level turnaways reports (JR2 and BR3).
+
 ## 2.0.0 (2019-09-13)
 
 * COUNTER 5 support (still a work in progress; see README).
