@@ -772,7 +772,7 @@ def parse_generic(report_reader):
         # these reports do not have line with totals
         six.next(report_reader)
 
-    if report.report_type == "DB2":
+    if report.report_type in ("DB2", "BR3"):
         # this report has two lines of totals
         six.next(report_reader)
 
@@ -792,6 +792,7 @@ def _parse_line(line, report, last_col):
     :param last_col: last column number containing data
     :return: an appropriate CounterResource subclass instance
     """
+    # pylint: disable=too-many-locals
     issn = None
     eissn = None
     isbn = None
@@ -800,6 +801,7 @@ def _parse_line(line, report, last_col):
     doi = ""
     prop_id = ""
 
+    metric = report.metric
     if report.report_version >= 4:
         if report.report_type.startswith("JR1") or report.report_type == "TR_J1":
             old_line = line
@@ -816,6 +818,13 @@ def _parse_line(line, report, last_col):
             isbn = line[3].strip()
             issn = line[4].strip()
 
+        elif report.report_type == "BR3":
+            metric = line[7]
+            doi = line[3]
+            prop_id = line[4]
+            line = line[0:3] + line[5:7] + line[9:last_col]
+            isbn = line[3].strip()
+            eissn = line[4].strip()
         # For DB1 and DB2, nothing additional to do here
 
     else:
@@ -853,7 +862,7 @@ def _parse_line(line, report, last_col):
         )
     elif report.report_type.startswith("BR"):
         return CounterBook(
-            metric=report.metric,
+            metric=metric,
             month_data=month_data,
             doi=doi,
             issn=issn,
