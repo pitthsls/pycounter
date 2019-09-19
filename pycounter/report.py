@@ -803,7 +803,7 @@ def _parse_line(line, report, last_col):
 
     metric = report.metric
     if report.report_version >= 4:
-        if report.report_type.startswith("JR1") or report.report_type == "TR_J1":
+        if report.report_type.startswith("JR1") or report.report_type == "TR_J1" or report.report_type == "TR_J2":
             old_line = line
             line = line[0:3] + line[5:7] + line[10:last_col]
             doi = old_line[3]
@@ -812,6 +812,8 @@ def _parse_line(line, report, last_col):
             pdf_total = format_stat(old_line[9])
             issn = line[3].strip()
             eissn = line[4].strip()
+            if report.report_type == "TR_J2":
+                metric = old_line[9]
 
         elif report.report_type in ("BR1", "BR2"):
             line = line[0:3] + line[5:7] + line[8:last_col]
@@ -851,7 +853,7 @@ def _parse_line(line, report, last_col):
     for data in line[months_start_idx:]:
         month_data.append((curr_month, format_stat(data)))
         curr_month = next_month(curr_month)
-    if report.report_type.startswith("JR") or report.report_type == "TR_J1":
+    if report.report_type.startswith("JR") or report.report_type == "TR_J1"  or report.report_type == "TR_J2":
         return CounterJournal(
             metric=metric,
             month_data=month_data,
