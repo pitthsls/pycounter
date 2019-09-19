@@ -15,8 +15,4 @@ def test_data(trj2_report):
     i = iter(trj2_report)
     row = next(i)
     item = next(iter(row))
-    assert item == (
-        datetime.date(2017, 1, 1),
-        u"Limit_Exceeded",
-        3,
-    )
+    assert item == (datetime.date(2017, 1, 1), u"Limit_Exceeded", 3)

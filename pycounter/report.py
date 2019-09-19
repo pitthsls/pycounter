@@ -803,7 +803,11 @@ def _parse_line(line, report, last_col):
 
     metric = report.metric
     if report.report_version >= 4:
-        if report.report_type.startswith("JR1") or report.report_type == "TR_J1" or report.report_type == "TR_J2":
+        if (
+            report.report_type.startswith("JR1")
+            or report.report_type == "TR_J1"
+            or report.report_type == "TR_J2"
+        ):
             old_line = line
             line = line[0:3] + line[5:7] + line[10:last_col]
             doi = old_line[3]
@@ -853,7 +857,11 @@ def _parse_line(line, report, last_col):
     for data in line[months_start_idx:]:
         month_data.append((curr_month, format_stat(data)))
         curr_month = next_month(curr_month)
-    if report.report_type.startswith("JR") or report.report_type == "TR_J1"  or report.report_type == "TR_J2":
+    if (
+        report.report_type.startswith("JR")
+        or report.report_type == "TR_J1"
+        or report.report_type == "TR_J2"
+    ):
         return CounterJournal(
             metric=metric,
             month_data=month_data,
