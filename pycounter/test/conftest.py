@@ -65,6 +65,8 @@ def parse_sushi_file(filename):
         "sushi_simple_br1.xml",
         "sushi_simple_db1.xml",
         "sushi_db1_missing_record_view.xml",
+        "sushi_br3.xml",
+        "sushi_jr2.xml",
     ]
 )
 def sushi_report_all(request):
@@ -95,6 +97,18 @@ def sushi_report_no_customer(request):
 def sushi_report_jr1(request):
     """Report from SUSHI, shared common data, JR1 only."""
     return parse_sushi_file(request.param)
+
+
+@pytest.fixture
+def sushi_report_jr2():
+    """Journal turnaways."""
+    return parse_sushi_file("sushi_jr2.xml")
+
+
+@pytest.fixture
+def sushi_report_br3():
+    """Book turnaways."""
+    return parse_sushi_file("sushi_br3.xml")
 
 
 @pytest.fixture(
@@ -155,3 +169,28 @@ def br3_report():
 def jr2_report():
     """Journal report 2 (turnaways)."""
     return parsedata("C4JR2.csv")
+
+
+@pytest.fixture(
+    params="""C4BR1.tsv
+C4BR2.tsv
+C4BR3.csv
+C4DB1.tsv
+C4DB1_split_year.tsv
+C4DB2.tsv
+C4JR1.csv
+C4JR1_bad.csv
+C4JR1big.csv
+C4JR1GOA.csv
+C4JR1mul.csv
+C4JR1my.csv
+C4JR2.csv
+PR1.tsv
+simpleBR1.csv
+simpleJR1.csv
+simpleJR1.tsv
+""".split()
+)
+def all_reports(request):
+    """All COUNTER 4 reports."""
+    return parsedata(request.param)
