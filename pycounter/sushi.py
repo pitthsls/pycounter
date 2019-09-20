@@ -275,7 +275,7 @@ def raw_to_full(raw_report):
         html_usage = 0
         pdf_usage = 0
 
-        metrics_for_db = collections.defaultdict(list)
+        metrics_for_db = collections.OrderedDict()
 
         for perform_item in item.ItemPerformance:
             item_date = convert_date_run(perform_item.Period.Begin.text)
@@ -294,7 +294,7 @@ def raw_to_full(raw_report):
                         "JR2",
                         "BR3",
                     ):
-                        metrics_for_db[inst.MetricType].append(
+                        metrics_for_db.setdefault(inst.MetricType, []).append(
                             (item_date, int(inst.Count))
                         )
             if usage is not None:
@@ -318,7 +318,26 @@ def raw_to_full(raw_report):
                         pdf_total=pdf_usage,
                     )
                 )
+            elif report.report_type == "BR3":
+                for metric_code, month_data in six.iteritems(metrics_for_db):
+                    metric = pycounter.constants.DB_METRIC_MAP[metric_code]
+                    report.pubs.append(
+                        pycounter.report.CounterBook(
+                            title=title,
+                            platform=platform,
+                            publisher=publisher_name,
+                            period=report.period,
+                            metric=metric,
+                            issn=issn,
+                            print_isbn=print_isbn,
+                            online_isbn=online_isbn,
+                            doi=doi,
+                            proprietary_id=prop_id,
+                            month_data=month_data,
+                        )
+                    )
             elif report.report_type.startswith("BR"):
+                # BR1, BR2
                 report.pubs.append(
                     pycounter.report.CounterBook(
                         title=title,

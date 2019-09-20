@@ -97,6 +97,17 @@ def test_data_jr2(sushi_report_jr2):
     ]
 
 
+def test_data_br3(sushi_report_br3):
+    assert [next(iter(line)) for line in sushi_report_br3] == [
+        (
+            datetime.date(2013, 1, 1),
+            u"Access denied: concurrent/simultaneous user license exceeded",
+            6,
+        ),
+        (datetime.date(2013, 1, 1), u"Access denied: content item not licensed", 8),
+    ]
+
+
 class TestConvertRawBook(unittest.TestCase):
     """Test converting simple BR1 SUSHI response"""
 
