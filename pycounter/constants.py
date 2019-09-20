@@ -157,6 +157,7 @@ HEADER_FIELDS = {
         u"Proprietary Identifier",
         u"ISBN",
         u"ISSN",
+        u"Access Denied Category",
         u"Reporting Period Total",
     ),
     "DB1": (
@@ -191,7 +192,9 @@ HEADER_FIELDS = {
 
 TOTAL_TEXT = {
     "JR1": u"Total for all journals",
+    "JR2": u"Total for all journals",
     "BR1": u"Total for all titles",
     "BR2": u"Total for all titles",
+    "BR3": u"Total for all titles",
     "DB2": u"Total for all databases",
 }

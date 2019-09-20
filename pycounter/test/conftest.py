@@ -65,6 +65,8 @@ def parse_sushi_file(filename):
         "sushi_simple_br1.xml",
         "sushi_simple_db1.xml",
         "sushi_db1_missing_record_view.xml",
+        "sushi_br3.xml",
+        "sushi_jr2.xml",
     ]
 )
 def sushi_report_all(request):

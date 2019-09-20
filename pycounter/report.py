@@ -170,7 +170,7 @@ class CounterReport(object):
         output_lines.append([u"Date run:"])
         output_lines.append([self.date_run.strftime("%Y-%m-%d")])
         output_lines.append(self._table_header())
-        if self.report_type in ("JR1", "BR1", "BR2", "DB2"):
+        if self.report_type in ("JR1", "BR1", "BR2", "DB2", "JR2", "BR3"):
             output_lines.extend(self._totals_lines())
         elif self.report_type.startswith("DB"):
             self._ensure_required_metrics()
@@ -207,9 +207,9 @@ class CounterReport(object):
             total_cells.append(platforms.pop())
         else:
             total_cells.append(u"")
-        if self.report_type in ("JR1", "BR1", "BR2"):
+        if self.report_type in ("JR1", "BR1", "BR2", "JR2", "BR3"):
             total_cells.extend([u""] * 4)
-        elif self.report_type == "DB2":
+        if self.report_type in ("DB2", "JR2", "BR3"):
             total_cells.append(metric)
         total_usage = 0
         pdf_usage = 0
@@ -426,9 +426,12 @@ class CounterJournal(CounterEresource):
         for data in self:
             total_usage += data[2]
             month_data.append(six.text_type(data[2]))
+        if self.metric.startswith("Access"):
+            data_line.append(self.metric)
         data_line.append(six.text_type(total_usage))
-        data_line.append(six.text_type(self.html_total))
-        data_line.append(six.text_type(self.pdf_total))
+        if not self.metric.startswith("Access"):
+            data_line.append(six.text_type(self.html_total))
+            data_line.append(six.text_type(self.pdf_total))
         data_line.extend(month_data)
         return data_line
 
@@ -523,6 +526,8 @@ class CounterBook(CounterEresource):
         for data in self:
             total_usage += data[2]
             month_data.append(six.text_type(data[2]))
+        if self.metric and self.metric.startswith("Access"):
+            data_line.append(self.metric)
         data_line.append(six.text_type(total_usage))
         data_line.extend(month_data)
         return data_line
