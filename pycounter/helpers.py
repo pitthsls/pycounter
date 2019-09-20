@@ -119,7 +119,7 @@ def format_stat(stat):
     try:
         return int(stat)
     except ValueError:
-        return None
+        return 0
 
 
 def guess_type_from_content(file_obj):

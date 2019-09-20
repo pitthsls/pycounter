@@ -91,6 +91,7 @@ REPORT_DESCRIPTIONS = {
     u"to mobile devices and for mobile devices/delivered to "
     u"mobile devices)",
     u"TR_J1": u'Journal Requests (Excluding "OA_Gold")',
+    u"TR_J2": u"Journal Access Denied",
 }
 
 HEADER_FIELDS = {
@@ -199,6 +200,17 @@ HEADER_FIELDS = {
         u"Reporting Period Total",
         u"Reporting Period HTML",
         u"Reporting Period PDF",
+    ),
+    "TR_J2": (
+        u"Journal",
+        u"Publisher",
+        u"Platform",
+        u"Journal DOI",
+        u"Proprietary Identifier",
+        u"Print ISSN",
+        u"Online ISSN",
+        u"Access Denied Category",
+        u"Reporting Period Total",
     ),
 }
 

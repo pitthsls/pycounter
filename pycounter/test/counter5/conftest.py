@@ -65,3 +65,11 @@ def sushi5_report_trj1():
             release=5,
             report="TR_J1",
         )
+
+
+@pytest.fixture(params=["tr_j1.tsv", "tr_j2.tsv"])
+def all_c5_reports(request):
+    """All COUNTER 4 reports."""
+    return pycounter.report.parse(
+        os.path.join(os.path.dirname(__file__), "data", request.param)
+    )
