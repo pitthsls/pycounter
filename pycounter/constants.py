@@ -63,7 +63,7 @@ REPORT_DESCRIPTIONS = {
     u"Requests by Month and Journal",
     u"JR1a": u"Number of Successful Full-Text Article Requests from an "
     u"Archive by Month and Journal",
-    u"JR2": u"Access Denied to Full Text Articles by Month, Journal, and " u"Category",
+    u"JR2": u"Access Denied to Full Text Articles by Month, Journal, and Category",
     u"JR3": u"Number of Successful Item Requests and Turnaways by Month, "
     u"Journal, and Page-Type",
     u"JR3mobile": u"Number of Successful Item Requests by Month, Journal, "
@@ -114,9 +114,8 @@ HEADER_FIELDS = {
         u"Proprietary Identifier",
         u"Print ISSN",
         u"Online ISSN",
+        u"Access Denied Category",
         u"Reporting Period Total",
-        u"Reporting Period HTML",
-        u"Reporting Period PDF",
     ),
     "JR3": (
         u"Journal",
