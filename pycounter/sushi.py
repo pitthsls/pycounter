@@ -272,7 +272,7 @@ def raw_to_full(raw_report):
         html_usage = 0
         pdf_usage = 0
 
-        metrics_for_db = collections.defaultdict(list)
+        metrics_for_db = collections.OrderedDict()
 
         for perform_item in item.ItemPerformance:
             item_date = convert_date_run(perform_item.Period.Begin.text)
@@ -286,18 +286,19 @@ def raw_to_full(raw_report):
                         pdf_usage += int(inst.Count)
                     elif inst.MetricType == "ft_html":
                         html_usage += int(inst.Count)
-                    elif (
-                        report.report_type.startswith("DB")
-                        or report.report_type == "PR1"
+                    elif report.report_type.startswith("DB") or report.report_type in (
+                        "PR1",
+                        "JR2",
+                        "BR3",
                     ):
-                        metrics_for_db[inst.MetricType].append(
+                        metrics_for_db.setdefault(inst.MetricType, []).append(
                             (item_date, int(inst.Count))
                         )
             if usage is not None:
                 month_data.append((item_date, int(usage)))
 
         if report.report_type:
-            if report.report_type.startswith("JR"):
+            if report.report_type == "JR1":
                 report.pubs.append(
                     pycounter.report.CounterJournal(
                         title=title,
@@ -314,7 +315,26 @@ def raw_to_full(raw_report):
                         pdf_total=pdf_usage,
                     )
                 )
+            elif report.report_type == "BR3":
+                for metric_code, month_data in six.iteritems(metrics_for_db):
+                    metric = pycounter.constants.DB_METRIC_MAP[metric_code]
+                    report.pubs.append(
+                        pycounter.report.CounterBook(
+                            title=title,
+                            platform=platform,
+                            publisher=publisher_name,
+                            period=report.period,
+                            metric=metric,
+                            issn=issn,
+                            print_isbn=print_isbn,
+                            online_isbn=online_isbn,
+                            doi=doi,
+                            proprietary_id=prop_id,
+                            month_data=month_data,
+                        )
+                    )
             elif report.report_type.startswith("BR"):
+                # BR1, BR2
                 report.pubs.append(
                     pycounter.report.CounterBook(
                         title=title,
@@ -352,6 +372,23 @@ def raw_to_full(raw_report):
                             publisher=publisher_name,
                             period=report.period,
                             metric=metric,
+                            month_data=month_data,
+                        )
+                    )
+            elif report.report_type == "JR2":
+                for metric_code, month_data in six.iteritems(metrics_for_db):
+                    metric = pycounter.constants.DB_METRIC_MAP[metric_code]
+                    report.pubs.append(
+                        pycounter.report.CounterJournal(
+                            title=title,
+                            platform=platform,
+                            publisher=publisher_name,
+                            period=report.period,
+                            metric=metric,
+                            issn=issn,
+                            eissn=eissn,
+                            doi=doi,
+                            proprietary_id=prop_id,
                             month_data=month_data,
                         )
                     )

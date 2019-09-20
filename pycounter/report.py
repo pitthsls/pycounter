@@ -142,7 +142,7 @@ class CounterReport:
         output_lines.append(["Date run:"])
         output_lines.append([self.date_run.strftime("%Y-%m-%d")])
         output_lines.append(self._table_header())
-        if self.report_type in ("JR1", "BR1", "BR2", "DB2"):
+        if self.report_type in ("JR1", "BR1", "BR2", "DB2", "JR2", "BR3"):
             output_lines.extend(self._totals_lines())
         elif self.report_type.startswith("DB"):
             self._ensure_required_metrics()
@@ -179,9 +179,9 @@ class CounterReport:
             total_cells.append(platforms.pop())
         else:
             total_cells.append("")
-        if self.report_type in ("JR1", "BR1", "BR2"):
+        if self.report_type in ("JR1", "BR1", "BR2", "JR2", "BR3"):
             total_cells.extend([""] * 4)
-        elif self.report_type == "DB2":
+        if self.report_type in ("DB2", "JR2", "BR3"):
             total_cells.append(metric)
         total_usage = 0
         pdf_usage = 0
@@ -396,9 +396,12 @@ class CounterJournal(CounterEresource):
         for data in self:
             total_usage += data[2]
             month_data.append(str(data[2]))
+        if self.metric.startswith("Access"):
+            data_line.append(self.metric)
         data_line.append(str(total_usage))
-        data_line.append(str(self.html_total))
-        data_line.append(str(self.pdf_total))
+        if not self.metric.startswith("Access"):
+            data_line.append(str(self.html_total))
+            data_line.append(str(self.pdf_total))
         data_line.extend(month_data)
         return data_line
 
@@ -491,6 +494,8 @@ class CounterBook(CounterEresource):
         for data in self:
             total_usage += data[2]
             month_data.append(str(data[2]))
+        if self.metric and self.metric.startswith("Access"):
+            data_line.append(self.metric)
         data_line.append(str(total_usage))
         data_line.extend(month_data)
         return data_line
@@ -750,7 +755,11 @@ def _parse_line(line, report, last_col):
     prop_id = ""
 
     metric = report.metric
-    if report.report_type.startswith("JR1") or report.report_type == "TR_J1":
+    if (
+            report.report_type.startswith("JR1")
+            or report.report_type == "TR_J1"
+        or report.report_type == "TR_J2"
+        ):
         old_line = line
         line = line[0:3] + line[5:7] + line[10:last_col]
         doi = old_line[3]
@@ -759,6 +768,8 @@ def _parse_line(line, report, last_col):
         pdf_total = format_stat(old_line[9])
         issn = line[3].strip()
         eissn = line[4].strip()
+        if report.report_type == "TR_J2":
+                metric = old_line[9]
 
     elif report.report_type in ("BR1", "BR2"):
         line = line[0:3] + line[5:7] + line[8:last_col]
@@ -790,7 +801,11 @@ def _parse_line(line, report, last_col):
     for data in line[months_start_idx:]:
         month_data.append((curr_month, format_stat(data)))
         curr_month = next_month(curr_month)
-    if report.report_type.startswith("JR") or report.report_type == "TR_J1":
+    if (
+        report.report_type.startswith("JR")
+        or report.report_type == "TR_J1"
+        or report.report_type == "TR_J2"
+    ):
         return CounterJournal(
             metric=metric,
             month_data=month_data,
