@@ -69,4 +69,4 @@ def test_totals_sparse_data(tmp_path):
 
 def test_roundtrippable(all_reports, tmp_path):
     """Test that all of our parsable reports can also be output."""
-    all_reports.write_tsv(tmp_path / "output.tsv")
+    all_reports.write_tsv(str(tmp_path / "output.tsv"))
