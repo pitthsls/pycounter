@@ -169,3 +169,28 @@ def br3_report():
 def jr2_report():
     """Journal report 2 (turnaways)."""
     return parsedata("C4JR2.csv")
+
+
+@pytest.fixture(
+    params="""C4BR1.tsv
+C4BR2.tsv
+C4BR3.csv
+C4DB1.tsv
+C4DB1_split_year.tsv
+C4DB2.tsv
+C4JR1.csv
+C4JR1_bad.csv
+C4JR1big.csv
+C4JR1GOA.csv
+C4JR1mul.csv
+C4JR1my.csv
+C4JR2.csv
+PR1.tsv
+simpleBR1.csv
+simpleJR1.csv
+simpleJR1.tsv
+""".split()
+)
+def all_reports(request):
+    """All COUNTER 4 reports."""
+    return parsedata(request.param)

@@ -59,7 +59,7 @@ REPORT_DESCRIPTIONS = {
     u"DB1": u"Total Searches, Result Clicks and Record Views by Month and " u"Database",
     u"DB2": u"Access Denied by Month, Database and Category",
     u"JR1": u"Number of Successful Full-Text Article Requests by Month and " u"Journal",
-    u"JR1GOA": u"Number of Successful Gold Open Access Full-Text Article "
+    u"JR1 GOA": u"Number of Successful Gold Open Access Full-Text Article "
     u"Requests by Month and Journal",
     u"JR1a": u"Number of Successful Full-Text Article Requests from an "
     u"Archive by Month and Journal",
@@ -95,6 +95,18 @@ REPORT_DESCRIPTIONS = {
 
 HEADER_FIELDS = {
     "JR1": (
+        u"Journal",
+        u"Publisher",
+        u"Platform",
+        u"Journal DOI",
+        u"Proprietary Identifier",
+        u"Print ISSN",
+        u"Online ISSN",
+        u"Reporting Period Total",
+        u"Reporting Period HTML",
+        u"Reporting Period PDF",
+    ),
+    "JR1 GOA": (
         u"Journal",
         u"Publisher",
         u"Platform",

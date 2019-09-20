@@ -65,3 +65,8 @@ def test_totals_sparse_data(tmp_path):
     assert book_line.startswith("Book 1")
     numbers = [int(num) for num in book_line.split("\t")[-3:]]
     assert numbers == [0, 3, 5], "check counts for book 1"
+
+
+def test_roundtrippable(all_reports, tmp_path):
+    """Test that all of our parsable reports can also be output."""
+    all_reports.write_tsv(tmp_path / "output.tsv")
