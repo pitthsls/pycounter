@@ -59,7 +59,7 @@ REPORT_DESCRIPTIONS = {
     "DB1": "Total Searches, Result Clicks and Record Views by Month and " "Database",
     "DB2": "Access Denied by Month, Database and Category",
     "JR1": "Number of Successful Full-Text Article Requests by Month and " "Journal",
-    "JR1GOA": "Number of Successful Gold Open Access Full-Text Article "
+    "JR1 GOA": "Number of Successful Gold Open Access Full-Text Article "
     "Requests by Month and Journal",
     "JR1a": "Number of Successful Full-Text Article Requests from an "
     "Archive by Month and Journal",
@@ -105,7 +105,7 @@ HEADER_FIELDS = {
         "Reporting Period HTML",
         "Reporting Period PDF",
     ),
-    "JR2": (
+    "JR1 GOA": (
         "Journal",
         "Publisher",
         "Platform",
@@ -116,6 +116,17 @@ HEADER_FIELDS = {
         "Reporting Period Total",
         "Reporting Period HTML",
         "Reporting Period PDF",
+    ),
+    "JR2": (
+        "Journal",
+        "Publisher",
+        "Platform",
+        "Journal DOI",
+        "Proprietary Identifier",
+        "Print ISSN",
+        "Online ISSN",
+        "Access Denied Category",
+        "Reporting Period Total",
     ),
     "JR3": (
         "Journal",
@@ -157,6 +168,7 @@ HEADER_FIELDS = {
         "Proprietary Identifier",
         "ISBN",
         "ISSN",
+        "Access Denied Category",
         "Reporting Period Total",
     ),
     "DB1": (
@@ -191,7 +203,9 @@ HEADER_FIELDS = {
 
 TOTAL_TEXT = {
     "JR1": "Total for all journals",
+    "JR2": "Total for all journals",
     "BR1": "Total for all titles",
     "BR2": "Total for all titles",
+    "BR3": "Total for all titles",
     "DB2": "Total for all databases",
 }
