@@ -24,7 +24,6 @@ from pycounter.helpers import (
     format_stat,
     guess_type_from_content,
     is_first_last,
-    last_day,
     next_month,
 )
 
@@ -794,7 +793,7 @@ def _parse_line(line, report, last_col):
         pdf_total = format_stat(old_line[9])
         issn = line[3].strip()
         eissn = line[4].strip()
-        if report.report_type == "TR_J2":
+        if report.report_type.startswith("TR"):
             metric = old_line[9]
 
     elif report.report_type in ("BR1", "BR2"):

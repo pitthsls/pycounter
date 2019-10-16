@@ -66,9 +66,7 @@ class NoUsageAvailableError(SushiException):
 
 
 class PycounterWarning(Warning, PycounterException):
-    """Warnings from pycounter"""
-
-    pass
+    """Warnings from pycounter."""
 
 
 class SushiWarning(Warning, SushiException):
