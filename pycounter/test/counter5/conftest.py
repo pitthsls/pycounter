@@ -24,14 +24,6 @@ def sushi_book_mock(url_unused, request_unused):
         return datafile.read()
 
 
-@urlmatch(netloc=r"(.*\.)?example\.com$")
-def sushi_book_mock(url_unused, request_unused):
-    """Mocked SUSHI service."""
-    path = os.path.join(os.path.dirname(__file__), "data", "sushi_book.json")
-    with io.open(path, "r", encoding="utf-8") as datafile:
-        return datafile.read()
-
-
 @pytest.fixture
 def trj1_report():
     """Tab-separated title report."""
