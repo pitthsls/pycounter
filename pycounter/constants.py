@@ -199,6 +199,17 @@ HEADER_FIELDS = {
         "Reporting Period HTML",
         "Reporting Period PDF",
     ),
+    "TR_J2": (
+        u"Journal",
+        u"Publisher",
+        u"Platform",
+        u"Journal DOI",
+        u"Proprietary Identifier",
+        u"Print ISSN",
+        u"Online ISSN",
+        u"Access Denied Category",
+        u"Reporting Period Total",
+    ),
 }
 
 TOTAL_TEXT = {

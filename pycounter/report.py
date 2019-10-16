@@ -12,12 +12,18 @@ import pendulum
 from pycounter import csvhelper
 from pycounter.constants import CODES, HEADER_FIELDS, METRICS
 from pycounter.constants import REPORT_DESCRIPTIONS, TOTAL_TEXT
-from pycounter.exceptions import PycounterException, UnknownReportTypeError
+from pycounter.exceptions import (
+    PycounterException,
+    PycounterWarning,
+    UnknownReportTypeError,
+)
 from pycounter.helpers import (
     convert_covered,
     convert_date_run,
     format_stat,
     guess_type_from_content,
+    is_first_last,
+    last_day,
     next_month,
 )
 
@@ -73,6 +79,12 @@ class CounterReport:
         self.metric = metric
         self.customer = customer
         self.institutional_identifier = institutional_identifier
+        if not is_first_last(period):
+            warnings.warn(
+                "report period should be from"
+                "first day of a month to last day of a month.",
+                PycounterWarning,
+            )
         self.period = period
         if date_run is None:
             self.date_run = datetime.date.today()
@@ -187,7 +199,12 @@ class CounterReport:
         pdf_usage = 0
         html_usage = 0
 
-        months = list(pendulum.period(self.period[0], self.period[1]).range("months"))
+        start_month_first_day = datetime.date(
+            self.period[0].year, self.period[0].month, 1
+        )
+        months = list(
+            pendulum.Period(start_month_first_day, self.period[1]).range("months")
+        )
         month_data = [0] * len(months)
         for pub in self.pubs:
             if pub.metric != metric:
@@ -208,7 +225,12 @@ class CounterReport:
     def _table_header(self):
         """Generate header for COUNTER table for report, as list of cells."""
         header_cells = list(HEADER_FIELDS[self.report_type])
-        for d_obj in pendulum.period(self.period[0], self.period[1]).range("months"):
+        start_month_first_day = datetime.date(
+            self.period[0].year, self.period[0].month, 1
+        )
+        for d_obj in pendulum.Period(start_month_first_day, self.period[1]).range(
+            "months"
+        ):
             header_cells.append(d_obj.strftime("%b-%Y"))
         return header_cells
 
@@ -297,9 +319,12 @@ class CounterEresource:
 
     def _fill_months(self):
         """Ensure each month in period represented and zero fill if not."""
-        start, end = self.period[0], self.period[1]
+        start_month_first_day = datetime.date(
+            self.period[0].year, self.period[0].month, 1
+        )
+        start, end = start_month_first_day, self.period[1]
         try:
-            for d_obj in pendulum.period(start, end).range("months"):
+            for d_obj in pendulum.Period(start, end).range("months"):
                 if d_obj not in (x[0] for x in self._full_data):
                     self._full_data.append((d_obj, 0))
         except IndexError:  # pragma: nocover
@@ -796,7 +821,7 @@ def _parse_line(line, report, last_col):
         "period": report.period,
     }
     month_data = []
-    curr_month = report.period[0]
+    curr_month = datetime.date(report.period[0].year, report.period[0].month, 1)
     months_start_idx = 5 if report.report_type != "PR1" else 4
     for data in line[months_start_idx:]:
         month_data.append((curr_month, format_stat(data)))

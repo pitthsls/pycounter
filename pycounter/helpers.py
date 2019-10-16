@@ -49,6 +49,21 @@ def convert_date_run(datestring):
             return datetime.datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S").date()
 
 
+def is_first_last(period):
+    """
+
+    Args:
+        period: a tuple of datetime.date objects
+
+    Returns: bool, whether the period starts on the 1st of a month and ends on
+        the last of a month
+
+    """
+    if period == (None, None):
+        return True
+    return period[0].day == 1 and period[1].day == last_day(period[1]).day
+
+
 def last_day(orig_date):
     """
     Find last day of a month from any day in the month.
@@ -106,7 +121,7 @@ def format_stat(stat):
     try:
         return int(stat)
     except ValueError:
-        return None
+        return 0
 
 
 def guess_type_from_content(file_obj):

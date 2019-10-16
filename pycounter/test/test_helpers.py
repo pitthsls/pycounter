@@ -6,7 +6,7 @@ import datetime
 
 import pytest
 
-from pycounter.helpers import next_month, prev_month
+from pycounter.helpers import is_first_last, next_month, prev_month
 
 
 @pytest.mark.parametrize(
@@ -33,3 +33,16 @@ def test_nextmonth(pair):
 )
 def test_prevmonth(pair):
     assert datetime.date(*pair[1]) == prev_month(datetime.date(*pair[0]))
+
+
+@pytest.mark.parametrize(
+    "period,expected",
+    [
+        (((2000, 1, 1), (2000, 1, 31)), True),
+        (((2000, 1, 2), (2000, 1, 31)), False),
+        (((2000, 1, 1), (2000, 1, 30)), False),
+    ],
+)
+def test_is_first_last(period, expected):
+    dt_period = tuple(datetime.date(*part) for part in period)
+    assert is_first_last(dt_period) == expected

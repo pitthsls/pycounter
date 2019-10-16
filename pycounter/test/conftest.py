@@ -19,7 +19,7 @@ def csv_jr1_report(request):
     return parsedata(request.param)
 
 
-@pytest.fixture(params=["simpleJR1.tsv", "tsvC4JR1"])
+@pytest.fixture(params=["simpleJR1.tsv", "tsvC4JR1", "issue_14.tsv"])
 def tsv_jr1(request):
     """TSV file"""
     return parsedata(request.param)

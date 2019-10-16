@@ -1,4 +1,5 @@
 # Changelog
+
 ## 3.0.0 (unreleased)
 
 * COUNTER 3 support removed (was at EOL in 2014).

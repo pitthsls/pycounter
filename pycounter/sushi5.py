@@ -1,5 +1,6 @@
 """COUNTER 5 SUSHI support."""
 
+import collections
 import datetime
 import logging
 import warnings
@@ -61,6 +62,7 @@ def raw_to_full(raw_report):
     :param raw_report: raw report as dict decoded from JSON
     :return: a :class:`pycounter.report.CounterReport`
     """
+    # pylint: disable=too-many-locals
     header = raw_report["Report_Header"]
     period = _dates_from_filters(header["Report_Filters"])
     date_run = header.get("Created")
@@ -81,18 +83,17 @@ def raw_to_full(raw_report):
 
         identifiers = _get_identifiers(item)
 
-        month_data = []
+        metrics_data = collections.OrderedDict()
 
         for perform_item in item["Performance"]:
             item_date = convert_date_run(perform_item["Period"]["Begin_Date"])
-            usage = None
             for inst in perform_item["Instance"]:
-                if inst["Metric_Type"] == "Total_Item_Requests":
-                    usage = inst["Count"]
-            if usage is not None:
-                month_data.append((item_date, int(usage)))
+                usage = inst["Count"]
+                metrics_data.setdefault(inst["Metric_Type"], []).append(
+                    (item_date, int(usage))
+                )
 
-        if report.report_type.startswith("TR_J"):
+        if report.report_type == "TR_J1":
             report.pubs.append(
                 pycounter.report.CounterJournal(
                     title=title,
@@ -104,9 +105,25 @@ def raw_to_full(raw_report):
                     eissn=identifiers["eissn"],
                     doi=identifiers["doi"],
                     proprietary_id=identifiers["prop_id"],
-                    month_data=month_data,
+                    month_data=metrics_data["Total_Item_Requests"],
                 )
             )
+        elif report.report_type == "TR_J2":
+            for metric, data in metrics_data.items():
+                report.pubs.append(
+                    pycounter.report.CounterJournal(
+                        title=title,
+                        platform=platform,
+                        publisher=publisher_name,
+                        period=report.period,
+                        metric=metric,
+                        issn=identifiers["issn"],
+                        eissn=identifiers["eissn"],
+                        doi=identifiers["doi"],
+                        proprietary_id=identifiers["prop_id"],
+                        month_data=data,
+                    )
+                )
         elif report.report_type.startswith("TR_B"):
             report.pubs.append(
                 pycounter.report.CounterBook(
@@ -119,7 +136,7 @@ def raw_to_full(raw_report):
                     isbn=identifiers["isbn"],
                     doi=identifiers["doi"],
                     proprietary_id=identifiers["prop_id"],
-                    month_data=month_data,
+                    month_data=metrics_data["Total_Item_Requests"],
                 )
             )
         else:
@@ -213,7 +230,7 @@ def _check_params(kwargs, release):
     """Warn about unnecessary/wrong params to get_sushi_stats_raw."""
     if release != 5:  # pragma: no cover
         raise pycounter.exceptions.SushiException(
-            "The sushi5 module only supports " "release 5"
+            "The sushi5 module only supports release 5"
         )
     deprecated_args = set(kwargs) & DEPRECATED_KEYS
     if deprecated_args:  # pragma: no cover

@@ -65,6 +65,12 @@ class NoUsageAvailableError(SushiException):
     """Service has no data for requested date range."""
 
 
+class PycounterWarning(Warning, PycounterException):
+    """Warnings from pycounter"""
+
+    pass
+
+
 class SushiWarning(Warning, SushiException):
     """Base class for SUSHI_related warnings."""
 
