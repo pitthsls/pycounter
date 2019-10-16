@@ -230,7 +230,7 @@ class CounterReport(object):
             self.period[0].year, self.period[0].month, 1
         )
         months = list(
-            pendulum.period(start_month_first_day, self.period[1]).range("months")
+            pendulum.Period(start_month_first_day, self.period[1]).range("months")
         )
         month_data = [0] * len(months)
         for pub in self.pubs:
@@ -255,7 +255,7 @@ class CounterReport(object):
         start_month_first_day = datetime.date(
             self.period[0].year, self.period[0].month, 1
         )
-        for d_obj in pendulum.period(start_month_first_day, self.period[1]).range(
+        for d_obj in pendulum.Period(start_month_first_day, self.period[1]).range(
             "months"
         ):
             header_cells.append(d_obj.strftime("%b-%Y"))
@@ -351,7 +351,7 @@ class CounterEresource(six.Iterator):
         )
         start, end = start_month_first_day, self.period[1]
         try:
-            for d_obj in pendulum.period(start, end).range("months"):
+            for d_obj in pendulum.Period(start, end).range("months"):
                 if d_obj not in (x[0] for x in self._full_data):
                     self._full_data.append((d_obj, 0))
         except IndexError:
