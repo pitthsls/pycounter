@@ -156,6 +156,7 @@ def get_sushi_stats_raw(
     sushi_dump=False,
     verify=True,
     url=None,
+    api_key=None,
     **kwargs
 ):
     """Get SUSHI stats for a given site in dict (decoded from JSON) format.
@@ -182,6 +183,9 @@ def get_sushi_stats_raw(
 
     :param url: str: URL to endpoint for this provider
 
+    :param api_key: str: API key for SUSHI provider (not used by all vendors; see
+        vendor instructions to determine if this is needed)
+
     """
     _check_params(kwargs, release)
     if url is None and wsdl_url:  # pragma: no cover
@@ -199,6 +203,8 @@ def get_sushi_stats_raw(
         "end_date": end_date,
         "requestor_id": requestor_id,
     }
+    if api_key:
+        req_params["api_key"] = api_key
 
     response = requests.get(
         "{url}/reports/{report}".format(**url_params),
