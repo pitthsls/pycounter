@@ -30,8 +30,9 @@ logging.basicConfig()
 @click.option("--requestor_id", "-i", help="Requestor ID")
 @click.option("--requestor_email", help="Email address of requestor")
 @click.option("--requestor_name", help="Internationally recognized organization name")
-@click.option("--customer_reference", "-c", help="Customer reference")
 @click.option("--customer_name", help="Internationally recognized organization name")
+@click.option("--customer_reference", "-c", help="Customer reference")
+@click.option("--api_key", help="API key (COUNTER 5 only)")
 @click.option(
     "--format",
     "-f",
@@ -66,6 +67,7 @@ def main(
     requestor_name,
     customer_name,
     customer_reference,
+    api_key,
     format_,
     output_file,
     dump,
@@ -100,6 +102,7 @@ def main(
         sushi_dump=dump,
         no_delay=no_delay,
         verify=not no_ssl_verify,
+        api_key=api_key,
     )
     if "%s" in output_file:
         output_file = output_file % format_

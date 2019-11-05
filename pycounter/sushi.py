@@ -6,6 +6,7 @@ import datetime
 import logging
 import time
 import uuid
+import warnings
 
 from lxml import etree
 from lxml import objectify
@@ -143,6 +144,11 @@ def get_report(*args, **kwargs):
     else:
         gssr = get_sushi_stats_raw
         rtf = raw_to_full
+        if "api_key" in kwargs:
+            warnings.warn(
+                pycounter.exceptions.SushiWarning("api_key only supported in COUNTER 5")
+            )
+            kwargs.pop("api_key", None)
 
     no_delay = kwargs.pop("no_delay", False)
     delay_amount = 0 if no_delay else 60
