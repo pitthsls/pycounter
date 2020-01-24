@@ -3,6 +3,7 @@ import calendar
 import datetime
 
 import six
+import re
 
 
 def convert_covered(datestring):
@@ -17,8 +18,15 @@ def convert_covered(datestring):
     (Will also accept MM/DD/YYYY format, ISO 8601 timestamps, or existing
     datetime objects; these shouldn't be in COUNTER reports, but they
     do show up in real world data...)
+
+    Also accepts strings of the form 'Begin_Date=2019-01-01; End_Date=2019-12-31'
+    for better compatibility with some (broken) COUNTER 5 implementations.
     """
-    start_string, end_string = datestring.split(" to ")
+    try:
+        start_string, end_string = datestring.split(" to ")
+    except ValueError:
+        start_string, end_string = tuple(re.findall(r"\d{4}-\d{2}-\d{2}", datestring))
+
     start_date = convert_date_run(start_string)
     end_date = convert_date_run(end_string)
 

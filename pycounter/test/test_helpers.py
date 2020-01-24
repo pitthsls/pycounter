@@ -6,7 +6,7 @@ import datetime
 
 import pytest
 
-from pycounter.helpers import is_first_last, next_month, prev_month
+from pycounter.helpers import convert_covered, is_first_last, next_month, prev_month
 
 
 @pytest.mark.parametrize(
@@ -46,3 +46,15 @@ def test_prevmonth(pair):
 def test_is_first_last(period, expected):
     dt_period = tuple(datetime.date(*part) for part in period)
     assert is_first_last(dt_period) == expected
+
+
+@pytest.mark.parametrize(
+    "covered_line, expected",
+    [
+        ("2017-01-01 to 2017-06-30", ((2017, 1, 1), (2017, 6, 30))),
+        ("Begin_Date=2019-01-01; End_Date=2019-12-31", ((2019, 1, 1), (2019, 12, 31))),
+    ],
+)
+def test_convert_covered(covered_line, expected):
+    expected_dates = tuple(datetime.date(*val) for val in expected)
+    assert convert_covered(covered_line) == expected_dates
