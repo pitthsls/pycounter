@@ -3,6 +3,7 @@ import calendar
 import datetime
 import re
 
+import pendulum
 import six
 
 
@@ -49,14 +50,7 @@ def convert_date_run(datestring):
     if isinstance(datestring, datetime.date):
         return datestring
 
-    try:
-        return datetime.datetime.strptime(datestring, "%Y-%m-%d").date()
-    except ValueError:
-        try:
-            return datetime.datetime.strptime(datestring, "%m/%d/%Y").date()
-        except ValueError:
-            # ISO 8601 without timezone
-            return datetime.datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S").date()
+    return pendulum.parse(datestring, strict=False).date()
 
 
 def convert_date_column(datestring):

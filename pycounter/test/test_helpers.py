@@ -6,7 +6,13 @@ import datetime
 
 import pytest
 
-from pycounter.helpers import convert_covered, is_first_last, next_month, prev_month
+from pycounter.helpers import (
+    convert_covered,
+    convert_date_run,
+    is_first_last,
+    next_month,
+    prev_month,
+)
 
 
 @pytest.mark.parametrize(
@@ -58,3 +64,12 @@ def test_is_first_last(period, expected):
 def test_convert_covered(covered_line, expected):
     expected_dates = tuple(datetime.date(*val) for val in expected)
     assert convert_covered(covered_line) == expected_dates
+
+
+@pytest.mark.parametrize(
+    "date_run, expected",
+    [("2017-01-01", (2017, 1, 1)), ("2020-01-24T14:04:36Z", (2020, 1, 24))],
+)
+def test_convert_date_run(date_run, expected):
+    expected_date = datetime.date(*expected)
+    assert convert_date_run(date_run) == expected_date
