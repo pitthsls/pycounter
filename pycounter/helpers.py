@@ -1,9 +1,9 @@
 """Helper functions used by pycounter."""
 import calendar
 import datetime
+import re
 
 import six
-import re
 
 
 def convert_covered(datestring):
