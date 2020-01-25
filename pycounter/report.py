@@ -161,7 +161,7 @@ class CounterReport:
             except ValueError:  # pragma: nocover
                 pass
 
-        for pub in sorted(self.pubs, key=lambda x: x.title):
+        for pub in sorted(self.pubs, key=lambda x: x.title or ''):
             output_lines.append(pub.as_generic())
 
         return output_lines
