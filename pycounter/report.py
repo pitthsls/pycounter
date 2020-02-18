@@ -639,7 +639,7 @@ def parse_xlsx(filename):
     :param filename: path to XLSX-format COUNTER report file.
 
     """
-    from openpyxl import load_workbook
+    from openpyxl import load_workbook  # pylint: disable=import-outside-toplevel
 
     with open(filename, "rb") as xlsx_file:
         workbook = load_workbook(xlsx_file)
