@@ -106,7 +106,7 @@ HEADER_FIELDS = {
         "Reporting Period HTML",
         "Reporting Period PDF",
     ),
-    "JR2": (
+    "JR1 GOA": (
         "Journal",
         "Publisher",
         "Platform",
@@ -117,18 +117,6 @@ HEADER_FIELDS = {
         "Reporting Period Total",
         "Reporting Period HTML",
         "Reporting Period PDF",
-    ),
-    "JR1 GOA": (
-        u"Journal",
-        u"Publisher",
-        u"Platform",
-        u"Journal DOI",
-        u"Proprietary Identifier",
-        u"Print ISSN",
-        u"Online ISSN",
-        u"Reporting Period Total",
-        u"Reporting Period HTML",
-        u"Reporting Period PDF",
     ),
     "JR2": (
         "Journal",
@@ -227,9 +215,9 @@ HEADER_FIELDS = {
 
 TOTAL_TEXT = {
     "JR1": "Total for all journals",
-"JR2": "Total for all journals",
+    "JR2": "Total for all journals",
     "BR1": "Total for all titles",
     "BR2": "Total for all titles",
-"BR3": "Total for all titles",
+    "BR3": "Total for all titles",
     "DB2": "Total for all databases",
 }

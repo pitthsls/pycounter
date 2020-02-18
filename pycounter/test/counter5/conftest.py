@@ -32,15 +32,6 @@ def trj1_report():
     )
 
 
-
-@pytest.fixture
-def trj2_report():
-    """Tab-separated title turnaways report."""
-    return pycounter.report.parse(
-        os.path.join(os.path.dirname(__file__), "data", "tr_j2.tsv")
-    )
-
-
 @pytest.fixture
 def trj2_report():
     """Tab-separated title turnaways report."""
