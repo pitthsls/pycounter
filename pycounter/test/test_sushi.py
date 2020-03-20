@@ -108,37 +108,34 @@ def test_data_br3(sushi_report_br3):
     ]
 
 
-class TestConvertRawBook(unittest.TestCase):
-    """Test converting simple BR1 SUSHI response"""
+def test_ssbr1_report(sushi_simple_br1):
+    assert sushi_simple_br1.report_type == "BR1"
 
-    def setUp(self):
-        path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple_br1.xml")
-        with open(path, "rb") as datafile:
-            self.report = sushi.raw_to_full(datafile.read())
 
-    def test_report(self):
-        self.assertEqual(self.report.report_type, "BR1")
+def test_ssbr1_isbn(sushi_simple_br1):
+    i_report = iter(sushi_simple_br1)
+    publication = next(i_report)
+    assert publication.isbn == "9780011234549"
 
-    def test_isbn(self):
-        i_report = iter(self.report)
-        publication = next(i_report)
-        self.assertEqual(publication.isbn, "9780011234549")
-        next(i_report)
-        pub3 = next(i_report)
-        self.assertEqual(pub3.isbn, "9780011234540")
+    next(i_report)
+    pub3 = next(i_report)
+    assert pub3.isbn == "9780011234540"
 
-    def test_title(self):
-        publication = next(iter(self.report))
-        self.assertEqual(publication.title, "Fake data")
 
-    def test_data(self):
-        publication = next(iter(self.report))
-        data = [month[2] for month in publication]
-        self.assertEqual(data[0], 14)
+def test_ssbr1_title(sushi_simple_br1):
+    publication = next(iter(sushi_simple_br1))
+    assert publication.title == "Fake data"
 
-    def test_proprietary(self):
-        publication = next(iter(self.report))
-        self.assertEqual(publication.proprietary_id, "FD")
+
+def test_ssbr1_data(sushi_simple_br1):
+    publication = next(iter(sushi_simple_br1))
+    data = [month[2] for month in publication]
+    assert data[0] == 14
+
+
+def test_ssbr1_proprietary(sushi_simple_br1):
+    publication = next(iter(sushi_simple_br1))
+    assert publication.proprietary_id == "FD"
 
 
 class TestConvertRawDatabase(unittest.TestCase):

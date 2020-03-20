@@ -109,6 +109,12 @@ def sushi_report_br3():
     return parse_sushi_file("sushi_br3.xml")
 
 
+@pytest.fixture
+def sushi_simple_br1():
+    """Book turnaways."""
+    return parse_sushi_file("sushi_simple_br1.xml")
+
+
 @pytest.fixture(
     params=[
         "C4BR1.tsv",
