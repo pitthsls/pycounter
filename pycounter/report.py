@@ -9,7 +9,6 @@ import re
 import warnings
 
 import pendulum
-import six
 
 from pycounter import csvhelper
 from pycounter.constants import CODES, HEADER_FIELDS, METRICS
@@ -21,17 +20,15 @@ from pycounter.exceptions import (
 )
 from pycounter.helpers import (
     convert_covered,
-    convert_date_column,
     convert_date_run,
     format_stat,
     guess_type_from_content,
     is_first_last,
-    last_day,
     next_month,
 )
 
 
-class CounterReport(object):
+class CounterReport:
     """
     a COUNTER usage statistics report.
 
@@ -93,33 +90,12 @@ class CounterReport(object):
             self.date_run = datetime.date.today()
         else:
             self.date_run = date_run
-        self._year = None
         self.section_type = section_type
 
     def __repr__(self):
-        return "<CounterReport %s version %s for date range %s to %s>" % (
-            self.report_type,
-            self.report_version,
-            self.period[0],
-            self.period[1],
+        return "<CounterReport {} version {} for date range {} to {}>".format(
+            self.report_type, self.report_version, self.period[0], self.period[1]
         )
-
-    @property
-    def year(self):
-        """Year report was issued (deprecated)."""
-        warnings.warn(
-            DeprecationWarning(
-                "CounterReport.year is deprecated."
-                "Reports may span multiple years. "
-                "COUNTER 5 reports will not have a year set."
-            )
-        )
-        return self._year
-
-    @year.setter
-    def year(self, value):
-        """Set year report was issued."""
-        self._year = value
 
     def __iter__(self):
         return iter(self.pubs)
@@ -160,25 +136,22 @@ class CounterReport(object):
             if code == self.report_type[0:2]:
                 rep_type = name
 
-        report_name = "%s Report %s (R%s)" % (
-            rep_type,
-            self.report_type[-1],
-            self.report_version,
+        report_name = "{} Report {} (R{})".format(
+            rep_type, self.report_type[-1], self.report_version
         )
         output_lines.append([report_name, REPORT_DESCRIPTIONS[self.report_type]])
         if self.report_type == "BR2":
-            output_lines.append([self.customer, u"Section Type:"])
+            output_lines.append([self.customer, "Section Type:"])
             output_lines.append([self.institutional_identifier, self.section_type])
         else:
             output_lines.append([self.customer])
             output_lines.append([self.institutional_identifier])
-        output_lines.append([u"Period covered by Report:"])
-        period = "%s to %s" % (
-            self.period[0].strftime("%Y-%m-%d"),
-            self.period[1].strftime("%Y-%m-%d"),
+        output_lines.append(["Period covered by Report:"])
+        period = "{} to {}".format(
+            self.period[0].strftime("%Y-%m-%d"), self.period[1].strftime("%Y-%m-%d")
         )
         output_lines.append([period])
-        output_lines.append([u"Date run:"])
+        output_lines.append(["Date run:"])
         output_lines.append([self.date_run.strftime("%Y-%m-%d")])
         output_lines.append(self._table_header())
         if self.report_type in ("JR1", "BR1", "BR2", "DB2", "JR2", "BR3"):
@@ -187,7 +160,7 @@ class CounterReport(object):
             self._ensure_required_metrics()
             try:
                 self.pubs.sort(key=lambda x: METRICS[self.report_type].index(x.metric))
-            except ValueError:
+            except ValueError:  # pragma: nocover
                 pass
 
         for pub in sorted(self.pubs, key=lambda x: x.title):
@@ -198,7 +171,7 @@ class CounterReport(object):
     def _totals_lines(self):
         """Generate Totals for COUNTER report, as list of lists of cells."""
         total_lines = []
-        metrics = set(resource.metric for resource in self.pubs)
+        metrics = {resource.metric for resource in self.pubs}
 
         for metric in sorted(metrics):
             total_lines.append(self._totals_line(metric))
@@ -208,18 +181,18 @@ class CounterReport(object):
     def _totals_line(self, metric):
         """Generate Totals for a given metric."""
         total_cells = [TOTAL_TEXT[self.report_type]]
-        publishers = set(resource.publisher for resource in self.pubs)
+        publishers = {resource.publisher for resource in self.pubs}
         if len(publishers) == 1:
             total_cells.append(publishers.pop())
         else:
-            total_cells.append(u"")
-        platforms = set(resource.platform for resource in self.pubs)
+            total_cells.append("")
+        platforms = {resource.platform for resource in self.pubs}
         if len(platforms) == 1:
             total_cells.append(platforms.pop())
         else:
-            total_cells.append(u"")
+            total_cells.append("")
         if self.report_type in ("JR1", "BR1", "BR2", "JR2", "BR3"):
-            total_cells.extend([u""] * 4)
+            total_cells.extend([""] * 4)
         if self.report_type in ("DB2", "JR2", "BR3"):
             total_cells.append(metric)
         total_usage = 0
@@ -242,11 +215,11 @@ class CounterReport(object):
             for data in pub:
                 total_usage += data[2]
                 month_data[months.index(data[0])] += data[2]
-        total_cells.append(six.text_type(total_usage))
+        total_cells.append(str(total_usage))
         if self.report_type == "JR1":
-            total_cells.append(six.text_type(html_usage))
-            total_cells.append(six.text_type(pdf_usage))
-        total_cells.extend(six.text_type(d) for d in month_data)
+            total_cells.append(str(html_usage))
+            total_cells.append(str(pdf_usage))
+        total_cells.extend(str(d) for d in month_data)
         return total_cells
 
     def _table_header(self):
@@ -271,14 +244,14 @@ class CounterReport(object):
         """
         try:
             required_metrics = METRICS[self.report_type]
-        except LookupError:
+        except LookupError:  # pragma: nocover
             raise UnknownReportTypeError(self.report_type)
 
         dbs = collections.defaultdict(set)
         for database in self.pubs:
             dbs[database.title].add(database.metric)
 
-        for database, metrics in six.iteritems(dbs):
+        for database, metrics in dbs.items():
             for metric in (m for m in required_metrics if m not in metrics):
                 self.pubs.append(
                     CounterDatabase(
@@ -295,7 +268,7 @@ class CounterReport(object):
 MonthsUsage = collections.namedtuple("MonthsUsage", "month metric usage")
 
 
-class CounterEresource(six.Iterator):
+class CounterEresource:
     """
     Base class for COUNTER statistics lines.
 
@@ -354,7 +327,7 @@ class CounterEresource(six.Iterator):
             for d_obj in pendulum.Period(start, end).range("months"):
                 if d_obj not in (x[0] for x in self._full_data):
                     self._full_data.append((d_obj, 0))
-        except IndexError:
+        except IndexError:  # pragma: nocover
             pass
         else:
             self._full_data.sort()
@@ -393,7 +366,7 @@ class CounterJournal(CounterEresource):
     def __init__(
         self,
         period=None,
-        metric=METRICS[u"JR1"],
+        metric=METRICS["JR1"],
         issn=None,
         eissn=None,
         month_data=None,
@@ -405,9 +378,7 @@ class CounterJournal(CounterEresource):
         doi="",
         proprietary_id="",
     ):
-        super(CounterJournal, self).__init__(
-            period, metric, month_data, title, platform, publisher
-        )
+        super().__init__(period, metric, month_data, title, platform, publisher)
         self.html_total = html_total
         self.pdf_total = pdf_total
         self.doi = doi
@@ -425,7 +396,7 @@ class CounterJournal(CounterEresource):
         else:
             self.eissn = ""
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: nocover
         return """<CounterJournal %s, publisher %s,
         platform %s>""" % (
             self.title,
@@ -449,13 +420,13 @@ class CounterJournal(CounterEresource):
         month_data = []
         for data in self:
             total_usage += data[2]
-            month_data.append(six.text_type(data[2]))
+            month_data.append(str(data[2]))
         if self.metric.startswith("Access"):
             data_line.append(self.metric)
-        data_line.append(six.text_type(total_usage))
+        data_line.append(str(total_usage))
         if not self.metric.startswith("Access"):
-            data_line.append(six.text_type(self.html_total))
-            data_line.append(six.text_type(self.pdf_total))
+            data_line.append(str(self.html_total))
+            data_line.append(str(self.pdf_total))
         data_line.extend(month_data)
         return data_line
 
@@ -494,9 +465,7 @@ class CounterBook(CounterEresource):
         print_isbn=None,
         online_isbn=None,
     ):
-        super(CounterBook, self).__init__(
-            period, metric, month_data, title, platform, publisher
-        )
+        super().__init__(period, metric, month_data, title, platform, publisher)
         self.eissn = None
         self.doi = doi
         self.proprietary_id = proprietary_id
@@ -508,7 +477,7 @@ class CounterBook(CounterEresource):
         if issn is not None:
             self.issn = issn
         else:
-            self.issn = u""
+            self.issn = ""
 
     def __repr__(self):
         return """<CounterBook %s (ISBN: %s), publisher %s,
@@ -531,7 +500,7 @@ class CounterBook(CounterEresource):
          online_ISBN and/or print_ISBN, the online one, if any, will be
          returned, otherwise the print.
         """
-        return self._isbn or self.online_isbn or self.print_isbn or u""
+        return self._isbn or self.online_isbn or self.print_isbn or ""
 
     def as_generic(self):
         """Get data for this line as list of COUNTER report cells."""
@@ -549,10 +518,10 @@ class CounterBook(CounterEresource):
         month_data = []
         for data in self:
             total_usage += data[2]
-            month_data.append(six.text_type(data[2]))
+            month_data.append(str(data[2]))
         if self.metric and self.metric.startswith("Access"):
             data_line.append(self.metric)
-        data_line.append(six.text_type(total_usage))
+        data_line.append(str(total_usage))
         data_line.extend(month_data)
         return data_line
 
@@ -569,9 +538,7 @@ class CounterDatabase(CounterEresource):
         platform="",
         publisher="",
     ):
-        super(CounterDatabase, self).__init__(
-            period, metric, month_data, title, platform, publisher
-        )
+        super().__init__(period, metric, month_data, title, platform, publisher)
         self.isbn = None
 
     def as_generic(self):
@@ -584,9 +551,9 @@ class CounterDatabase(CounterEresource):
 
         for data in self:
             total_usage += data[2]
-            month_data.append(six.text_type(data[2]))
+            month_data.append(str(data[2]))
 
-        data_line.append(six.text_type(total_usage))
+        data_line.append(str(total_usage))
         data_line.extend(month_data)
 
         return data_line
@@ -598,7 +565,7 @@ class CounterPlatform(CounterEresource):
     def __init__(
         self, period=None, metric=None, month_data=None, platform="", publisher=""
     ):
-        super(CounterPlatform, self).__init__(
+        super().__init__(
             period=period,
             metric=metric,
             month_data=month_data,
@@ -618,9 +585,9 @@ class CounterPlatform(CounterEresource):
 
         for data in self:
             total_usage += data[2]
-            month_data.append(six.text_type(data[2]))
+            month_data.append(str(data[2]))
 
-        data_line.append(six.text_type(total_usage))
+        data_line.append(str(total_usage))
         data_line.extend(month_data)
 
         return data_line
@@ -657,12 +624,11 @@ def parse(filename, filetype=None, encoding="utf-8", fallback_encoding="latin-1"
 
     if filetype == "tsv":
         return parse_separated(filename, "\t", encoding, fallback_encoding)
-    elif filetype == "xlsx":
+    if filetype == "xlsx":
         return parse_xlsx(filename)
-    elif filetype == "csv":
+    if filetype == "csv":
         return parse_separated(filename, ",", encoding, fallback_encoding)
-    else:
-        raise PycounterException("Unknown file type %s" % filetype)
+    raise PycounterException("Unknown file type %s" % filetype)
 
 
 def parse_xlsx(filename):
@@ -673,7 +639,7 @@ def parse_xlsx(filename):
     :param filename: path to XLSX-format COUNTER report file.
 
     """
-    from openpyxl import load_workbook
+    from openpyxl import load_workbook  # pylint: disable=import-outside-toplevel
 
     with open(filename, "rb") as xlsx_file:
         workbook = load_workbook(xlsx_file)
@@ -724,10 +690,10 @@ def parse_generic(report_reader):
     # pylint: disable=too-many-locals,too-many-branches,too-many-statements
     report = CounterReport()
 
-    first_line = six.next(report_reader)
+    first_line = next(report_reader)
     if first_line[0] == "Report_Name":  # COUNTER 5 report
-        second_line = six.next(report_reader)
-        third_line = six.next(report_reader)
+        second_line = next(report_reader)
+        third_line = next(report_reader)
         report.report_type, report.report_version = _get_c5_type_and_version(
             second_line, third_line
         )
@@ -738,10 +704,10 @@ def parse_generic(report_reader):
         # noinspection PyTypeChecker
         report.metric = METRICS.get(report.report_type)
 
-    report.customer = six.next(report_reader)[1 if report.report_version == 5 else 0]
+    report.customer = next(report_reader)[1 if report.report_version == 5 else 0]
 
     if report.report_version >= 4:
-        inst_id_line = six.next(report_reader)
+        inst_id_line = next(report_reader)
         if inst_id_line:
             report.institutional_identifier = inst_id_line[
                 1 if report.report_version == 5 else 0
@@ -749,20 +715,20 @@ def parse_generic(report_reader):
             if report.report_type == "BR2":
                 report.section_type = inst_id_line[1]
 
-        six.next(report_reader)
+        next(report_reader)
         if report.report_version == 5:
             for _ in range(3):
-                six.next(report_reader)
+                next(report_reader)
 
-        covered_line = six.next(report_reader)
+        covered_line = next(report_reader)
         report.period = convert_covered(
             covered_line[1 if report.report_version == 5 else 0]
         )
 
     if report.report_version < 5:
-        six.next(report_reader)
+        next(report_reader)
 
-    date_run_line = six.next(report_reader)
+    date_run_line = next(report_reader)
     report.date_run = convert_date_run(
         date_run_line[1 if report.report_version == 5 else 0]
     )
@@ -770,40 +736,23 @@ def parse_generic(report_reader):
     if report.report_version == 5:
         for _ in range(2):
             # Skip Created_By and blank line
-            six.next(report_reader)
+            next(report_reader)
 
-    header = six.next(report_reader)
+    header = next(report_reader)
 
-    if report.report_version < 5:
-        try:
-            report.year = _year_from_header(header, report)
-        except AttributeError:
-            warnings.warn("Could not determine year from malformed header")
-
-    if report.report_version >= 4:
-        countable_header = header[0:8]
-        for col in header[8:]:
-            if col:
-                countable_header.append(col)
-        last_col = len(countable_header)
-    else:
-        last_col = 0
-        for val in header:
-            if "YTD" in val:
-                break
-            last_col += 1
-
-        start_date = datetime.date(report.year, 1, 1)
-        end_date = last_day(convert_date_column(header[last_col - 1]))
-        report.period = (start_date, end_date)
+    countable_header = header[0:8]
+    for col in header[8:]:
+        if col:
+            countable_header.append(col)
+    last_col = len(countable_header)
 
     if report.report_type not in ("DB1", "PR1") and report.report_version != 5:
         # these reports do not have line with totals
-        six.next(report_reader)
+        next(report_reader)
 
     if report.report_type in ("DB2", "BR3", "JR3"):
         # this report has two lines of totals
-        six.next(report_reader)
+        next(report_reader)
 
     for line in report_reader:
         if not line:
@@ -829,49 +778,40 @@ def _parse_line(line, report, last_col):
     pdf_total = 0
     doi = ""
     prop_id = ""
-    old_line = line
+
     metric = report.metric
-    if report.report_version >= 4:
-        if (
-            report.report_type.startswith("JR1")
-            or report.report_type == "TR_J1"
-            or report.report_type == "TR_J2"
-        ):
+    if (
+        report.report_type.startswith("JR1")
+        or report.report_type == "TR_J1"
+        or report.report_type == "TR_J2"
+    ):
+        old_line = line
+        line = line[0:3] + line[5:7] + line[10:last_col]
+        doi = old_line[3]
+        prop_id = old_line[4]
+        html_total = format_stat(old_line[8])
+        pdf_total = format_stat(old_line[9])
+        issn = line[3].strip()
+        eissn = line[4].strip()
+        if report.report_type.startswith("TR"):
+            metric = old_line[9]
 
-            line = line[0:3] + line[5:7] + line[10:last_col]
-            doi = old_line[3]
-            prop_id = old_line[4]
-            html_total = format_stat(old_line[8])
-            pdf_total = format_stat(old_line[9])
-            issn = line[3].strip()
-            eissn = line[4].strip()
-            if report.report_type.startswith("TR"):
-                metric = old_line[9]
+    elif report.report_type in ("BR1", "BR2"):
+        line = line[0:3] + line[5:7] + line[8:last_col]
+        isbn = line[3].strip()
+        issn = line[4].strip()
 
-        elif report.report_type in ("BR1", "BR2"):
-            line = line[0:3] + line[5:7] + line[8:last_col]
+    elif report.report_type in ("BR3", "JR2"):
+        metric = line[7]
+        doi = line[3]
+        prop_id = line[4]
+        line = line[0:3] + line[5:7] + line[9:last_col]
+        eissn = line[4].strip()
+        if report.report_type == "BR3":
             isbn = line[3].strip()
-            issn = line[4].strip()
-
-        elif report.report_type in ("BR3", "JR2"):
-            metric = line[7]
-            doi = line[3]
-            prop_id = line[4]
-            line = line[0:3] + line[5:7] + line[9:last_col]
-            eissn = line[4].strip()
-            if report.report_type == "BR3":
-                isbn = line[3].strip()
-            else:
-                issn = line[3].strip()
-        # For DB1 and DB2, nothing additional to do here
-
-    else:
-        if report.report_type.startswith("JR1"):
-            html_total = format_stat(line[-2])
-            pdf_total = format_stat(line[-1])
+        else:
             issn = line[3].strip()
-            eissn = line[4].strip()
-        line = line[0:last_col]
+    # For DB1 and DB2, nothing additional to do here
 
     logging.debug(line)
     common_args = {
@@ -902,7 +842,7 @@ def _parse_line(line, report, last_col):
             pdf_total=pdf_total,
             **common_args
         )
-    elif report.report_type.startswith("BR"):
+    if report.report_type.startswith("BR"):
         return CounterBook(
             metric=metric,
             month_data=month_data,
@@ -912,9 +852,9 @@ def _parse_line(line, report, last_col):
             proprietary_id=prop_id,
             **common_args
         )
-    elif report.report_type.startswith("DB"):
+    if report.report_type.startswith("DB"):
         return CounterDatabase(metric=line[3], month_data=month_data, **common_args)
-    elif report.report_type == "PR1":
+    if report.report_type == "PR1":
         # there is no title in the PR1 report
         return CounterPlatform(
             metric=line[2],
@@ -941,17 +881,12 @@ def _get_type_and_version(specifier):
         report_version = int(rt_match.group(3))
     else:
         raise UnknownReportTypeError("No match in line: %s" % specifier)
+    # pragma: nocover
     if not any(report_type.startswith(x) for x in ("JR", "BR", "DB", "PR1")):
         raise UnknownReportTypeError(report_type)
 
-    if report_version < 4:
-        warnings.warn(
-            DeprecationWarning(
-                "Parsing COUNTER versions before 4 ("
-                "current: {}) will not be supported in "
-                "the next release of pycounter.".format(report_version)
-            )
-        )
+    if report_version < 4:  # pragma: nocover
+        raise UnknownReportTypeError("Only COUNTER 4&5 are supported.")
 
     return report_type, report_version
 
@@ -962,10 +897,9 @@ def _get_c5_type_and_version(second_line, third_line):
 
 
 def _year_from_header(header, report):
-    """Get the year for the report from the header.
+    """Get the year of the first month in the report from the header.
 
-    NOTE: for multi-year reports, this will be the date of the first month,
-    and probably doesn't make sense to talk of a report having a year...
+    (Only used for COUNTER 4.)
     """
     first_date_col = 10 if report.report_version == 4 else 5
     if report.report_type in ("BR1", "BR2") and report.report_version == 4:

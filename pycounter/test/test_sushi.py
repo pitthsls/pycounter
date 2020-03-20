@@ -58,23 +58,23 @@ def test_report_version(sushi_report_all):
 
 
 def test_report_customer(sushi_report_with_customer):
-    assert sushi_report_with_customer.institutional_identifier == u"exampleLibrary"
+    assert sushi_report_with_customer.institutional_identifier == "exampleLibrary"
 
 
 def test_report_no_customer(sushi_report_no_customer):
-    assert sushi_report_no_customer.institutional_identifier == u""
+    assert sushi_report_no_customer.institutional_identifier == ""
 
 
 def test_report_type_jr1(sushi_report_jr1):
-    assert sushi_report_jr1.report_type == u"JR1"
+    assert sushi_report_jr1.report_type == "JR1"
 
 
 def test_data_jr1(sushi_report_jr1):
     publication = next(iter(sushi_report_jr1))
     assert publication.html_total == 6
     assert publication.pdf_total == 8
-    assert publication.doi == u"10.5555/12345678"
-    assert publication.proprietary_id == u"JFD"
+    assert publication.doi == "10.5555/12345678"
+    assert publication.proprietary_id == "JFD"
 
     data = [month[2] for month in publication]
 
@@ -83,17 +83,17 @@ def test_data_jr1(sushi_report_jr1):
 
 def test_title_jr1(sushi_report_jr1):
     publication = next(iter(sushi_report_jr1))
-    assert publication.title == u"Journal of fake data"
+    assert publication.title == "Journal of fake data"
 
 
 def test_data_jr2(sushi_report_jr2):
     assert [next(iter(line)) for line in sushi_report_jr2] == [
         (
             datetime.date(2013, 1, 1),
-            u"Access denied: concurrent/simultaneous user license exceeded",
+            "Access denied: concurrent/simultaneous user license exceeded",
             6,
         ),
-        (datetime.date(2013, 1, 1), u"Access denied: content item not licensed", 8),
+        (datetime.date(2013, 1, 1), "Access denied: content item not licensed", 8),
     ]
 
 
@@ -101,10 +101,10 @@ def test_data_br3(sushi_report_br3):
     assert [next(iter(line)) for line in sushi_report_br3] == [
         (
             datetime.date(2013, 1, 1),
-            u"Access denied: concurrent/simultaneous user license exceeded",
+            "Access denied: concurrent/simultaneous user license exceeded",
             6,
         ),
-        (datetime.date(2013, 1, 1), u"Access denied: content item not licensed", 8),
+        (datetime.date(2013, 1, 1), "Access denied: content item not licensed", 8),
     ]
 
 
@@ -117,19 +117,19 @@ class TestConvertRawBook(unittest.TestCase):
             self.report = sushi.raw_to_full(datafile.read())
 
     def test_report(self):
-        self.assertEqual(self.report.report_type, u"BR1")
+        self.assertEqual(self.report.report_type, "BR1")
 
     def test_isbn(self):
         i_report = iter(self.report)
         publication = next(i_report)
-        self.assertEqual(publication.isbn, u"9780011234549")
+        self.assertEqual(publication.isbn, "9780011234549")
         next(i_report)
         pub3 = next(i_report)
-        self.assertEqual(pub3.isbn, u"9780011234540")
+        self.assertEqual(pub3.isbn, "9780011234540")
 
     def test_title(self):
         publication = next(iter(self.report))
-        self.assertEqual(publication.title, u"Fake data")
+        self.assertEqual(publication.title, "Fake data")
 
     def test_data(self):
         publication = next(iter(self.report))
@@ -138,7 +138,7 @@ class TestConvertRawBook(unittest.TestCase):
 
     def test_proprietary(self):
         publication = next(iter(self.report))
-        self.assertEqual(publication.proprietary_id, u"FD")
+        self.assertEqual(publication.proprietary_id, "FD")
 
 
 class TestConvertRawDatabase(unittest.TestCase):
@@ -151,42 +151,42 @@ class TestConvertRawDatabase(unittest.TestCase):
         self.databases = list(self.report)
 
     def test_report(self):
-        self.assertEqual(self.report.report_type, u"DB1")
+        self.assertEqual(self.report.report_type, "DB1")
 
     def test_platform(self):
         database = self.databases[0]
-        self.assertEqual(database.platform, u"ExamplePlatform")
+        self.assertEqual(database.platform, "ExamplePlatform")
 
     def test_publisher(self):
         database = self.databases[0]
-        self.assertEqual(database.publisher, u"ExamplePublisher")
+        self.assertEqual(database.publisher, "ExamplePublisher")
 
     def test_title(self):
         database = self.databases[0]
-        self.assertEqual(database.title, u"ExampleDatabase")
+        self.assertEqual(database.title, "ExampleDatabase")
 
     def test_search_reg(self):
         database = self.databases[0]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u"Regular Searches")
+        self.assertEqual(database.metric, "Regular Searches")
         self.assertEqual(data[0], 5)
 
     def test_search_fed(self):
         database = self.databases[1]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u"Searches-federated and automated")
+        self.assertEqual(database.metric, "Searches-federated and automated")
         self.assertEqual(data[0], 13)
 
     def test_result_click(self):
         database = self.databases[2]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u"Result Clicks")
+        self.assertEqual(database.metric, "Result Clicks")
         self.assertEqual(data[0], 16)
 
     def test_record_view(self):
         database = self.databases[3]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u"Record Views")
+        self.assertEqual(database.metric, "Record Views")
         self.assertEqual(data[0], 7)
 
 
@@ -209,13 +209,13 @@ class TestRawDatabaseWithMissingData(unittest.TestCase):
     def test_january(self):
         database = self.databases[1]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u"Searches-federated and automated")
+        self.assertEqual(database.metric, "Searches-federated and automated")
         self.assertEqual(data[0], 0)
 
     def test_record_view(self):
         database = self.databases[3]
         data = [month[2] for month in database]
-        self.assertEqual(database.metric, u"Record Views")
+        self.assertEqual(database.metric, "Record Views")
         self.assertEqual(data[0], 0)
 
 
@@ -233,7 +233,7 @@ class TestMissingMonth(unittest.TestCase):
         self.assertEqual(first_month_data[0], datetime.date(2013, 2, 1))
 
     def test_title(self):
-        self.assertEqual(self.publication.title, u"Journal of fake data")
+        self.assertEqual(self.publication.title, "Journal of fake data")
 
 
 class TestSushiRequest(unittest.TestCase):
@@ -248,7 +248,7 @@ class TestSushiRequest(unittest.TestCase):
             )
 
     def test_report(self):
-        self.assertEqual(self.report.report_type, u"JR1")
+        self.assertEqual(self.report.report_type, "JR1")
         self.assertEqual(self.report.report_version, 4)
 
 

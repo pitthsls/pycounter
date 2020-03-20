@@ -7,7 +7,7 @@ from pycounter import report
 
 def test_counter_journal():
     journal = report.CounterJournal()
-    assert journal.issn == u""
+    assert journal.issn == ""
 
 
 def test_report_gaps():

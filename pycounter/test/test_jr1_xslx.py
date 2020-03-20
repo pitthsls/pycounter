@@ -6,27 +6,23 @@ import pytest
 
 
 def test_report_type(jr1_report_xlsx):
-    assert jr1_report_xlsx.report_type == u"JR1"
+    assert jr1_report_xlsx.report_type == "JR1"
 
 
 def test_report_version(jr1_report_xlsx):
     assert jr1_report_xlsx.report_version == 4
 
 
-def test_year(jr1_report_xlsx):
-    assert jr1_report_xlsx.year == 2013
-
-
 def test_publisher(jr1_report_xlsx):
     assert all(  # pragma: no branch
-        publication.publisher == u"American Medical Association"
+        publication.publisher == "American Medical Association"
         for publication in jr1_report_xlsx
     )
 
 
 def test_platform(jr1_report_xlsx):
     for publication in jr1_report_xlsx:
-        assert publication.platform == u"Silverchair"
+        assert publication.platform == "Silverchair"
 
 
 @pytest.mark.parametrize(

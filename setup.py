@@ -13,14 +13,14 @@ with open(os.path.join(os.path.dirname(__file__), "pycounter/version.py"), "r") 
 with open("README.rst") as readmefile:
     readme = readmefile.read()
 
-requirements = ["openpyxl", "requests", "six", "pendulum", "click", "lxml"]
+requirements = ["openpyxl", "requests", "pendulum", "click", "lxml"]
 
 if platform.python_implementation() == "PyPy":
     requirements = ["cython"] + requirements
 
 setup(
     name="pycounter",
-    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+    python_requires=">=3.6",
     version=version["__version__"],
     packages=find_packages(),
     author="Health Sciences Library System, University of Pittsburgh",
@@ -33,11 +33,9 @@ setup(
     long_description=readme,
     keywords="library COUNTER journals usage_statistics SUSHI",
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",

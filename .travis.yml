@@ -2,14 +2,10 @@ dist: xenial
 
 language: python
 python:
-  - "2.7"
-  - "3.5"
   - "3.6"
   - "3.7"
+  - "pypy3.6-7.0.0"
   - "3.8"
-  - "pypy2.7-6.0"
-  - "pypy3.5-6.0"
-
 
 cache: pip
 
@@ -32,11 +28,9 @@ jobs:
   include:
   - python: 3.7
     env: TOXENV=flake8
-  - python: 2.7
-    env: TOXENV=flake8_py2
   - python: 3.7
     env: TOXENV=manifest
-  - python: 3.6
+  - python: 3.7
     env: TOXENV=lint
   - python: 3.7
     env: TOXENV=docs

@@ -39,10 +39,8 @@ usage data into our in-house Electronic Resources Management (ERM) system.
 Licensed under the `MIT <https://choosealicense.com/licenses/mit/>`_ license.
 See the file LICENSE for details.
 
-pycounter is tested on Python 2.7, 3.5, 3.6, 3.7 and pypy (2 and 3)
+pycounter is tested on Python 3.6, 3.7, 3.8 and pypy3
 
-pycounter 2.x will be the last version with support for `Python 2
-<https://pythonclock.org/>`_.
 
 Documentation is on `Read the Docs <http://pycounter.readthedocs.io>`_ and
 the code can be found on `GitHub <https://github.com/pitthsls/pycounter>`_.
@@ -78,8 +76,8 @@ were making assumptions about the data received to pass it into another system.
 Usage
 -----
 
-Parsing COUNTER reports (currently supports COUNTER 3 and 4, in .csv, .tsv, 
-or .xlsx files, reports JR1, JR2, DB1, DB2, PR1, BR1, BR2 and BR3)::
+Parsing COUNTER reports (currently supports 4 in .csv, .tsv,
+or .xlsx files, reports JR1, JR2, DB1, DB2, BR1, BR2, and BR3) and COUNTER 5::
 
     >>> import pycounter.report
     >>> report = pycounter.report.parse("COUNTER4_2015.tsv")  # filename or path to file

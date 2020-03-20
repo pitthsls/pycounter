@@ -12,7 +12,6 @@ from lxml import etree
 from lxml import objectify
 import pendulum
 import requests
-import six
 
 from pycounter import sushi5
 import pycounter.constants
@@ -196,11 +195,10 @@ def raw_to_full(raw_report):
         except AttributeError:
             if b"Report Queued" in raw_report:
                 raise pycounter.exceptions.ServiceBusyError("Report Queued")
-            else:
-                logger.error("report not found in XML: %s", raw_report)
-                raise pycounter.exceptions.SushiException(
-                    message="report not found in XML", raw=raw_report, xml=o_root
-                )
+            logger.error("report not found in XML: %s", raw_report)
+            raise pycounter.exceptions.SushiException(
+                message="report not found in XML", raw=raw_report, xml=o_root
+            )
     logger.debug("COUNTER report: %s", etree.tostring(c_report))
     start_date = datetime.datetime.strptime(
         root.find(".//%s" % ns("sushi", "Begin")).text, "%Y-%m-%d"
@@ -226,7 +224,7 @@ def raw_to_full(raw_report):
     try:
         inst_id = customer.find(".//%s" % ns("counter", "ID")).text
     except AttributeError:
-        inst_id = u""
+        inst_id = ""
     report_data["institutional_identifier"] = inst_id
 
     rep_root = root.find(".//%s" % ns("counter", "Report"))
@@ -324,7 +322,7 @@ def raw_to_full(raw_report):
                     )
                 )
             elif report.report_type == "BR3":
-                for metric_code, month_data in six.iteritems(metrics_for_db):
+                for metric_code, month_data in metrics_for_db.items():
                     metric = pycounter.constants.DB_METRIC_MAP[metric_code]
                     report.pubs.append(
                         pycounter.report.CounterBook(
@@ -359,7 +357,7 @@ def raw_to_full(raw_report):
                     )
                 )
             elif report.report_type.startswith("DB"):
-                for metric_code, month_data in six.iteritems(metrics_for_db):
+                for metric_code, month_data in metrics_for_db.items():
                     metric = pycounter.constants.DB_METRIC_MAP[metric_code]
                     report.pubs.append(
                         pycounter.report.CounterDatabase(
@@ -372,7 +370,7 @@ def raw_to_full(raw_report):
                         )
                     )
             elif report.report_type == "PR1":
-                for metric_code, month_data in six.iteritems(metrics_for_db):
+                for metric_code, month_data in metrics_for_db.items():
                     metric = pycounter.constants.DB_METRIC_MAP[metric_code]
                     report.pubs.append(
                         pycounter.report.CounterPlatform(
@@ -384,7 +382,7 @@ def raw_to_full(raw_report):
                         )
                     )
             elif report.report_type == "JR2":
-                for metric_code, month_data in six.iteritems(metrics_for_db):
+                for metric_code, month_data in metrics_for_db.items():
                     metric = pycounter.constants.DB_METRIC_MAP[metric_code]
                     report.pubs.append(
                         pycounter.report.CounterJournal(

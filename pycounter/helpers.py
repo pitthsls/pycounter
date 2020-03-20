@@ -1,10 +1,6 @@
 """Helper functions used by pycounter."""
 import calendar
 import datetime
-import re
-
-import pendulum
-import six
 
 
 def convert_covered(datestring):
@@ -19,15 +15,8 @@ def convert_covered(datestring):
     (Will also accept MM/DD/YYYY format, ISO 8601 timestamps, or existing
     datetime objects; these shouldn't be in COUNTER reports, but they
     do show up in real world data...)
-
-    Also accepts strings of the form 'Begin_Date=2019-01-01; End_Date=2019-12-31'
-    for better compatibility with some (broken) COUNTER 5 implementations.
     """
-    try:
-        start_string, end_string = datestring.split(" to ")
-    except ValueError:
-        start_string, end_string = tuple(re.findall(r"\d{4}-\d{2}-\d{2}", datestring))
-
+    start_string, end_string = datestring.split(" to ")
     start_date = convert_date_run(start_string)
     end_date = convert_date_run(end_string)
 
@@ -50,18 +39,14 @@ def convert_date_run(datestring):
     if isinstance(datestring, datetime.date):
         return datestring
 
-    return pendulum.parse(datestring, strict=False).date()
-
-
-def convert_date_column(datestring):
-    """
-    Convert human-readable month to date of first day of month.
-
-    :param datestring: the string to convert to a date. Format like "Jan-2014".
-
-    :return: datetime.date
-    """
-    return datetime.datetime.strptime(datestring.strip(), "%b-%Y").date()
+    try:
+        return datetime.datetime.strptime(datestring, "%Y-%m-%d").date()
+    except ValueError:
+        try:
+            return datetime.datetime.strptime(datestring, "%m/%d/%Y").date()
+        except ValueError:
+            # ISO 8601 without timezone
+            return datetime.datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S").date()
 
 
 def is_first_last(period):
@@ -128,7 +113,7 @@ def format_stat(stat):
 
     :return: int
     """
-    if isinstance(stat, six.integer_types):
+    if isinstance(stat, int):
         return stat
 
     stat = stat.replace(",", "")

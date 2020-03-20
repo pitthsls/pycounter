@@ -1,6 +1,5 @@
 """Pytest fixtures for COUNTER 5 test suite."""
 import datetime
-import io
 import os
 
 from httmock import HTTMock, urlmatch
@@ -13,7 +12,7 @@ import pycounter
 def sushi_mock(url_unused, request_unused):
     """Mocked SUSHI service."""
     path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple.json")
-    with io.open(path, "r", encoding="utf-8") as datafile:
+    with open(path, "r", encoding="utf-8") as datafile:
         return datafile.read()
 
 
@@ -21,7 +20,7 @@ def sushi_mock(url_unused, request_unused):
 def sushi_book_mock(url_unused, request_unused):
     """Mocked SUSHI service."""
     path = os.path.join(os.path.dirname(__file__), "data", "sushi_book.json")
-    with io.open(path, "r", encoding="utf-8") as datafile:
+    with open(path, "r", encoding="utf-8") as datafile:
         return datafile.read()
 
 
