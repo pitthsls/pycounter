@@ -130,10 +130,10 @@ def sushi_missing_ii():
 @pytest.fixture
 def sushi_missing_rec():
     """Database report with January missing, no record_view records."""
-    report = parse_sushi_file("sushi_db1_missing_record_view.xml")
+    rpt = parse_sushi_file("sushi_db1_missing_record_view.xml")
     # missing data added on export
-    report.as_generic()
-    return report
+    rpt.as_generic()
+    return rpt
 
 
 @pytest.fixture
