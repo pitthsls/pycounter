@@ -111,8 +111,14 @@ def sushi_report_br3():
 
 @pytest.fixture
 def sushi_simple_br1():
-    """Book turnaways."""
+    """Book report."""
     return parse_sushi_file("sushi_simple_br1.xml")
+
+
+@pytest.fixture
+def sushi_simple_db1():
+    """Database report."""
+    return parse_sushi_file("sushi_simple_db1.xml")
 
 
 @pytest.fixture(

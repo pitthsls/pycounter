@@ -138,53 +138,51 @@ def test_ssbr1_proprietary(sushi_simple_br1):
     assert publication.proprietary_id == "FD"
 
 
-class TestConvertRawDatabase(unittest.TestCase):
-    """Test converting simple DB1 SUSHI response"""
+def test_db_report(sushi_simple_db1):
+    assert sushi_simple_db1.report_type == "DB1"
 
-    def setUp(self):
-        path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple_db1.xml")
-        with open(path, "rb") as datafile:
-            self.report = sushi.raw_to_full(datafile.read())
-        self.databases = list(self.report)
 
-    def test_report(self):
-        self.assertEqual(self.report.report_type, "DB1")
+def test_db_platform(sushi_simple_db1):
+    database = list(sushi_simple_db1)[0]
+    assert database.platform == "ExamplePlatform"
 
-    def test_platform(self):
-        database = self.databases[0]
-        self.assertEqual(database.platform, "ExamplePlatform")
 
-    def test_publisher(self):
-        database = self.databases[0]
-        self.assertEqual(database.publisher, "ExamplePublisher")
+def test_db_publisher(sushi_simple_db1):
+    database = list(sushi_simple_db1)[0]
+    assert database.publisher == "ExamplePublisher"
 
-    def test_title(self):
-        database = self.databases[0]
-        self.assertEqual(database.title, "ExampleDatabase")
 
-    def test_search_reg(self):
-        database = self.databases[0]
-        data = [month[2] for month in database]
-        self.assertEqual(database.metric, "Regular Searches")
-        self.assertEqual(data[0], 5)
+def test_db_title(sushi_simple_db1):
+    database = list(sushi_simple_db1)[0]
+    assert database.title == "ExampleDatabase"
 
-    def test_search_fed(self):
-        database = self.databases[1]
-        data = [month[2] for month in database]
-        self.assertEqual(database.metric, "Searches-federated and automated")
-        self.assertEqual(data[0], 13)
 
-    def test_result_click(self):
-        database = self.databases[2]
-        data = [month[2] for month in database]
-        self.assertEqual(database.metric, "Result Clicks")
-        self.assertEqual(data[0], 16)
+def test_db_search_reg(sushi_simple_db1):
+    database = list(sushi_simple_db1)[0]
+    data = [month[2] for month in database]
+    assert database.metric == "Regular Searches"
+    assert data[0] == 5
 
-    def test_record_view(self):
-        database = self.databases[3]
-        data = [month[2] for month in database]
-        self.assertEqual(database.metric, "Record Views")
-        self.assertEqual(data[0], 7)
+
+def test_db_search_fed(sushi_simple_db1):
+    database = list(sushi_simple_db1)[1]
+    data = [month[2] for month in database]
+    assert database.metric == "Searches-federated and automated"
+    assert data[0] == 13
+
+
+def test_db_result_click(sushi_simple_db1):
+    database = list(sushi_simple_db1)[2]
+    data = [month[2] for month in database]
+    assert database.metric == "Result Clicks"
+    assert data[0] == 16
+
+
+def test_db_record_view(sushi_simple_db1):
+    database = list(sushi_simple_db1)[3]
+    data = [month[2] for month in database]
+    assert database.metric == "Record Views"
+    assert data[0] == 7
 
 
 class TestRawDatabaseWithMissingData(unittest.TestCase):
