@@ -185,50 +185,29 @@ def test_db_record_view(sushi_simple_db1):
     assert data[0] == 7
 
 
-class TestRawDatabaseWithMissingData(unittest.TestCase):
-    """
-    Test database request with January missing for 'search_fed'
-    and no 'record_view' records
-    """
-
-    def setUp(self):
-        path = os.path.join(
-            os.path.dirname(__file__), "data", "sushi_db1_missing_record_view.xml"
-        )
-        with open(path, "rb") as datafile:
-            self.report = sushi.raw_to_full(datafile.read())
-        # missing data only injected when making generic to write
-        self.report.as_generic()
-        self.databases = list(self.report)
-
-    def test_january(self):
-        database = self.databases[1]
-        data = [month[2] for month in database]
-        self.assertEqual(database.metric, "Searches-federated and automated")
-        self.assertEqual(data[0], 0)
-
-    def test_record_view(self):
-        database = self.databases[3]
-        data = [month[2] for month in database]
-        self.assertEqual(database.metric, "Record Views")
-        self.assertEqual(data[0], 0)
+def test_missing_january(sushi_missing_rec):
+    database = list(sushi_missing_rec)[1]
+    data = [month[2] for month in database]
+    assert database.metric == "Searches-federated and automated"
+    assert data[0] == 0
 
 
-class TestMissingMonth(unittest.TestCase):
-    """Test SUSHI with months missing"""
+def test_missing_record_view(sushi_missing_rec):
+    database = list(sushi_missing_rec)[3]
+    data = [month[2] for month in database]
+    assert database.metric == "Record Views"
+    assert data[0] == 0
 
-    def setUp(self):
-        path = os.path.join(os.path.dirname(__file__), "data", "sushi_missing_jan.xml")
-        with open(path, "rb") as datafile:
-            self.report = sushi.raw_to_full(datafile.read())
-        self.publication = next(iter(self.report))
 
-    def test_february(self):
-        first_month_data = next(iter(self.publication))
-        self.assertEqual(first_month_data[0], datetime.date(2013, 2, 1))
+def test_mj_february(sushi_missing_jan):
+    publication = next(iter(sushi_missing_jan))
+    first_month_data = next(iter(publication))
+    assert first_month_data[0] == datetime.date(2013, 2, 1)
 
-    def test_title(self):
-        self.assertEqual(self.publication.title, "Journal of fake data")
+
+def test_mj_title(sushi_missing_jan):
+    publication = next(iter(sushi_missing_jan))
+    assert publication.title == "Journal of fake data"
 
 
 class TestSushiRequest(unittest.TestCase):
