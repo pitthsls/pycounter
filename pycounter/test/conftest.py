@@ -121,6 +121,12 @@ def sushi_simple_db1():
     return parse_sushi_file("sushi_simple_db1.xml")
 
 
+@pytest.fixture
+def sushi_missing_ii():
+    """SUSHI response with missing ISSN."""
+    return parse_sushi_file("sushi_missing_ii.xml")
+
+
 @pytest.fixture(
     params=[
         "C4BR1.tsv",
