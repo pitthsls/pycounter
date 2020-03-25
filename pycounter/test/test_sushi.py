@@ -9,6 +9,7 @@ import unittest
 from click.testing import CliRunner
 from httmock import HTTMock, urlmatch
 import mock
+import pytest
 
 from pycounter import sushi
 from pycounter import sushiclient
@@ -210,60 +211,48 @@ def test_mj_title(sushi_missing_jan):
     assert publication.title == "Journal of fake data"
 
 
-class TestSushiRequest(unittest.TestCase):
+def test_sushi_request():
     """Test making a SUSHI request"""
-
-    def setUp(self):
-        with HTTMock(sushi_mock):
-            self.report = sushi.get_report(
-                "http://www.example.com/Sushi",
-                datetime.date(2015, 1, 1),
-                datetime.date(2015, 1, 31),
-            )
-
-    def test_report(self):
-        self.assertEqual(self.report.report_type, "JR1")
-        self.assertEqual(self.report.report_version, 4)
+    with HTTMock(sushi_mock):
+        rpt = sushi.get_report(
+            "http://www.example.com/Sushi",
+            datetime.date(2015, 1, 1),
+            datetime.date(2015, 1, 31),
+        )
+    assert rpt.report_type == "JR1"
+    assert rpt.report_version == 4
 
 
-class TestSushiDump(unittest.TestCase):
+@mock.patch("pycounter.sushi.logger")
+def test_sushi_dump(mock_logger):
     """Test dumping SUSHI response"""
-
-    @mock.patch("pycounter.sushi.logger")
-    def test_dump(self, mock_logger):
-        with HTTMock(sushi_mock):
-            sushi.get_report(
-                "http://www.example.com/Sushi",
-                datetime.date(2015, 1, 1),
-                datetime.date(2015, 1, 31),
-                sushi_dump=True,
-            )
-        self.assertTrue(mock_logger.debug.called)
+    with HTTMock(sushi_mock):
+        sushi.get_report(
+            "http://www.example.com/Sushi",
+            datetime.date(2015, 1, 1),
+            datetime.date(2015, 1, 31),
+            sushi_dump=True,
+        )
+    assert mock_logger.debug.called
 
 
-class TestBogusXML(unittest.TestCase):
+def test_bogus_xml():
     """Test dealing with broken XML"""
-
-    def test_request(self):
-        logging.disable(logging.CRITICAL)
-        with HTTMock(bogus_mock):
-            self.assertRaises(
-                pycounter.exceptions.SushiException,
-                sushi.get_report,
+    logging.disable(logging.CRITICAL)
+    with HTTMock(bogus_mock):
+        with pytest.raises(pycounter.exceptions.SushiException):
+            sushi.get_report(
                 "http://www.example.com/bogus",
                 datetime.date(2015, 1, 1),
                 datetime.date(2015, 1, 31),
             )
 
 
-class TestSushiError(unittest.TestCase):
+def test_sushi_error():
     """Test error from SUSHI"""
-
-    def test_error(self):
-        with HTTMock(error_mock):
-            self.assertRaises(
-                pycounter.exceptions.SushiException,
-                sushi.get_report,
+    with HTTMock(error_mock):
+        with pytest.raises(pycounter.exceptions.SushiException):
+            sushi.get_report(
                 "http://www.example.com/out_of_range",
                 datetime.date(2015, 1, 1),
                 datetime.date(2015, 1, 31),
