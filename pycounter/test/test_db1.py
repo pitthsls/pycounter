@@ -1,39 +1,20 @@
 """Test COUNTER DB1 database report"""
 
-import os
-import unittest
 
-import pycounter.report
-
-
-class ParseCounter4Example(unittest.TestCase):
-    """Tests for parsing C4 DB1"""
-
-    def setUp(self):
-        self.report = pycounter.report.parse(
-            os.path.join(os.path.dirname(__file__), "data/C4DB1.tsv")
-        )
-
-    def test_reportname(self):
-        self.assertEqual(self.report.report_type, "DB1")
-
-    def test_stats(self):
-        publication = self.report.pubs[0]
-        self.assertEqual([x[2] for x in publication], [0, 20, 0, 0, 5, 0])
-
-    def test_row_metric(self):
-        publication = self.report.pubs[0]
-        jan_data = next(iter(publication))
-        self.assertEqual(jan_data[1], "Regular Searches")
+def test_reportname(c4db1):
+    assert c4db1.report_type == "DB1"
 
 
-class ParseCounter4SplitExample(unittest.TestCase):
-    """Tests for parsing C4 DB1"""
+def test_stats(c4db1):
+    publication = c4db1.pubs[0]
+    assert [x[2] for x in publication] == [0, 20, 0, 0, 5, 0]
 
-    def setUp(self):
-        self.report = pycounter.report.parse(
-            os.path.join(os.path.dirname(__file__), "data/C4DB1_split_year.tsv")
-        )
 
-    def test_reportname(self):
-        self.assertEqual(self.report.report_type, "DB1")
+def test_row_metric(c4db1):
+    publication = c4db1.pubs[0]
+    jan_data = next(iter(publication))
+    assert jan_data[1] == "Regular Searches"
+
+
+def test_split_year_reportname(c4db1_sy):
+    assert c4db1_sy.report_type == "DB1"

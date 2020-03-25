@@ -191,9 +191,27 @@ def c4db2():
 
 
 @pytest.fixture
+def c4db1():
+    """DB1."""
+    return parsedata("C4DB1.tsv")
+
+
+@pytest.fixture
+def c4db1_sy():
+    """DB1 split year"""
+    return parsedata("C4DB1_split_year.tsv")
+
+
+@pytest.fixture
 def br3_report():
     """Book report 3 (turnaways)."""
     return parsedata("C4BR3.csv")
+
+
+@pytest.fixture
+def br1_report():
+    """Book report 1."""
+    return parsedata("C4BR1.tsv")
 
 
 @pytest.fixture
