@@ -185,6 +185,12 @@ def db_report(request):
 
 
 @pytest.fixture
+def c4db2():
+    """DB2."""
+    return parsedata("C4DB2.tsv")
+
+
+@pytest.fixture
 def br3_report():
     """Book report 3 (turnaways)."""
     return parsedata("C4BR3.csv")
