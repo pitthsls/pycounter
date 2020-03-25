@@ -16,5 +16,5 @@ def test_c4db2_row_metric(c4db2):
     assert (
         jan_data[1] == "Access denied: concurrent/"
         "simultaneous user license "
-        "limit exceeded",
+        "limit exceeded"
     )
