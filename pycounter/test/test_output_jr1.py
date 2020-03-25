@@ -1,7 +1,5 @@
 """Test output of JR1 report"""
 
-from __future__ import absolute_import
-
 import datetime
 
 import pycounter

@@ -1,6 +1,4 @@
 """command line client to fetch statistics via SUSHI."""
-from __future__ import absolute_import
-from __future__ import print_function
 
 import datetime
 import logging

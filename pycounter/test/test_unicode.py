@@ -1,7 +1,5 @@
 """regression test to ensure all output is of text type"""
 
-from __future__ import absolute_import
-
 import os
 
 import pytest

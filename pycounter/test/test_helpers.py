@@ -1,7 +1,5 @@
 """Tests for the helpers module"""
 
-from __future__ import absolute_import
-
 import datetime
 
 import pytest

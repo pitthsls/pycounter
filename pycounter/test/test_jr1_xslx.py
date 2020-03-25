@@ -1,7 +1,5 @@
 """Test COUNTER JR1 journal report (Excel)"""
 
-from __future__ import absolute_import
-
 import pytest
 
 

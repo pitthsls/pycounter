@@ -1,7 +1,5 @@
 """Test parsing of COUNTER BR1 book report."""
 
-from __future__ import absolute_import
-
 import os
 import unittest
 

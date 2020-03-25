@@ -1,7 +1,5 @@
 """COUNTER journal and book reports and associated functions."""
 
-from __future__ import absolute_import
-
 import collections
 import datetime
 import logging

@@ -1,7 +1,5 @@
 """Test COUNTER JR1 journal report (CSV)"""
 
-from __future__ import absolute_import
-
 import datetime
 import os
 import unittest
