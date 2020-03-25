@@ -196,6 +196,12 @@ def jr2_report():
     return parsedata("C4JR2.csv")
 
 
+@pytest.fixture
+def pr1_report():
+    """Platform report 1."""
+    return parsedata("PR1.tsv")
+
+
 @pytest.fixture(
     params="""C4BR1.tsv
 C4BR2.tsv
