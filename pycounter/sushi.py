@@ -1,6 +1,4 @@
 """NISO SUSHI support."""
-from __future__ import absolute_import
-
 import collections
 import datetime
 import logging
@@ -147,7 +145,9 @@ def get_report(*args, **kwargs):
         if "api_key" in kwargs:
             if kwargs["api_key"] is not None:
                 warnings.warn(
-                    pycounter.exceptions.SushiWarning("api_key only supported in COUNTER 5")
+                    pycounter.exceptions.SushiWarning(
+                        "api_key only supported in COUNTER 5"
+                    )
                 )
             kwargs.pop("api_key", None)
 
