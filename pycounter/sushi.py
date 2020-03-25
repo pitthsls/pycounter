@@ -145,9 +145,10 @@ def get_report(*args, **kwargs):
         gssr = get_sushi_stats_raw
         rtf = raw_to_full
         if "api_key" in kwargs:
-            warnings.warn(
-                pycounter.exceptions.SushiWarning("api_key only supported in COUNTER 5")
-            )
+            if kwargs["api_key"] is not None:
+                warnings.warn(
+                    pycounter.exceptions.SushiWarning("api_key only supported in COUNTER 5")
+                )
             kwargs.pop("api_key", None)
 
     no_delay = kwargs.pop("no_delay", False)
