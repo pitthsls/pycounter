@@ -1,10 +1,7 @@
 """Tests for pycounter.sushi"""
-from __future__ import absolute_import
-
 import datetime
 import logging
 import os
-import unittest
 
 from click.testing import CliRunner
 from httmock import HTTMock, urlmatch
@@ -259,68 +256,63 @@ def test_sushi_error():
             )
 
 
-class TestSushiClient(unittest.TestCase):
-    """Test the client"""
+def test_sushi_client_get():
+    arglist = ["http://www.example.com/Sushi"]
 
-    def test_get(self):
-        arglist = ["http://www.example.com/Sushi"]
-
-        with HTTMock(sushi_mock):
-            runner = CliRunner()
-            with runner.isolated_filesystem():
-                result = runner.invoke(sushiclient.main, arglist)
-                with open("report.tsv") as tsv_file:
-                    self.assertTrue("Journal Report 1" in tsv_file.read())
-                self.assertEqual(result.exit_code, 0)
-
-    def test_output_file(self):
-        arglist = ["-o", "other_report.tsv", "http://www.example.com/Sushi"]
-
-        with HTTMock(sushi_mock):
-            runner = CliRunner()
-            with runner.isolated_filesystem():
-                result = runner.invoke(sushiclient.main, arglist)
-                with open("other_report.tsv") as tsv_file:
-                    self.assertTrue("Journal Report 1" in tsv_file.read())
-                self.assertEqual(result.exit_code, 0)
-
-    def test_end_date_error(self):
-        """Test trying to use implied start date and explicit end date"""
-        arglist = ["http://www.example.com/Sushi", "-e", "2015-12-31"]
+    with HTTMock(sushi_mock):
         runner = CliRunner()
-        result = runner.invoke(sushiclient.main, arglist)
-        self.assertEqual(result.exit_code, 1)
+        with runner.isolated_filesystem():
+            result = runner.invoke(sushiclient.main, arglist)
+            with open("report.tsv") as tsv_file:
+                assert "Journal Report 1" in tsv_file.read()
+            assert result.exit_code == 0
 
-    def test_explicit_dates(self):
-        """Test providing both start and end dates"""
-        arglist = [
-            "http://www.example.com/Sushi",
-            "-s",
-            "2015-10-31",
-            "-e",
-            "2015-12-31",
-        ]
-        with HTTMock(sushi_mock):
-            runner = CliRunner()
-            with runner.isolated_filesystem():
-                result = runner.invoke(sushiclient.main, arglist)
-                self.assertEqual(result.exit_code, 0)
 
-    def test_queued_report(self):
-        """Test that queued report is retried"""
-        arglist = [
-            "http://www.example.com/Sushi",
-            "-s",
-            "2013-01-01",
-            "-e",
-            "2013-01-31",
-            "--no-delay",
-        ]
-        with HTTMock(report_queued_mock):
-            runner = CliRunner()
-            with runner.isolated_filesystem():
-                result = runner.invoke(sushiclient.main, arglist)
-                self.assertEqual(result.exit_code, 0)
+def test_sushi_client_output_file():
+    arglist = ["-o", "other_report.tsv", "http://www.example.com/Sushi"]
+
+    with HTTMock(sushi_mock):
+        runner = CliRunner()
+        with runner.isolated_filesystem():
+            result = runner.invoke(sushiclient.main, arglist)
+            with open("other_report.tsv") as tsv_file:
+                assert "Journal Report 1" in tsv_file.read()
+            assert result.exit_code == 0
+
+
+def test_sushi_client_end_date_error():
+    """Test trying to use implied start date and explicit end date"""
+    arglist = ["http://www.example.com/Sushi", "-e", "2015-12-31"]
+    runner = CliRunner()
+    result = runner.invoke(sushiclient.main, arglist)
+    assert result.exit_code == 1
+
+
+def test_sushi_client_explicit_dates():
+    """Test providing both start and end dates"""
+    arglist = ["http://www.example.com/Sushi", "-s", "2015-10-31", "-e", "2015-12-31"]
+    with HTTMock(sushi_mock):
+        runner = CliRunner()
+        with runner.isolated_filesystem():
+            result = runner.invoke(sushiclient.main, arglist)
+            assert result.exit_code == 0
+
+
+def test_sushi_client_queued_report():
+    """Test that queued report is retried"""
+    arglist = [
+        "http://www.example.com/Sushi",
+        "-s",
+        "2013-01-01",
+        "-e",
+        "2013-01-31",
+        "--no-delay",
+    ]
+    with HTTMock(report_queued_mock):
+        runner = CliRunner()
+        with runner.isolated_filesystem():
+            result = runner.invoke(sushiclient.main, arglist)
+            assert result.exit_code == 0
 
 
 def test_missing_issn(sushi_missing_ii):
