@@ -232,6 +232,27 @@ def pr1_report():
     return parsedata("PR1.tsv")
 
 
+@pytest.fixture
+def jr1_bad():
+    """C4 JR1 with questionable formatting..."""
+    return parsedata("C4JR1_bad.csv")
+
+
+@pytest.fixture
+def goa():
+    return parsedata("C4JR1GOA.csv")
+
+
+@pytest.fixture
+def big_multiyear():
+    return parsedata("C4JR1big.csv")
+
+
+@pytest.fixture
+def multiyear():
+    return parsedata("C4JR1my.csv")
+
+
 @pytest.fixture(
     params="""C4BR1.tsv
 C4BR2.tsv

@@ -1,12 +1,8 @@
 """Test COUNTER JR1 journal report (CSV)"""
 
 import datetime
-import os
-import unittest
 
 import pytest
-
-from pycounter import report
 
 
 @pytest.mark.parametrize(
@@ -48,95 +44,87 @@ def test_ibsn(csv_jr1_r4_report):
     assert csv_jr1_r4_report.pubs[1].isbn is None
 
 
-class ParseMultiyear(unittest.TestCase):
-    """Multi-year COUNTER report
-    """
-
-    def setUp(self):
-        self.report = report.parse(
-            os.path.join(os.path.dirname(__file__), "data/C4JR1my.csv")
-        )
-
-    def test_period(self):
-        self.assertEqual(
-            self.report.period, (datetime.date(2011, 10, 1), datetime.date(2012, 2, 29))
-        )
-
-    def test_monthdata_exception(self):
-        self.assertRaises(AttributeError, getattr, self.report.pubs[0], "monthdata")
-
-    def test_data(self):
-        self.assertEqual(len(list(self.report.pubs[0])), 5)
-        usage = [x[2] for x in self.report.pubs[0]]
-        self.assertEqual(usage, [0, 0, 0, 0, 0])
-
-    def test_month_data(self):
-        expected = [
-            datetime.date(2011, 10, 1),
-            datetime.date(2011, 11, 1),
-            datetime.date(2011, 12, 1),
-            datetime.date(2012, 1, 1),
-            datetime.date(2012, 2, 1),
-        ]
-
-        months = [x[0] for x in self.report.pubs[0]]
-
-        self.assertEqual(months, expected)
+def test_multiyear_period(multiyear):
+    assert multiyear.period == (datetime.date(2011, 10, 1), datetime.date(2012, 2, 29))
 
 
-class ParseBigMultiyear(unittest.TestCase):
-    """Multi-year report with more than 12 months of data
-    """
-
-    def setUp(self):
-        self.report = report.parse(
-            os.path.join(os.path.dirname(__file__), "data/C4JR1big.csv")
-        )
-
-    def test_period(self):
-        self.assertEqual(
-            self.report.period, (datetime.date(2011, 1, 1), datetime.date(2012, 12, 31))
-        )
-
-    def test_monthdata_exception(self):
-        self.assertRaises(AttributeError, getattr, self.report.pubs[0], "monthdata")
-
-    def test_data(self):
-        usage = [x[2] for x in self.report.pubs[0]]
-        self.assertEqual(
-            usage,
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        )
+def test_multiyear_monthdata_exception(multiyear):
+    with pytest.raises(AttributeError):
+        multiyear.pubs[0].monthdata
 
 
-class ParseGOA(unittest.TestCase):
-    """Gold Open Access Report
-    """
-
-    def setUp(self):
-        self.report = report.parse(
-            os.path.join(os.path.dirname(__file__), "data/C4JR1GOA.csv")
-        )
-
-    def test_metric(self):
-        self.assertEqual(self.report.metric, "Gold Open Access Article Requests")
+def test_multiyear_data(multiyear):
+    assert len(list(multiyear.pubs[0])) == 5
+    usage = [x[2] for x in multiyear.pubs[0]]
+    assert usage == [0, 0, 0, 0, 0]
 
 
-class ParseCounter4Bad(unittest.TestCase):
-    """Tests for parsing C4 JR1 with questionable formatting..."""
+def test_multiyear_month_data(multiyear):
+    expected = [
+        datetime.date(2011, 10, 1),
+        datetime.date(2011, 11, 1),
+        datetime.date(2011, 12, 1),
+        datetime.date(2012, 1, 1),
+        datetime.date(2012, 2, 1),
+    ]
 
-    def setUp(self):
-        self.report = report.parse(
-            os.path.join(os.path.dirname(__file__), "data/C4JR1_bad.csv")
-        )
+    months = [x[0] for x in multiyear.pubs[0]]
 
-    def test_counter4_csv_data(self):
+    assert months == expected
 
-        publication = self.report.pubs[0]
-        self.assertEqual(
-            [x[2] for x in publication], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        )
-        publication = self.report.pubs[1]
-        self.assertEqual(
-            [x[2] for x in publication], [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 1000]
-        )
+
+# Multi-year report with more than 12 months of data
+
+
+def test_big_period(big_multiyear):
+    assert big_multiyear.period == (
+        datetime.date(2011, 1, 1),
+        datetime.date(2012, 12, 31),
+    )
+
+
+def test_big_monthdata_exception(big_multiyear):
+    with pytest.raises(AttributeError):
+        big_multiyear.pubs[0].monthdata
+
+
+def test_big_data(big_multiyear):
+    usage = [x[2] for x in big_multiyear.pubs[0]]
+    assert usage == [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    ]
+
+
+def test_goa_metric(goa):
+    assert goa.metric == "Gold Open Access Article Requests"
+
+
+def test_counter4_bad_csv_data(jr1_bad):
+
+    publication = jr1_bad.pubs[0]
+    assert [x[2] for x in publication] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    publication = jr1_bad.pubs[1]
+    assert [x[2] for x in publication] == [2, 1, 0, 0, 0, 5, 1, 1, 0, 5, 1, 1000]
