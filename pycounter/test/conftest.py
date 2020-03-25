@@ -240,16 +240,19 @@ def jr1_bad():
 
 @pytest.fixture
 def goa():
+    """Gold Open Access."""
     return parsedata("C4JR1GOA.csv")
 
 
 @pytest.fixture
 def big_multiyear():
+    """Big report spanning multiple years."""
     return parsedata("C4JR1big.csv")
 
 
 @pytest.fixture
 def multiyear():
+    """Multiyear report."""
     return parsedata("C4JR1my.csv")
 
 

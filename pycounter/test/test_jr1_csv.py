@@ -50,6 +50,7 @@ def test_multiyear_period(multiyear):
 
 def test_multiyear_monthdata_exception(multiyear):
     with pytest.raises(AttributeError):
+        # pylint: disable=pointless-statement
         multiyear.pubs[0].monthdata
 
 
@@ -85,6 +86,7 @@ def test_big_period(big_multiyear):
 
 def test_big_monthdata_exception(big_multiyear):
     with pytest.raises(AttributeError):
+        # pylint: disable=pointless-statement
         big_multiyear.pubs[0].monthdata
 
 
