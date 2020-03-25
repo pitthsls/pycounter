@@ -1,22 +1,13 @@
 """Test parsing of COUNTER BR2 book report."""
 
-import os
-import unittest
 
-import pycounter.report
+def test_reportname(br2_report):
+    assert br2_report.report_type == "BR2"
 
 
-class ParseCounter4Example(unittest.TestCase):
-    """Tests for parsing C4 BR2"""
+def test_report_version(br2_report):
+    assert br2_report.report_version == 4
 
-    def setUp(self):
-        self.report = pycounter.report.parse(
-            os.path.join(os.path.dirname(__file__), "data/C4BR2.tsv")
-        )
 
-    def test_reportname(self):
-        self.assertEqual(self.report.report_type, "BR2")
-        self.assertEqual(self.report.report_version, 4)
-
-    def test_metric(self):
-        self.assertEqual(self.report.metric, "Book Section Requests")
+def test_metric(br2_report):
+    assert br2_report.metric == "Book Section Requests"

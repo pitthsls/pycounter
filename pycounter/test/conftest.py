@@ -215,6 +215,12 @@ def br1_report():
 
 
 @pytest.fixture
+def br2_report():
+    """Book report 2."""
+    return parsedata("C4BR2.tsv")
+
+
+@pytest.fixture
 def jr2_report():
     """Journal report 2 (turnaways)."""
     return parsedata("C4JR2.csv")
