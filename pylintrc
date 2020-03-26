@@ -9,6 +9,7 @@ disable= bad-continuation,
          too-many-arguments,
          duplicate-code,
          fixme
+enable= useless-suppression
 good-names=logger,
            i,
            j,

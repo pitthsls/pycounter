@@ -685,7 +685,7 @@ def parse_generic(report_reader):
     :return: CounterReport object
 
     """
-    # pylint: disable=too-many-locals,too-many-branches,too-many-statements
+    # pylint: disable=too-many-branches
     report = CounterReport()
 
     first_line = next(report_reader)
@@ -768,7 +768,7 @@ def _parse_line(line, report, last_col):
     :param last_col: last column number containing data
     :return: an appropriate CounterResource subclass instance
     """
-    # pylint: disable=too-many-locals,too-many-branches,too-many-statements
+    # pylint: disable=too-many-locals
     issn = None
     eissn = None
     isbn = None
