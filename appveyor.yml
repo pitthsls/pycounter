@@ -5,6 +5,7 @@ environment:
   matrix:
   - TOXENV: py36
   - TOXENV: py37
+  - TOXENV: py38
 
 install:
   - python -m pip install --ignore-installed -U pip
