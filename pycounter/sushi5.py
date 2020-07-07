@@ -30,12 +30,24 @@ def _dates_from_filters(filters):
     converted_filters = {
         filter_["Name"]: datetime.datetime.strptime(filter_["Value"], "%Y-%m-%d").date()
         for filter_ in filters
-        if filter_["Name"] in ("Begin_Date", "End_Date")
+        if filter_["Name"].lower() in ("begin_date", "end_date")
     }
-    try:
-        return converted_filters["Begin_Date"], converted_filters["End_Date"]
-    except KeyError:  # pragma: no cover
+
+    # Test whether both ranges are present
+    if len({e.lower() for e in converted_filters}) != 2:
         raise ValueError("filters must include a Begin_Date and End_Date")
+
+    def update_case_insensitive(name):
+        if name not in converted_filters:
+            # pick the first case insensitive choice
+            key = [e for e in converted_filters if name.lower() == e.lower()][0]
+            converted_filters[name] = converted_filters[key]
+
+    # make sure that Begin_date and End_Date are set
+    update_case_insensitive("Begin_Date")
+    update_case_insensitive("End_Date")
+
+    return converted_filters["Begin_Date"], converted_filters["End_Date"]
 
 
 def _get_identifiers(item):
