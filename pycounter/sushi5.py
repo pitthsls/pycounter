@@ -80,7 +80,7 @@ def raw_to_full(raw_report):
     date_run = header.get("Created")
     report = pycounter.report.CounterReport(
         period=period,
-        report_version=int(header["Release"]),
+        report_version=int(header.get("Release", raw_report.get("Release", 5))),
         report_type=header["Report_ID"],
         customer=header.get("Institution_Name", ""),
         institutional_identifier=header.get("Customer_ID", ""),
