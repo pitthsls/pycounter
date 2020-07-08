@@ -11,7 +11,7 @@ with open(os.path.join(os.path.dirname(__file__), "pycounter/version.py"), "r") 
 with open("README.rst") as readmefile:
     readme = readmefile.read()
 
-requirements = ["openpyxl", "requests", "pendulum", "click", "lxml"]
+requirements = ["openpyxl", "requests", "pendulum==2.0.3", "click", "lxml"]
 
 if platform.python_implementation() == "PyPy":
     requirements = ["cython"] + requirements
