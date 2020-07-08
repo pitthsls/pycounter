@@ -907,7 +907,7 @@ def _year_from_header(header, report):
     elif report.report_type == "PR1" and report.report_version == 4:
         first_date_col = 4
     elif report.report_type == "JR2":
-        first_date_col = 11
+        first_date_col = 9
     year = int(header[first_date_col].split("-")[1])
     if year < 100:
         year += 2000

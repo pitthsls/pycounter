@@ -269,6 +269,7 @@ C4JR1GOA.csv
 C4JR1mul.csv
 C4JR1my.csv
 C4JR2.csv
+C4JR2_single_month.csv
 PR1.tsv
 simpleJR1.tsv
 """.split()
