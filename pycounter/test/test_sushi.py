@@ -8,10 +8,10 @@ from httmock import HTTMock, urlmatch
 import mock
 import pytest
 
-import pycounter.helpers
 from pycounter import sushi
 from pycounter import sushiclient
 import pycounter.exceptions
+import pycounter.helpers
 
 
 @urlmatch(netloc=r"(.*\.)?example\.com$")

@@ -74,10 +74,9 @@ def sushi_report_all(request):
     return parse_sushi_file(request.param)
 
 
-@pytest.fixture(
-    params=["sushi_simple_no_envelope.xml",]
-)
+@pytest.fixture(params=["sushi_simple_no_envelope.xml"])
 def xml_data(request):
+    """COUNTER 4 XML data from a file."""
     filename = request.param
     with open(os.path.join(os.path.dirname(__file__), "data", filename), "rb") as f:
         return f.read()

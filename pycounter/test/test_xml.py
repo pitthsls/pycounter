@@ -1,3 +1,4 @@
+"""Tests of COUNTER 4 XML processing."""
 import pycounter.report
 
 

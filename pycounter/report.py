@@ -1,5 +1,5 @@
 """COUNTER journal and book reports and associated functions."""
-
+# pylint: disable=too-many-lines
 import collections
 import datetime
 import logging
@@ -96,6 +96,7 @@ class CounterReport:
     @classmethod
     def from_xml(cls, xml, **kwargs):
         """Makes a CounterReport object from COUNTER 4 XML."""
+        # pylint: disable=too-many-statements,too-many-branches,too-many-locals
         root = etree.fromstring(xml)
         o_root = objectify.fromstring(xml)
         c_report = o_root[ns("counter", "Report")]
