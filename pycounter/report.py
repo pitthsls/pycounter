@@ -161,7 +161,7 @@ class CounterReport:
             except ValueError:  # pragma: nocover
                 pass
 
-        for pub in sorted(self.pubs, key=lambda x: x.title or ''):
+        for pub in sorted(self.pubs, key=lambda x: x.title or ""):
             output_lines.append(pub.as_generic())
 
         return output_lines
@@ -395,11 +395,9 @@ class CounterJournal(CounterEresource):
             self.eissn = ""
 
     def __repr__(self):  # pragma: nocover
-        return """<CounterJournal %s, publisher %s,
-        platform %s>""" % (
-            self.title,
-            self.publisher,
-            self.platform,
+        return """<CounterJournal {}, publisher {},
+        platform {}>""".format(
+            self.title, self.publisher, self.platform,
         )
 
     def as_generic(self):
@@ -478,12 +476,9 @@ class CounterBook(CounterEresource):
             self.issn = ""
 
     def __repr__(self):
-        return """<CounterBook %s (ISBN: %s), publisher %s,
-        platform %s>""" % (
-            self.title,
-            self.isbn,
-            self.publisher,
-            self.platform,
+        return """<CounterBook {} (ISBN: {}), publisher {},
+        platform {}>""".format(
+            self.title, self.isbn, self.publisher, self.platform,
         )
 
     @property

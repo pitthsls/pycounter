@@ -24,8 +24,8 @@
                 </ns2:Filters>
             </ns2:ReportDefinition>
             <ns3:Report>
-                <Report Title="Book Report 1" Name="BR1" Version="4"
-                        ID="exampleuser:BR1">
+                <Report Title="Book Report 1" Name="BR3" Version="4"
+                        ID="exampleuser:BR3">
                     <Vendor>
                         <Name>Example Vendor</Name>
                         <ID>example</ID>

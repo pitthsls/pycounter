@@ -51,7 +51,9 @@ def jr1_report_xlsx(request):
 
 def parse_sushi_file(filename):
     """Turn SUSHI data file into a report."""
-    with open(os.path.join(os.path.dirname(__file__), "data", filename)) as datafile:
+    with open(
+        os.path.join(os.path.dirname(__file__), "data", filename), "rb"
+    ) as datafile:
         return pycounter.sushi.raw_to_full(datafile.read())
 
 
@@ -59,6 +61,7 @@ def parse_sushi_file(filename):
     params=[
         "sushi_simple.xml",
         "sushi_simple_no_customer.xml",
+        "sushi_simple_no_envelope.xml",
         "sushi_simple_br1.xml",
         "sushi_simple_db1.xml",
         "sushi_db1_missing_record_view.xml",

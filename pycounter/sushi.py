@@ -196,25 +196,32 @@ def raw_to_full(raw_report):
         except AttributeError:
             if b"Report Queued" in raw_report:
                 raise pycounter.exceptions.ServiceBusyError("Report Queued")
-            logger.error("report not found in XML: %s", raw_report)
-            raise pycounter.exceptions.SushiException(
-                message="report not found in XML", raw=raw_report, xml=o_root
-            )
+            try:
+                c_report = o_root[ns("counter", "Report")]
+            except AttributeError:
+                logger.error("report not found in XML: %s", raw_report)
+                raise pycounter.exceptions.SushiException(
+                    message="report not found in XML", raw=raw_report, xml=o_root
+                )
     logger.debug("COUNTER report: %s", etree.tostring(c_report))
-    start_date = datetime.datetime.strptime(
-        root.find(".//%s" % ns("sushi", "Begin")).text, "%Y-%m-%d"
-    ).date()
-
-    end_date = datetime.datetime.strptime(
-        root.find(".//%s" % ns("sushi", "End")).text, "%Y-%m-%d"
-    ).date()
+    try:
+        start_date = datetime.datetime.strptime(
+            root.find(".//%s" % ns("sushi", "Begin")).text, "%Y-%m-%d"
+        ).date()
+    except AttributeError:
+        start_date = None
+    try:
+        end_date = datetime.datetime.strptime(
+            root.find(".//%s" % ns("sushi", "End")).text, "%Y-%m-%d"
+        ).date()
+    except AttributeError:
+        end_date = None
 
     report_data = {"period": (start_date, end_date)}
 
-    rep_def = root.find(".//%s" % ns("sushi", "ReportDefinition"))
-    report_data["report_version"] = int(rep_def.get("Release"))
+    report_data["report_version"] = int(c_report.get("Version"))
 
-    report_data["report_type"] = rep_def.get("Name")
+    report_data["report_type"] = c_report.get("Name")
 
     customer = root.find(".//%s" % ns("counter", "Customer"))
     try:
