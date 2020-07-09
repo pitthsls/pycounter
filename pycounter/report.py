@@ -6,10 +6,12 @@ import logging
 import re
 import warnings
 
+from lxml import etree
+from lxml import objectify
 import pendulum
 
 from pycounter import csvhelper
-from pycounter.constants import CODES, HEADER_FIELDS, METRICS
+from pycounter.constants import CODES, DB_METRIC_MAP, HEADER_FIELDS, METRICS
 from pycounter.constants import REPORT_DESCRIPTIONS, TOTAL_TEXT
 from pycounter.exceptions import (
     PycounterException,
@@ -23,6 +25,7 @@ from pycounter.helpers import (
     guess_type_from_content,
     is_first_last,
     next_month,
+    ns,
 )
 
 
@@ -89,6 +92,217 @@ class CounterReport:
         else:
             self.date_run = date_run
         self.section_type = section_type
+
+    @classmethod
+    def from_xml(cls, xml, **kwargs):
+        """Makes a CounterReport object from COUNTER 4 XML."""
+        root = etree.fromstring(xml)
+        o_root = objectify.fromstring(xml)
+        c_report = o_root[ns("counter", "Report")]
+        logging.debug("COUNTER report: %s", etree.tostring(c_report))
+        try:
+            start_date = datetime.datetime.strptime(
+                root.find(".//%s" % ns("sushi", "Begin")).text, "%Y-%m-%d"
+            ).date()
+        except AttributeError:
+            start_date = None
+        try:
+            end_date = datetime.datetime.strptime(
+                root.find(".//%s" % ns("sushi", "End")).text, "%Y-%m-%d"
+            ).date()
+        except AttributeError:
+            end_date = None
+
+        report_data = {"period": (start_date, end_date)}
+
+        report_data["report_version"] = int(c_report.get("Version"))
+
+        report_data["report_type"] = c_report.get("Name")
+
+        customer = root.find(".//%s" % ns("counter", "Customer"))
+        try:
+            report_data["customer"] = customer.find(
+                ".//%s" % ns("counter", "Name")
+            ).text
+        except AttributeError:
+            report_data["customer"] = ""
+
+        try:
+            inst_id = customer.find(".//%s" % ns("counter", "ID")).text
+        except AttributeError:
+            inst_id = ""
+        report_data["institutional_identifier"] = inst_id
+
+        rep_root = root.find(".//%s" % ns("counter", "Report"))
+        created_string = rep_root.get("Created")
+        if created_string is not None:
+            report_data["date_run"] = pendulum.parse(created_string)
+        else:
+            report_data["date_run"] = datetime.datetime.now()
+
+        report = cls(**report_data, **kwargs)
+
+        report.metric = METRICS.get(report_data["report_type"])
+
+        for item in c_report.Customer.ReportItems:
+            try:
+                publisher_name = item.ItemPublisher.text
+            except AttributeError:
+                publisher_name = ""
+            title = item.ItemName.text
+            platform = item.ItemPlatform.text
+
+            eissn = issn = ""
+            print_isbn = None
+            online_isbn = None
+            doi = ""
+            prop_id = ""
+
+            try:
+                for identifier in item.ItemIdentifier:
+                    if identifier.Type == "Print_ISSN":
+                        issn = identifier.Value.text
+                        if issn is None:
+                            issn = ""
+                    elif identifier.Type == "Online_ISSN":
+                        eissn = identifier.Value.text
+                        if eissn is None:
+                            eissn = ""
+                    elif identifier.Type == "Online_ISBN":
+                        online_isbn = identifier.Value.text
+                    elif identifier.Type == "Print_ISBN":
+                        print_isbn = identifier.Value.text
+                    elif identifier.Type == "DOI":
+                        doi = identifier.Value.text
+                    elif identifier.Type == "Proprietary":
+                        prop_id = identifier.Value.text
+
+            except AttributeError:
+                pass
+
+            month_data = []
+            html_usage = 0
+            pdf_usage = 0
+
+            metrics_for_db = collections.OrderedDict()
+
+            for perform_item in item.ItemPerformance:
+                item_date = convert_date_run(perform_item.Period.Begin.text)
+                logging.debug("perform_item date: %r", item_date)
+                usage = None
+                if hasattr(perform_item, "Instance"):
+                    for inst in perform_item.Instance:
+                        if inst.MetricType == "ft_total":
+                            usage = str(inst.Count)
+                        elif inst.MetricType == "ft_pdf":
+                            pdf_usage += int(inst.Count)
+                        elif inst.MetricType == "ft_html":
+                            html_usage += int(inst.Count)
+                        elif report.report_type.startswith(
+                            "DB"
+                        ) or report.report_type in ("PR1", "JR2", "BR3",):
+                            metrics_for_db.setdefault(inst.MetricType, []).append(
+                                (item_date, int(inst.Count))
+                            )
+                if usage is not None:
+                    month_data.append((item_date, int(usage)))
+
+            if report.report_type:
+                if report.report_type == "JR1":
+                    report.pubs.append(
+                        CounterJournal(
+                            title=title,
+                            platform=platform,
+                            publisher=publisher_name,
+                            period=report.period,
+                            metric=report.metric,
+                            issn=issn,
+                            eissn=eissn,
+                            doi=doi,
+                            proprietary_id=prop_id,
+                            month_data=month_data,
+                            html_total=html_usage,
+                            pdf_total=pdf_usage,
+                        )
+                    )
+                elif report.report_type == "BR3":
+                    for metric_code, month_data in metrics_for_db.items():
+                        metric = DB_METRIC_MAP[metric_code]
+                        report.pubs.append(
+                            CounterBook(
+                                title=title,
+                                platform=platform,
+                                publisher=publisher_name,
+                                period=report.period,
+                                metric=metric,
+                                issn=issn,
+                                print_isbn=print_isbn,
+                                online_isbn=online_isbn,
+                                doi=doi,
+                                proprietary_id=prop_id,
+                                month_data=month_data,
+                            )
+                        )
+                elif report.report_type.startswith("BR"):
+                    # BR1, BR2
+                    report.pubs.append(
+                        CounterBook(
+                            title=title,
+                            platform=platform,
+                            publisher=publisher_name,
+                            period=report.period,
+                            metric=report.metric,
+                            issn=issn,
+                            doi=doi,
+                            proprietary_id=prop_id,
+                            print_isbn=print_isbn,
+                            online_isbn=online_isbn,
+                            month_data=month_data,
+                        )
+                    )
+                elif report.report_type.startswith("DB"):
+                    for metric_code, month_data in metrics_for_db.items():
+                        metric = DB_METRIC_MAP[metric_code]
+                        report.pubs.append(
+                            CounterDatabase(
+                                title=title,
+                                platform=platform,
+                                publisher=publisher_name,
+                                period=report.period,
+                                metric=metric,
+                                month_data=month_data,
+                            )
+                        )
+                elif report.report_type == "PR1":
+                    for metric_code, month_data in metrics_for_db.items():
+                        metric = DB_METRIC_MAP[metric_code]
+                        report.pubs.append(
+                            CounterPlatform(
+                                platform=platform,
+                                publisher=publisher_name,
+                                period=report.period,
+                                metric=metric,
+                                month_data=month_data,
+                            )
+                        )
+                elif report.report_type == "JR2":
+                    for metric_code, month_data in metrics_for_db.items():
+                        metric = DB_METRIC_MAP[metric_code]
+                        report.pubs.append(
+                            CounterJournal(
+                                title=title,
+                                platform=platform,
+                                publisher=publisher_name,
+                                period=report.period,
+                                metric=metric,
+                                issn=issn,
+                                eissn=eissn,
+                                doi=doi,
+                                proprietary_id=prop_id,
+                                month_data=month_data,
+                            )
+                        )
+        return report
 
     def __repr__(self):
         return "<CounterReport {} version {} for date range {} to {}>".format(

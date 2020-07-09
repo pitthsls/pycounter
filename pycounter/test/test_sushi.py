@@ -8,6 +8,7 @@ from httmock import HTTMock, urlmatch
 import mock
 import pytest
 
+import pycounter.helpers
 from pycounter import sushi
 from pycounter import sushiclient
 import pycounter.exceptions
@@ -48,7 +49,10 @@ def bogus_mock(url_unused, request_unused):
 
 def test_helper_ns():
     """Test _ns helper"""
-    assert sushi.ns("sushi", "name") == "{http://www.niso.org/schemas/sushi}name"
+    assert (
+        pycounter.helpers.ns("sushi", "name")
+        == "{http://www.niso.org/schemas/sushi}name"
+    )
 
 
 def test_report_version(sushi_report_all):

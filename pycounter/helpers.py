@@ -5,6 +5,8 @@ import re
 
 import pendulum
 
+from pycounter.constants import NS
+
 
 def convert_covered(datestring):
     """
@@ -157,3 +159,12 @@ def guess_type_from_content(file_obj):
         else:
             filetype = "csv"
     return filetype
+
+
+def ns(namespace, name):
+    """Convenience function to make a namespaced XML name.
+
+    :param namespace: one of 'SOAP-ENV', 'sushi', 'sushicounter', 'counter'
+    :param name: tag name within the given namespace
+    """
+    return "{" + NS[namespace] + "}" + name

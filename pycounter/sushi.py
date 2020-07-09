@@ -14,7 +14,7 @@ import requests
 from pycounter import sushi5
 import pycounter.constants
 import pycounter.exceptions
-from pycounter.helpers import convert_date_run
+from pycounter.helpers import convert_date_run, ns
 import pycounter.report
 
 
@@ -160,15 +160,6 @@ def get_report(*args, **kwargs):
         except pycounter.exceptions.ServiceBusyError:
             print("Service busy, retrying in %d seconds" % delay_amount)
             time.sleep(delay_amount)
-
-
-def ns(namespace, name):
-    """Convenience function to make a namespaced XML name.
-
-    :param namespace: one of 'SOAP-ENV', 'sushi', 'sushicounter', 'counter'
-    :param name: tag name within the given namespace
-    """
-    return "{" + NS[namespace] + "}" + name
 
 
 def raw_to_full(raw_report):

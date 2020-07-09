@@ -75,6 +75,15 @@ def sushi_report_all(request):
 
 
 @pytest.fixture(
+    params=["sushi_simple_no_envelope.xml",]
+)
+def xml_data(request):
+    filename = request.param
+    with open(os.path.join(os.path.dirname(__file__), "data", filename), "rb") as f:
+        return f.read()
+
+
+@pytest.fixture(
     params=[
         "sushi_simple.xml",
         "sushi_simple_br1.xml",

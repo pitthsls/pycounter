@@ -6,6 +6,7 @@
 * CounterReport no longer has .year attribute (doesn't make sense for part or multi
 year reports, and wasn't on COUNTER 5 reports in pycounter 2.0)
 * Dropped support for python 2 and 3.5. Now supports only python 3.6+
+* Add pycounter.report.CounterReport.from_xml() constructor.
 
 ## 2.1.4 (2020-07-08)
 * Better handling of report JR2 [Stepan Henek]
