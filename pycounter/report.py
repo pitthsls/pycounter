@@ -101,24 +101,13 @@ class CounterReport:
         o_root = objectify.fromstring(xml)
         c_report = o_root[ns("counter", "Report")]
         logging.debug("COUNTER report: %s", etree.tostring(c_report))
-        try:
-            start_date = datetime.datetime.strptime(
-                root.find(".//%s" % ns("sushi", "Begin")).text, "%Y-%m-%d"
-            ).date()
-        except AttributeError:
-            start_date = None
-        try:
-            end_date = datetime.datetime.strptime(
-                root.find(".//%s" % ns("sushi", "End")).text, "%Y-%m-%d"
-            ).date()
-        except AttributeError:
-            end_date = None
 
-        report_data = {"period": (start_date, end_date)}
-
-        report_data["report_version"] = int(c_report.get("Version"))
-
-        report_data["report_type"] = c_report.get("Name")
+        report_data = {
+            "report_version": int(c_report.get("Version")),
+            "report_type": c_report.get("Name"),
+        }
+        # FIXME: calculate report period from minimum and maximum dates in data,
+        # if not in kwargs from SUSHI
 
         customer = root.find(".//%s" % ns("counter", "Customer"))
         try:
