@@ -1,4 +1,10 @@
 # Changelog
+## 2.1.4 (2020-07-08)
+* Better handling of report JR2 [Stepan Henek]
+
+## 2.1.2 (2010-01-24)
+* fix a missed place with too-strict date handling
+
 ## 2.1.1 (2020-01-24)
 * less strict date handling in Begin/End date strings to allow working with
 badly-formatted reports that exist in the wild.
