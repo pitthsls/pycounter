@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import datetime
+import io
 import logging
 import os
 import unittest
@@ -197,9 +198,7 @@ class TestRawDatabaseWithMissingData(unittest.TestCase):
     """
 
     def setUp(self):
-        path = os.path.join(
-            os.path.dirname(__file__), "data", "sushi_db1_missing_record_view.xml"
-        )
+        path = os.path.join(os.path.dirname(__file__), "data", "sushi_db1_missing_record_view.xml")
         with open(path, "rb") as datafile:
             self.report = sushi.raw_to_full(datafile.read())
         # missing data only injected when making generic to write
@@ -371,3 +370,57 @@ class TestMissingItemIdentifier(unittest.TestCase):
     def test_issn(self):
         publication = next(iter(self.report))
         self.assertEqual(publication.issn, "")
+
+
+class TestDumpFile(unittest.TestCase):
+    """ Test whether content of mocked file was properly dumped """
+
+    def test_counter_success(self):
+        fake_file = io.BytesIO()
+
+        with HTTMock(sushi_mock):
+            self.report = sushi.get_report(
+                "http://www.example.com/Sushi",
+                datetime.date(2015, 1, 1),
+                datetime.date(2015, 1, 31),
+                dump_file=fake_file,
+            )
+
+        fake_file.seek(0)
+        path = os.path.join(os.path.dirname(__file__), "data", "sushi_simple.xml")
+        with open(path, "rb") as datafile:
+            self.assertEquals(datafile.read(), fake_file.read())
+
+    def test_counter_error(self):
+        fake_file = io.BytesIO()
+
+        with HTTMock(error_mock):
+            self.assertRaises(
+                pycounter.exceptions.SushiException,
+                sushi.get_report,
+                "http://www.example.com/Sushi",
+                datetime.date(2015, 1, 1),
+                datetime.date(2015, 1, 31),
+                dump_file=fake_file,
+            )
+
+        fake_file.seek(0)
+        path = os.path.join(os.path.dirname(__file__), "data", "sushi_error.xml")
+        with open(path, "rb") as datafile:
+            self.assertEquals(datafile.read(), fake_file.read())
+
+    def test_counter_bogus(self):
+        fake_file = io.BytesIO()
+
+        with HTTMock(bogus_mock):
+            self.assertRaises(
+                pycounter.exceptions.SushiException,
+                sushi.get_report,
+                "http://www.example.com/Sushi",
+                datetime.date(2015, 1, 1),
+                datetime.date(2015, 1, 31),
+                dump_file=fake_file,
+            )
+
+        fake_file.seek(0)
+        self.assertEquals(b"Bogus response with no XML", fake_file.read())
