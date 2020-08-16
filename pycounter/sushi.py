@@ -246,6 +246,11 @@ def raw_to_full(raw_report):
 
     report.metric = pycounter.constants.METRICS.get(report_data["report_type"])
 
+    # Missing some mandatory field to extract data ->
+    # exit right away
+    if not c_report or not hasattr(c_report, "Customer") or not hasattr(c_report.Customer, "ReportItems"):
+        return report
+
     for item in c_report.Customer.ReportItems:
         try:
             publisher_name = item.ItemPublisher.text
