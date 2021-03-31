@@ -130,8 +130,8 @@ def get_status(url: str, release: int) -> str:
     """Request SUSHI server status."""
     if release != 5:
         raise NotImplementedError(f"Status for COUNTER {release} is not implemented.")
-    else:
-        return sushi5.get_status(url)
+
+    return sushi5.get_status(url)
 
 
 def get_report(*args, **kwargs):
