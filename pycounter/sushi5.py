@@ -205,6 +205,7 @@ def get_sushi_stats_raw(
         vendor instructions to determine if this is needed)
 
     """
+    # pylint: disable=too-many-locals
     _check_params(kwargs, release)
     if url is None and wsdl_url:  # pragma: no cover
         warnings.warn(

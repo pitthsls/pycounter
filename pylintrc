@@ -8,7 +8,9 @@ disable= bad-continuation,
          too-few-public-methods,
          too-many-arguments,
          duplicate-code,
-         fixme
+         fixme,
+         raise-missing-from,
+         logging-fstring-interpolation
 enable= useless-suppression
 good-names=logger,
            i,
