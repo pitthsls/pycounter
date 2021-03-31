@@ -35,7 +35,7 @@ def get_sushi_stats_raw(
     release=4,
     sushi_dump=False,
     verify=True,
-    **extra_params
+    **extra_params,
 ):
     """Get SUSHI stats for a given site in raw XML format.
 
@@ -124,6 +124,14 @@ def get_sushi_stats_raw(
             "SUSHI DUMP: request: %s \n\n response: %s", payload, response.content
         )
     return response.content
+
+
+def get_status(url: str, release: int) -> str:
+    """Request SUSHI server status."""
+    if release != 5:
+        raise NotImplementedError(f"Status for COUNTER {release} is not implemented.")
+    else:
+        return sushi5.get_status(url)
 
 
 def get_report(*args, **kwargs):

@@ -9,8 +9,6 @@ import click
 from pycounter import sushi
 from pycounter.helpers import convert_date_run, last_day, prev_month
 
-logging.basicConfig()
-
 
 @click.command()
 @click.argument("url")
@@ -54,6 +52,7 @@ logging.basicConfig()
     help="Do not delay before rerequesting a queued report. "
     "Probably don't do this to a real server.",
 )
+@click.option("--status", is_flag=True, help="Request server status and exit.")
 def main(
     url,
     report,
@@ -71,9 +70,18 @@ def main(
     dump,
     no_ssl_verify,
     no_delay,
+    status,
 ):
     """Main function for the SUSHI client."""
     # pylint: disable=too-many-locals
+    if dump:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig()
+    if status:
+        status_response = sushi.get_status(url, release)
+        click.echo(status_response)
+        sys.exit(0)
     click.echo(f"pycounter SUSHI client for URL {url} ({report} R{release})")
     if end_date is not None and start_date is None:
         click.echo("Cannot specify --end_date without --start_date", err=True)
@@ -86,6 +94,7 @@ def main(
         converted_end_date = last_day(converted_start_date)
     else:
         converted_end_date = convert_date_run(end_date)
+
     report = sushi.get_report(
         wsdl_url=url,
         report=report,

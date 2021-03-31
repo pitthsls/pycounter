@@ -79,3 +79,9 @@ Options:
    Do not wait 60 seconds before retrying a request in case of failure. This is
    provided mainly for testing; it's not recommended to skip the delay when
    talking to someone else's server...
+
+.. option:: --status
+
+   Request the status of the (COUNTER 5 only at the moment) SUSHI server,
+   print it, and exit. Ignores all other options except --release, --dump, and the
+   URL.

@@ -157,6 +157,12 @@ def raw_to_full(raw_report):
     return report
 
 
+def get_status(url: str) -> str:
+    """Request SUSHI server status."""
+    response = requests.get(f"{url}/status")
+    return response.content
+
+
 def get_sushi_stats_raw(
     wsdl_url=None,
     start_date=None,
@@ -169,7 +175,7 @@ def get_sushi_stats_raw(
     verify=True,
     url=None,
     api_key=None,
-    **kwargs
+    **kwargs,
 ):
     """Get SUSHI stats for a given site in dict (decoded from JSON) format.
 
@@ -218,8 +224,10 @@ def get_sushi_stats_raw(
     if api_key:
         req_params["api_key"] = api_key
 
+    url_full = "{url}/reports/{report}".format(**url_params)
+    logger.debug(f"Making request to {url_full} with params {req_params}")
     response = requests.get(
-        "{url}/reports/{report}".format(**url_params),
+        url_full,
         params=req_params,
         headers={"User-Agent": "pycounter/%s" % pycounter.__version__},
         verify=verify,
