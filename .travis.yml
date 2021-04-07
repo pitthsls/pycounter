@@ -35,7 +35,7 @@ jobs:
   - python: 3.7
     env: TOXENV=docs
   - python: "pypy3.6-7.0.0"
-    env: pypy3_linux
+    env: TOXENV=pypy3_linux
 
 deploy:
   provider: pypi
