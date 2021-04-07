@@ -6,7 +6,7 @@ environment:
   - TOXENV: py36
   - TOXENV: py37
   - TOXENV: py38
-  - TOXENV: pypy3
+  - TOXENV: pypy3_win
   - TOXENV: py39
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
