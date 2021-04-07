@@ -6,6 +6,7 @@ environment:
   - TOXENV: py36
   - TOXENV: py37
   - TOXENV: py38
+  - TOXENV: pypy3
   - TOXENV: py39
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
@@ -13,6 +14,11 @@ install:
   - python -m pip install --ignore-installed -U pip
   - pip install -U virtualenv
   - pip install tox
+
+  - ps: (New-Object Net.WebClient).DownloadFile('https://downloads.python.org/pypy/pypy3.7-v7.3.3-win32.zip', "$env:appveyor_build_folder\pypy3.7-v7.3.3-win32.zip")
+  - ps: 7z x pypy3.7-v7.3.3-win32.zip | Out-Null
+  - move pypy3.7-v7.3.3-win32 C:\
+  - 'SET PATH=C:\pypy3.7-v7.3.3-win32\;%PATH%'
 
 test_script:
   - tox
