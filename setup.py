@@ -25,7 +25,7 @@ setup(
     author_email="speargh@pitt.edu",
     maintainer="Geoffrey Spear",
     maintainer_email="speargh@pitt.edu",
-    url="http://www.github.com/pitthsls/pycounter",
+    url="https://www.github.com/pitthsls/pycounter",
     project_urls={"Documentation": "https://pycounter.readthedocs.io"},
     description="Project COUNTER/NISO SUSHI statistics",
     long_description=readme,
