@@ -22,7 +22,7 @@ after_success:
   - coverage report -m
 
 notifications:
-  irc: "chat.freenode.net#pycounter"
+  irc: "irc.libera.chat#pycounter"
 
 jobs:
   include:
