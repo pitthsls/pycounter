@@ -780,9 +780,9 @@ def _parse_line(line, report, last_col):
     metric = report.metric
     if (
         report.report_type.startswith("JR1")
-        or report.report_type == "TR_J1"
         or report.report_type == "TR_J2"
     ):
+
         old_line = line
         line = line[0:3] + line[5:7] + line[10:last_col]
         doi = old_line[3]
@@ -791,8 +791,15 @@ def _parse_line(line, report, last_col):
         pdf_total = format_stat(old_line[9])
         issn = line[3].strip()
         eissn = line[4].strip()
-        if report.report_type.startswith("TR"):
-            metric = old_line[9]
+
+    elif report.report_type in "TR_J1":
+        old_line = line
+        line = line[0:2] + line[3:4] + line[6:8] + line[11:last_col]
+        doi = old_line[4]
+        metric = old_line[9]
+        prop_id = old_line[5]
+        issn = line[3].strip()
+        eissn = line[4].strip()
 
     elif report.report_type in ("BR1", "BR2"):
         line = line[0:3] + line[5:7] + line[8:last_col]
