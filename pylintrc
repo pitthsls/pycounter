@@ -9,6 +9,7 @@ disable= too-few-public-methods,
          duplicate-code,
          fixme,
          raise-missing-from,
+         consider-using-f-string,
          logging-fstring-interpolation
 enable= useless-suppression
 good-names=logger,
