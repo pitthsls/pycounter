@@ -4,8 +4,7 @@
 no-docstring-rgx=__.*__|test[A-Z_].*|setUp|tearDown|.*_mock
 
 extension-pkg-whitelist=lxml
-disable= bad-continuation,
-         too-few-public-methods,
+disable= too-few-public-methods,
          too-many-arguments,
          duplicate-code,
          fixme,

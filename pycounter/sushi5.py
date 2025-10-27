@@ -159,7 +159,7 @@ def raw_to_full(raw_report):
 
 def get_status(url: str) -> str:
     """Request SUSHI server status."""
-    response = requests.get(f"{url}/status")
+    response = requests.get(f"{url}/status", timeout=30)
     return response.content
 
 
@@ -232,6 +232,7 @@ def get_sushi_stats_raw(
         params=req_params,
         headers={"User-Agent": "pycounter/%s" % pycounter.__version__},
         verify=verify,
+        timeout=30,
     )
 
     if sushi_dump:  # pragma: no cover

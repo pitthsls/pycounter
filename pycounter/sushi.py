@@ -1,4 +1,5 @@
 """NISO SUSHI support."""
+
 import collections
 import datetime
 import logging
@@ -116,7 +117,12 @@ def get_sushi_stats_raw(
     }
 
     response = requests.post(
-        url=wsdl_url, headers=headers, data=payload, verify=verify, **extra_params
+        url=wsdl_url,
+        headers=headers,
+        data=payload,
+        verify=verify,
+        timeout=30,
+        **extra_params,
     )
 
     if sushi_dump:
