@@ -161,7 +161,7 @@ class CounterReport:
             except ValueError:  # pragma: nocover
                 pass
 
-        for pub in sorted(self.pubs, key=lambda x: x.title or ''):
+        for pub in sorted(self.pubs, key=lambda x: x.title or ""):
             output_lines.append(pub.as_generic())
 
         return output_lines
@@ -201,7 +201,7 @@ class CounterReport:
             self.period[0].year, self.period[0].month, 1
         )
         months = list(
-            pendulum.Period(start_month_first_day, self.period[1]).range("months")
+            pendulum.Interval(start_month_first_day, self.period[1]).range("months")
         )
         month_data = [0] * len(months)
         for pub in self.pubs:
@@ -226,7 +226,7 @@ class CounterReport:
         start_month_first_day = datetime.date(
             self.period[0].year, self.period[0].month, 1
         )
-        for d_obj in pendulum.Period(start_month_first_day, self.period[1]).range(
+        for d_obj in pendulum.Interval(start_month_first_day, self.period[1]).range(
             "months"
         ):
             header_cells.append(d_obj.strftime("%b-%Y"))
@@ -322,7 +322,7 @@ class CounterEresource:
         )
         start, end = start_month_first_day, self.period[1]
         try:
-            for d_obj in pendulum.Period(start, end).range("months"):
+            for d_obj in pendulum.Interval(start, end).range("months"):
                 if d_obj not in (x[0] for x in self._full_data):
                     self._full_data.append((d_obj, 0))
         except IndexError:  # pragma: nocover
@@ -395,8 +395,8 @@ class CounterJournal(CounterEresource):
             self.eissn = ""
 
     def __repr__(self):  # pragma: nocover
-        return """<CounterJournal %s, publisher %s,
-        platform %s>""" % (
+        return """<CounterJournal {}, publisher {},
+        platform {}>""".format(
             self.title,
             self.publisher,
             self.platform,
@@ -478,8 +478,8 @@ class CounterBook(CounterEresource):
             self.issn = ""
 
     def __repr__(self):
-        return """<CounterBook %s (ISBN: %s), publisher %s,
-        platform %s>""" % (
+        return """<CounterBook {} (ISBN: {}), publisher {},
+        platform {}>""".format(
             self.title,
             self.isbn,
             self.publisher,

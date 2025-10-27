@@ -5,20 +5,20 @@ from setuptools import find_packages, setup
 
 version = {}  # will be set by exec below
 
-with open(os.path.join(os.path.dirname(__file__), "pycounter/version.py"), "r") as fp:
+with open(os.path.join(os.path.dirname(__file__), "pycounter/version.py")) as fp:
     exec(fp.read(), version)
 
 with open("README.rst") as readmefile:
     readme = readmefile.read()
 
-requirements = ["openpyxl", "requests", "pendulum==2.0.3", "click", "lxml"]
+requirements = ["openpyxl", "requests", "pendulum", "click", "lxml"]
 
 if platform.python_implementation() == "PyPy":
     requirements = ["cython"] + requirements
 
 setup(
     name="pycounter",
-    python_requires=">=3.6",
+    python_requires=">=3.10",
     version=version["__version__"],
     packages=find_packages(),
     author="Health Sciences Library System, University of Pittsburgh",
@@ -34,10 +34,11 @@ setup(
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Programming Language :: Python :: Implementation :: PyPy3",
     ],
     extras_require={
