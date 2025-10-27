@@ -53,7 +53,7 @@ def test_totals_sparse_data(tmp_path):
     report = CounterReport(report_type="BR2", period=(start, end))
     report.pubs = [cb1, cb2]
     report.write_tsv(str(tmp_path / "outputfile.tsv"))
-    with open(str(tmp_path / "outputfile.tsv", encoding="utf-8")) as new_file:
+    with open(str(tmp_path / "outputfile.tsv"), encoding="utf-8") as new_file:
         output_lines = list(new_file.readlines())
     assert len(output_lines) == 11
     # check totals computation
