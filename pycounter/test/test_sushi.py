@@ -3,10 +3,10 @@
 import datetime
 import logging
 import os
+from unittest import mock
 
 from click.testing import CliRunner
 from httmock import HTTMock, urlmatch
-from unittest import mock
 import pytest
 
 from pycounter import sushi

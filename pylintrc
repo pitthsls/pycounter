@@ -6,6 +6,7 @@ no-docstring-rgx=__.*__|test[A-Z_].*|setUp|tearDown|.*_mock
 extension-pkg-whitelist=lxml
 disable= too-few-public-methods,
          too-many-arguments,
+         too-many-positional-arguments,
          duplicate-code,
          fixme,
          raise-missing-from,
