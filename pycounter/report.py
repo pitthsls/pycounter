@@ -208,6 +208,7 @@ class CounterReport:
             if pub.metric != metric:
                 continue
             if self.report_type == "JR1":
+                # pylint: disable=no-member
                 pdf_usage += pub.pdf_total  # pytype: disable=attribute-error
                 html_usage += pub.html_total  # pytype: disable=attribute-error
             for data in pub:
