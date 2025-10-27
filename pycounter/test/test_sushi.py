@@ -1,11 +1,12 @@
 """Tests for pycounter.sushi"""
+
 import datetime
 import logging
 import os
 
 from click.testing import CliRunner
 from httmock import HTTMock, urlmatch
-import mock
+from unittest import mock
 import pytest
 
 from pycounter import sushi
@@ -263,7 +264,7 @@ def test_sushi_client_get():
         runner = CliRunner()
         with runner.isolated_filesystem():
             result = runner.invoke(sushiclient.main, arglist)
-            with open("report.tsv") as tsv_file:
+            with open("report.tsv", encoding="utf-8") as tsv_file:
                 assert "Journal Report 1" in tsv_file.read()
             assert result.exit_code == 0
 
@@ -275,7 +276,7 @@ def test_sushi_client_output_file():
         runner = CliRunner()
         with runner.isolated_filesystem():
             result = runner.invoke(sushiclient.main, arglist)
-            with open("other_report.tsv") as tsv_file:
+            with open("other_report.tsv", encoding="utf-8") as tsv_file:
                 assert "Journal Report 1" in tsv_file.read()
             assert result.exit_code == 0
 
