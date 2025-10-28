@@ -1,9 +1,7 @@
 pycounter
 =========
 
-.. image:: https://travis-ci.org/pitthsls/pycounter.svg?branch=master
-    :target: https://travis-ci.org/pitthsls/pycounter
-    
+
 .. image:: https://ci.appveyor.com/api/projects/status/lochuaf25fa9inru/branch/master?svg=true
     :target: https://ci.appveyor.com/project/Wooble/pycounter/branch/master
 
