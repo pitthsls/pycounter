@@ -43,7 +43,7 @@ usage data into our in-house Electronic Resources Management (ERM) system.
 Licensed under the `MIT <https://choosealicense.com/licenses/mit/>`_ license.
 See the file LICENSE for details.
 
-pycounter is tested on Python 3.6, 3.7, 3.8, 3.9 and pypy3
+pycounter is tested on Python 3.10, 3.11, 3.12, 3.13, 3.14, and pypy3
 
 
 Documentation is on `Read the Docs <http://pycounter.readthedocs.io>`_ and
