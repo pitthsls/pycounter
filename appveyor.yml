@@ -12,7 +12,7 @@ environment:
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 install:
-  - python -m pip install --ignore-installed -U pip
+  - python3 -m pip install --ignore-installed -U pip
   - pip install -U virtualenv
   - pip install tox
 
