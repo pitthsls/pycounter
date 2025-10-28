@@ -2,8 +2,14 @@ pycounter
 =========
 
 
+
+
 .. image:: https://ci.appveyor.com/api/projects/status/lochuaf25fa9inru/branch/master?svg=true
     :target: https://ci.appveyor.com/project/Wooble/pycounter/branch/master
+
+.. image:: https://github.com/pitthsls/pycounter/actions/workflows/run_tests.yml/badge.svg
+    :target: https://github.com/pitthsls/pycounter/actions/workflows/run_tests.yml
+    :alt: github actions
 
 .. image:: https://coveralls.io/repos/pitthsls/pycounter/badge.svg?branch=master
     :target: https://coveralls.io/r/pitthsls/pycounter?branch=master
