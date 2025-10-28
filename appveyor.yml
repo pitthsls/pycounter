@@ -1,5 +1,5 @@
-version: 3.0.{build}
-build: false
+image:
+  - Visual Studio 2019
 
 environment:
   matrix:
@@ -7,19 +7,18 @@ environment:
   - TOXENV: py312
   - TOXENV: py313
   - TOXENV: py314
-  - TOXENV: pypy3_win
+#  - TOXENV: pypy3_win
   - TOXENV: py310
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+
+build: false
 
 install:
-  - py -m pip install --ignore-installed -U pip
-  - py -m pip install -U virtualenv
   - py -m pip install tox
 
-  - ps: (New-Object Net.WebClient).DownloadFile('https://downloads.python.org/pypy/pypy3.11-v7.3.20-win64.zip', "$env:appveyor_build_folder\pypy3.11-v7.3.20-win64.zip")
-  - ps: 7z x pypy3.11-v7.3.20-win64.zip | Out-Null
-  - move pypy3.11-v7.3.20-win64 C:\
-  - 'SET PATH=C:\pypy3.11-v7.3.20-win64\;%PATH%'
+#  - ps: (New-Object Net.WebClient).DownloadFile('https://downloads.python.org/pypy/pypy3.11-v7.3.20-win64.zip', "$env:appveyor_build_folder\pypy3.11-v7.3.20-win64.zip")
+#  - ps: 7z x pypy3.11-v7.3.20-win64.zip | Out-Null
+#  - move pypy3.11-v7.3.20-win64 C:\
+#  - 'SET PATH=C:\pypy3.11-v7.3.20-win64\;%PATH%'
 
 test_script:
-  - tox
+  - py -m tox
